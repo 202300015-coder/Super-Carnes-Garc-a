@@ -1,18 +1,15 @@
-import { defineConfig } from "vite";
-import tailwindcss from "@tailwindcss/vite";
-import { resolve } from "path";
+import { defineConfig } from 'vite'
 
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [tailwindcss()],
-  base:
-    process.env.NODE_ENV === "production" && process.env.GITHUB_REPOSITORY
-      ? `/${process.env.GITHUB_REPOSITORY.split("/")[1]}/`
-      : "/",
+  base: '/Super-Carnes-Garc-a/', // 👈 usa el nombre exacto del repo
+  publicDir: 'public', // 👈 carpeta donde tienes tus assets estáticos
   build: {
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, "index.html"),
-      },
-    },
+    outDir: 'dist', // salida de producción (por defecto)
+    emptyOutDir: true
   },
-});
+  server: {
+    port: 5173, // puedes cambiar el puerto si lo necesitas
+    open: true  // abre el navegador al iniciar
+  }
+})
