@@ -13,7 +13,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       <nav class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
-            <a href="#" class="text-2xl font-bold">Super Carnes García</a>
+            <a href="#" class="text-2xl font-bold">Supeeeeeeeer Carnes García</a>
           </div>
           
           <div class="hidden md:flex space-x-8">
