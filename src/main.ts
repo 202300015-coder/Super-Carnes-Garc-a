@@ -1,4 +1,9 @@
 import './input.css'
+import { Navigation } from './components/layout/Navigation'
+import { renderHome } from './pages/Home'
+import { renderMeats } from './pages/Meats'
+import { renderProducts } from './pages/Products'
+import { renderOffers } from './pages/Offers'
 
 // Inicializar el modo oscuro
 const isDarkMode = localStorage.getItem('darkMode') === 'true'
@@ -6,7 +11,32 @@ if (isDarkMode) {
   document.documentElement.classList.add('dark')
 }
 
+// Initialize state
+let currentPage = 'home'
+
+// Router function
+function renderPage(page: string) {
+  switch(page) {
+    case 'home':
+      return renderHome()
+    case 'meats':
+      return renderMeats()
+    case 'products':
+      return renderProducts()
+    case 'offers':
+      return renderOffers()
+    default:
+      return renderHome()
+  }
+}
+
+// Render initial state
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    ${Navigation()}
+    <main>
+      ${renderPage(currentPage)}
+    </main>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
     <!-- Header -->
     <header class="bg-primary-600 dark:bg-primary-900 text-white">
