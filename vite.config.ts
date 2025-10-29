@@ -2,14 +2,18 @@ import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/Super-Carnes-Garc-a/', // 👈 usa el nombre exacto del repo
-  publicDir: 'public', // 👈 carpeta donde tienes tus assets estáticos
+  base: '/Super-Carnes-Garc-a/',
   build: {
-    outDir: 'dist', // salida de producción (por defecto)
-    emptyOutDir: true
+    outDir: 'dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
   },
   server: {
-    port: 5173, // puedes cambiar el puerto si lo necesitas
-    open: true  // abre el navegador al iniciar
+    port: 5173,
+    open: true
   }
 })
