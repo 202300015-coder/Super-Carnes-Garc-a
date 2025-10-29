@@ -4,6 +4,8 @@ import { renderHome } from './pages/Home'
 import { renderMeats } from './pages/Meats'
 import { renderProducts } from './pages/Products'
 import { renderOffers } from './pages/Offers'
+import { LoginModal } from './components/ui/LoginModal'
+import { setupAuth } from './components/auth/setupAuth'
 
 // Inicializar el modo oscuro
 const isDarkMode = localStorage.getItem('darkMode') === 'true'
@@ -37,6 +39,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <main>
       ${renderPage(currentPage)}
     </main>
+    ${LoginModal()}
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
     <!-- Header -->
     <header class="bg-primary-600 dark:bg-primary-900 text-white">
