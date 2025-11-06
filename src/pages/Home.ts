@@ -1,7 +1,7 @@
 export function renderHome() {
   return `
-    <section class="relative bg-primary-600 rounded-lg overflow-hidden mb-12">
-      <div class="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-900 opacity-90"></div>
+    <section class="relative bg-primary-600 dark:bg-gray-800 rounded-lg overflow-hidden mb-12">
+      <div class="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-900 dark:from-gray-800 dark:to-gray-900 opacity-90"></div>
       <div class="relative z-10 px-8 py-16 text-white">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">Bienvenidos a Super Carnes García</h1>
         <p class="text-xl mb-8">La mejor calidad en carnes para su mesa</p>
@@ -69,7 +69,7 @@ export function renderHome() {
         </div>
 
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-          <img src="/images/ofertas.jpg" alt="Ofertas" class="w-full h-48 object-cover">
+          <img src="/images/ofertas.jpeg" alt="Ofertas" class="w-full h-48 object-cover">
           <div class="p-6">
             <h3 class="text-xl font-semibold text-primary-600 dark:text-primary-400 mb-2">Ofertas</h3>
             <p class="text-gray-600 dark:text-gray-300">Descuentos especiales de la semana.</p>

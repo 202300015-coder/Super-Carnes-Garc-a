@@ -5,7 +5,9 @@ import { renderMeats } from './pages/Meats'
 import { renderProducts } from './pages/Products'
 import { renderOffers } from './pages/Offers'
 import { LoginModal } from './components/ui/LoginModal'
+import { AddProductModal } from './components/ui/AddProductModal'
 import { setupAuth } from './components/auth/setupAuth'
+import { setupAddProductModal } from './components/ui/setupAddProductModal'
 
 // Inicializar el modo oscuro
 const isDarkMode = localStorage.getItem('darkMode') === 'true'
@@ -42,6 +44,7 @@ function renderApp() {
         ${renderPage(currentPage)}
       </main>
       ${LoginModal()}
+      ${AddProductModal()}
     </div>
   `
 
@@ -97,6 +100,7 @@ function attachUI() {
   // Initialize auth handlers
   try {
     setupAuth()
+    setupAddProductModal()
   } catch (e) {
     // setupAuth may rely on DOM elements; ignore if not ready
     // console.warn('setupAuth error', e)
