@@ -9,27 +9,27 @@ export function renderAuthPage() {
         </div>
 
         <!-- Tabs de Login/Register -->
-        <div class="bg-white rounded-t-lg shadow-xl">
-          <div class="flex border-b border-gray-200">
+        <div class="bg-white dark:bg-gray-800 rounded-t-lg shadow-xl">
+          <div class="flex border-b border-gray-200 dark:border-gray-700">
             <button 
               id="loginTab" 
-              class="flex-1 py-4 px-6 text-center font-semibold transition-colors border-b-2 border-primary-600 text-primary-600"
+              class="flex-1 py-4 px-6 text-center font-semibold transition-colors border-b-2 border-primary-600 text-primary-600 dark:text-primary-400"
             >
               Iniciar Sesión
             </button>
             <button 
               id="registerTab" 
-              class="flex-1 py-4 px-6 text-center font-semibold transition-colors border-b-2 border-transparent text-gray-500 hover:text-gray-700"
+              class="flex-1 py-4 px-6 text-center font-semibold transition-colors border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
             >
               Crear Cuenta
             </button>
           </div>
 
           <!-- Login Form -->
-          <div id="loginForm" class="p-8">
+          <div id="loginForm" class="p-8 bg-white dark:bg-gray-800">
             <form id="loginFormElement" class="space-y-6">
               <div>
-                <label for="loginEmail" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="loginEmail" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Correo Electrónico
                 </label>
                 <input 
@@ -37,13 +37,13 @@ export function renderAuthPage() {
                   id="loginEmail" 
                   name="email"
                   required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   placeholder="tu@email.com"
                 >
               </div>
 
               <div>
-                <label for="loginPassword" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="loginPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Contraseña
                 </label>
                 <div class="relative">
@@ -52,13 +52,13 @@ export function renderAuthPage() {
                     id="loginPassword" 
                     name="password"
                     required
-                    class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    class="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                     placeholder="••••••••"
                   >
                   <button
                     type="button"
                     id="toggleLoginPassword"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                   >
                     <svg id="loginEyeOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -73,13 +73,13 @@ export function renderAuthPage() {
 
               <div class="flex items-center justify-between">
                 <label class="flex items-center">
-                  <input type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
-                  <span class="ml-2 text-sm text-gray-600">Recordarme</span>
+                  <input type="checkbox" class="rounded border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-primary-600 focus:ring-primary-500">
+                  <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">Recordarme</span>
                 </label>
                 <button 
                   type="button" 
                   id="forgotPasswordBtn"
-                  class="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                  class="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
                 >
                   ¿Olvidaste tu contraseña?
                 </button>
@@ -109,10 +109,10 @@ export function renderAuthPage() {
           </div>
 
           <!-- Register Form -->
-          <div id="registerForm" class="p-8 hidden">
+          <div id="registerForm" class="p-8 bg-white dark:bg-gray-800 hidden">
             <form id="registerFormElement" class="space-y-6">
               <div>
-                <label for="registerName" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="registerName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Nombre Completo
                 </label>
                 <input 
@@ -120,13 +120,13 @@ export function renderAuthPage() {
                   id="registerName" 
                   name="fullName"
                   required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   placeholder="Juan Pérez"
                 >
               </div>
 
               <div>
-                <label for="registerEmail" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="registerEmail" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Correo Electrónico
                 </label>
                 <input 
@@ -134,13 +134,13 @@ export function renderAuthPage() {
                   id="registerEmail" 
                   name="email"
                   required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  placeholder="tu@email.com"
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  placeholder="tu@example.com"
                 >
               </div>
 
               <div>
-                <label for="registerPassword" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="registerPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Contraseña
                 </label>
                 <div class="relative">
@@ -150,13 +150,13 @@ export function renderAuthPage() {
                     name="password"
                     required
                     minlength="6"
-                    class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    class="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                     placeholder="Mínimo 6 caracteres"
                   >
                   <button
                     type="button"
                     id="toggleRegisterPassword"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                   >
                     <svg id="registerEyeOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -167,11 +167,11 @@ export function renderAuthPage() {
                     </svg>
                   </button>
                 </div>
-                <p class="mt-1 text-xs text-gray-500">Mínimo 6 caracteres</p>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Mínimo 6 caracteres</p>
               </div>
 
               <div>
-                <label for="registerPasswordConfirm" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="registerPasswordConfirm" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Confirmar Contraseña
                 </label>
                 <div class="relative">
@@ -181,13 +181,13 @@ export function renderAuthPage() {
                     name="passwordConfirm"
                     required
                     minlength="6"
-                    class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    class="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                     placeholder="Repite tu contraseña"
                   >
                   <button
                     type="button"
                     id="toggleRegisterPasswordConfirm"
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                   >
                     <svg id="registerConfirmEyeOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -201,8 +201,8 @@ export function renderAuthPage() {
               </div>
 
               <label class="flex items-start">
-                <input type="checkbox" required class="mt-1 rounded border-gray-300 text-primary-600 focus:ring-primary-500">
-                <span class="ml-2 text-sm text-gray-600">
+                <input type="checkbox" required class="mt-1 rounded border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-primary-600 focus:ring-primary-500">
+                <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">
                   Acepto los términos y condiciones y la política de privacidad
                 </span>
               </label>
@@ -231,10 +231,10 @@ export function renderAuthPage() {
 
       <!-- Forgot Password Modal -->
       <div id="forgotPasswordModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-8">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-8">
           <div class="flex items-center justify-between mb-6">
-            <h3 class="text-2xl font-bold text-gray-900">Recuperar Contraseña</h3>
-            <button id="closeForgotPassword" class="text-gray-400 hover:text-gray-600">
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Recuperar Contraseña</h3>
+            <button id="closeForgotPassword" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
               </svg>
@@ -243,7 +243,7 @@ export function renderAuthPage() {
 
           <form id="forgotPasswordForm" class="space-y-6">
             <div>
-              <label for="forgotEmail" class="block text-sm font-medium text-gray-700 mb-2">
+              <label for="forgotEmail" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Correo Electrónico
               </label>
               <input 
@@ -251,10 +251,10 @@ export function renderAuthPage() {
                 id="forgotEmail" 
                 name="email"
                 required
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 placeholder="tu@email.com"
               >
-              <p class="mt-2 text-sm text-gray-600">
+              <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
                 Te enviaremos un enlace para restablecer tu contraseña
               </p>
             </div>
