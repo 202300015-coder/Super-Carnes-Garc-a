@@ -151,7 +151,16 @@ export function setupAuthPage() {
       if (error) throw error
 
       if (data.user) {
-        successDiv.textContent = '✅ Cuenta creada exitosamente. Revisa tu email para confirmar tu cuenta.'
+        console.log('✅ Usuario creado:', data.user.email)
+        
+        // Verificar si el usuario fue confirmado automáticamente
+        if (!data.user.email_confirmed_at) {
+          // Si no está confirmado, mostrar mensaje personalizado
+          successDiv.textContent = '✅ Cuenta creada. Revisa tu email para confirmarla o contacta al administrador.'
+        } else {
+          successDiv.textContent = '✅ Cuenta creada exitosamente. Ya puedes iniciar sesión.'
+        }
+        
         successDiv.classList.remove('hidden')
         registerFormElement.reset()
 

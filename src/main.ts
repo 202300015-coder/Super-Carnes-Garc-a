@@ -97,6 +97,13 @@ function attachUIForContent() {
     if (userRole === 'admin') {
       document.querySelectorAll('.admin-only').forEach(el => {
         el.classList.remove('hidden')
+        el.classList.add('flex')
+      })
+    } else {
+      // Asegurar que estén ocultos para usuarios normales
+      document.querySelectorAll('.admin-only').forEach(el => {
+        el.classList.add('hidden')
+        el.classList.remove('flex')
       })
     }
   } catch (e) {
@@ -200,6 +207,13 @@ function attachUI() {
     if (userRole === 'admin') {
       document.querySelectorAll('.admin-only').forEach(el => {
         el.classList.remove('hidden')
+        el.classList.add('flex')
+      })
+    } else {
+      // Asegurar que estén ocultos para usuarios normales
+      document.querySelectorAll('.admin-only').forEach(el => {
+        el.classList.add('hidden')
+        el.classList.remove('flex')
       })
     }
   } catch (e) {
