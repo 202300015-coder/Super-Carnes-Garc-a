@@ -69,7 +69,8 @@ export function renderHome() {
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
       <img src="images/especialidades.jpg" alt="Especialidades" class="w-full h-56 object-cover">
       <div class="p-6 text-center">
-        <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Especialidades</h3>
+        <h3 class="text-xl font-se
+        mibold text-red-700 dark:text-red-400 mb-2">Especialidades</h3>
         <p class="text-gray-600 dark:text-gray-300">Cortes especiales y preparados exclusivos.</p>
       </div>
     </div>
