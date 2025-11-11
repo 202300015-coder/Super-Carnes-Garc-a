@@ -49,34 +49,42 @@ export function renderHome() {
       </div>
     </section>
 
-    <section class="mb-12">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Categorías Destacadas</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-         <img src="images/carnes-frescas.jpeg" alt="Carnes Frescas" class="w-full h-48 object-cover"
-          <div class="p-6">
-            <h3 class="text-xl font-semibold text-primary-600 dark:text-primary-400 mb-2">Carnes Frescas</h3>
-            <p class="text-gray-600 dark:text-gray-300">La mejor selección de cortes frescos para tu mesa.</p>
-          </div>
-        </div>
+    <section class="mb-12 px-4">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+    Categorías Destacadas
+  </h2>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-<img src="images/especialidades.jpg" alt="Especialidades" class="w-full h-48 object-cover">
-          <div class="p-6">
-            <h3 class="text-xl font-semibold text-primary-600 dark:text-primary-400 mb-2">Especialidades</h3>
-            <p class="text-gray-600 dark:text-gray-300">Cortes especiales y preparados exclusivos.</p>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-<img src="images/ofertas.jpeg" alt="Ofertas" class="w-full h-48 object-cover">
-
-        <div class="p-6">
-            <h3 class="text-xl font-semibold text-primary-600 dark:text-primary-400 mb-2">Ofertas</h3>
-            <p class="text-gray-600 dark:text-gray-300">Descuentos especiales de la semana.</p>
-          </div>
-        </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    
+    <!-- Tarjeta 1 -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
+      <img src="images/carnes-frescas.jpeg" alt="Carnes Frescas" class="w-full h-56 object-cover">
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Carnes Frescas</h3>
+        <p class="text-gray-600 dark:text-gray-300">La mejor selección de cortes frescos para tu mesa.</p>
       </div>
-    </section>
+    </div>
+
+    <!-- Tarjeta 2 -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
+      <img src="images/especialidades.jpg" alt="Especialidades" class="w-full h-56 object-cover">
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Especialidades</h3>
+        <p class="text-gray-600 dark:text-gray-300">Cortes especiales y preparados exclusivos.</p>
+      </div>
+    </div>
+
+    <!-- Tarjeta 3 -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
+      <img src="images/ofertas.jpeg" alt="Ofertas" class="w-full h-56 object-cover">
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Ofertas</h3>
+        <p class="text-gray-600 dark:text-gray-300">Descuentos especiales de la semana.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
   `
 }
