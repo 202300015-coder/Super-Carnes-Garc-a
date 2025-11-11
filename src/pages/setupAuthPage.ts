@@ -14,6 +14,25 @@ export function setupAuthPage() {
 
   if (!loginTab || !registerTab || !loginForm || !registerForm) return
 
+  // Toggle password visibility
+  const setupPasswordToggle = (toggleId: string, inputId: string, eyeOpenId: string, eyeClosedId: string) => {
+    const toggle = document.getElementById(toggleId)
+    const input = document.getElementById(inputId) as HTMLInputElement
+    const eyeOpen = document.getElementById(eyeOpenId)
+    const eyeClosed = document.getElementById(eyeClosedId)
+
+    toggle?.addEventListener('click', () => {
+      const isPassword = input.type === 'password'
+      input.type = isPassword ? 'text' : 'password'
+      eyeOpen?.classList.toggle('hidden')
+      eyeClosed?.classList.toggle('hidden')
+    })
+  }
+
+  setupPasswordToggle('toggleLoginPassword', 'loginPassword', 'loginEyeOpen', 'loginEyeClosed')
+  setupPasswordToggle('toggleRegisterPassword', 'registerPassword', 'registerEyeOpen', 'registerEyeClosed')
+  setupPasswordToggle('toggleRegisterPasswordConfirm', 'registerPasswordConfirm', 'registerConfirmEyeOpen', 'registerConfirmEyeClosed')
+
   // Switch tabs
   loginTab.addEventListener('click', () => {
     loginTab.classList.add('border-primary-600', 'text-primary-600')
