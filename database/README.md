@@ -12,7 +12,25 @@
 7. Click en **"Run"** (botón verde abajo a la derecha)
 8. Verifica el resultado: deberías ver "Query executed successfully" y un conteo de productos
 
-### 2️⃣ Crear el Bucket de Storage
+### 2️⃣ Configurar Sistema de Roles y Autenticación
+1. En **SQL Editor**, click en **"New query"**
+2. Copia TODO el contenido de `database/auth-roles-setup.sql`
+3. Pégalo y click en **"Run"**
+4. Verifica que se creó la tabla `user_profiles` y las funciones
+
+### 3️⃣ Crear Usuario Administrador
+1. Ve a **Authentication** → **Users** en el menú lateral
+2. Click en **"Add user"** → **"Create new user"**
+3. Configura:
+   - **Email:** `admin@supercarnes.com`
+   - **Password:** `Admin2025$uper` (guárdala en lugar seguro)
+   - **Auto Confirm User:** ✅ **ACTIVADO** (importante)
+   - **User Metadata:** Click en "Add metadata"
+     - Key: `role`
+     - Value: `admin`
+4. Click en **"Create user"**
+
+### 4️⃣ Crear el Bucket de Storage
 1. En el Dashboard, ve a **Storage** (icono 🗃️ en el menú lateral)
 2. Click en **"New bucket"**
 3. Configura:
@@ -22,13 +40,13 @@
    - **Allowed MIME types:** `image/jpeg,image/jpg,image/png,image/webp`
 4. Click en **"Create bucket"**
 
-### 3️⃣ Configurar Políticas de Storage
+### 5️⃣ Configurar Políticas de Storage
 1. Regresa a **SQL Editor**
 2. Click en **"New query"**
 3. Copia TODO el contenido de `database/storage-setup.sql`
 4. Pégalo y click en **"Run"**
 
-### 4️⃣ Verificar que Todo Funciona
+### 6️⃣ Verificar que Todo Funciona
 1. Ve a **Table Editor** (icono tabla en el menú lateral)
 2. Selecciona la tabla **productos**
 3. Deberías ver 10 productos de prueba listados
@@ -41,9 +59,25 @@
 - [ ] Tabla `productos` creada con 10 registros de prueba
 - [ ] Índices creados (idx_productos_categoria, idx_productos_activo, etc.)
 - [ ] RLS habilitado en la tabla productos
-- [ ] 4 políticas de seguridad activas en productos
+- [ ] Tabla `user_profiles` creada
+- [ ] Función `is_admin()` creada
+- [ ] Usuario admin creado (admin@supercarnes.com)
 - [ ] Bucket `productos-imagenes` creado
-- [ ] 4 políticas de storage configuradas
+- [ ] Políticas de storage configuradas (solo admins pueden subir)
+
+---
+
+## 🔐 CREDENCIALES DE PRUEBA
+
+### 👨‍💼 Usuario Administrador
+- **Email:** admin@supercarnes.com
+- **Password:** Admin2025$uper
+- **Permisos:** Puede añadir, editar y eliminar productos
+
+### 👤 Usuario Normal (Créalo tú mismo)
+- Haz click en "Crear Cuenta" en el sitio
+- Los usuarios normales solo pueden ver productos
+- No tienen botones de añadir/editar
 
 ---
 

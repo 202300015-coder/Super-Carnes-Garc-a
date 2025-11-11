@@ -1,9 +1,12 @@
 import './input.css'
+import { supabase } from './lib/supabaseClient'
 import { Navigation } from './components/layout/Navigation'
 import { renderHome } from './pages/Home'
 import { renderMeats } from './pages/Meats'
 import { renderProducts } from './pages/Products'
 import { renderOffers } from './pages/Offers'
+import { renderAuthPage } from './pages/AuthPage'
+import { setupAuthPage } from './pages/setupAuthPage'
 import { LoginModal } from './components/ui/LoginModal'
 import { AddProductModal } from './components/ui/AddProductModal'
 import { setupAuth } from './components/auth/setupAuth'
@@ -15,8 +18,35 @@ if (isDarkMode) {
   document.documentElement.classList.add('dark')
 }
 
+// Estado de autenticación
+let isAuthenticated = false
+let userRole: string | null = null
+
 // Initialize state
 let currentPage = 'home'
+
+// Check authentication status
+async function checkAuth() {
+  const { data: { session } } = await supabase.auth.getSession()
+  
+  if (session) {
+    isAuthenticated = true
+    // Get user role
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('role')
+      .eq('id', session.user.id)
+      .single()
+    
+    userRole = profile?.role || 'user'
+    console.log('🔐 Usuario autenticado:', { email: session.user.email, role: userRole })
+    return true
+  }
+  
+  isAuthenticated = false
+  userRole = null
+  return false
+}
 
 // Router function
 function renderPage(page: string) {
@@ -52,6 +82,13 @@ function renderApp() {
   attachUI()
 }
 
+// Render auth page
+function renderAuthPageView() {
+  const app = document.querySelector<HTMLDivElement>('#app')!
+  app.innerHTML = renderAuthPage()
+  setupAuthPage()
+}
+
 function attachUI() {
   // Mobile menu
   document.getElementById('menuButton')?.addEventListener('click', () => {
@@ -64,6 +101,48 @@ function attachUI() {
     document.documentElement.classList.toggle('dark')
     const isDark = document.documentElement.classList.contains('dark')
     localStorage.setItem('darkMode', isDark.toString())
+  })
+
+  // User menu dropdown
+  const userMenuButton = document.getElementById('userMenuButton')
+  const userDropdown = document.getElementById('userDropdown')
+  
+  userMenuButton?.addEventListener('click', () => {
+    userDropdown?.classList.toggle('hidden')
+  })
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (userDropdown && !userMenuButton?.contains(e.target as Node) && !userDropdown.contains(e.target as Node)) {
+      userDropdown.classList.add('hidden')
+    }
+  })
+
+  // Logout button
+  document.getElementById('logoutButton')?.addEventListener('click', async () => {
+    const { error } = await supabase.auth.signOut()
+    if (!error) {
+      console.log('✅ Sesión cerrada')
+      window.location.reload()
+    } else {
+      console.error('❌ Error al cerrar sesión:', error)
+    }
+  })
+
+  // Show user email in nav
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    if (session) {
+      const userEmail = document.getElementById('userEmail')
+      const dropdownEmail = document.getElementById('dropdownEmail')
+      const email = session.user.email || ''
+      const shortEmail = email.length > 20 ? email.substring(0, 17) + '...' : email
+      
+      if (userEmail) userEmail.textContent = shortEmail
+      if (dropdownEmail) dropdownEmail.textContent = email
+      
+      userMenuButton?.classList.remove('hidden')
+      userMenuButton?.classList.add('flex')
+    }
   })
 
   // Search modal
@@ -101,6 +180,13 @@ function attachUI() {
   try {
     setupAuth()
     setupAddProductModal()
+    
+    // Show/hide admin elements based on role
+    if (userRole === 'admin') {
+      document.querySelectorAll('.admin-only').forEach(el => {
+        el.classList.remove('hidden')
+      })
+    }
   } catch (e) {
     // setupAuth may rely on DOM elements; ignore if not ready
     // console.warn('setupAuth error', e)
@@ -124,5 +210,26 @@ function attachUI() {
   })
 }
 
-// Initial render
-renderApp()
+// Initial render - check auth first
+async function init() {
+  const authenticated = await checkAuth()
+  
+  if (authenticated) {
+    renderApp()
+  } else {
+    renderAuthPageView()
+  }
+  
+  // Listen for auth changes
+  supabase.auth.onAuthStateChange((event, session) => {
+    console.log('🔄 Auth state changed:', event)
+    if (event === 'SIGNED_IN' && session) {
+      window.location.reload()
+    } else if (event === 'SIGNED_OUT') {
+      renderAuthPageView()
+    }
+  })
+}
+
+// Start app
+init()
