@@ -143,7 +143,8 @@ export function setupAuthPage() {
           data: {
             full_name: fullName,
             role: 'user' // Default role
-          }
+          },
+          emailRedirectTo: undefined // Desactivar confirmación por email
         }
       })
 

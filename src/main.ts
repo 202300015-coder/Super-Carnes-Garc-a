@@ -86,6 +86,24 @@ function renderAuthPageView() {
   setupAuthPage()
 }
 
+// Attach UI handlers solo para contenido dinámico (sin duplicar event listeners de la nav)
+function attachUIForContent() {
+  // Initialize auth handlers
+  try {
+    setupAuth()
+    setupAddProductModal()
+    
+    // Show/hide admin elements based on role
+    if (userRole === 'admin') {
+      document.querySelectorAll('.admin-only').forEach(el => {
+        el.classList.remove('hidden')
+      })
+    }
+  } catch (e) {
+    // setupAuth may rely on DOM elements; ignore if not ready
+  }
+}
+
 function attachUI() {
   // Mobile menu
   document.getElementById('menuButton')?.addEventListener('click', () => {
@@ -167,8 +185,8 @@ function attachUI() {
         // re-render page content only
         const pageContent = document.getElementById('pageContent')
         if (pageContent) pageContent.innerHTML = renderPage(currentPage)
-        // re-attach UI for new content
-        attachUI()
+        // re-attach UI for new content (pero NO para la navegación)
+        attachUIForContent()
       }
     })
   })
