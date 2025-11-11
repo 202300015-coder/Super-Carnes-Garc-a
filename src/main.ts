@@ -102,14 +102,12 @@ function attachUIForContent() {
     if (userRole === 'admin') {
       console.log('✅ Usuario es ADMIN - mostrando botones')
       adminElements.forEach(el => {
-        el.classList.remove('hidden')
-        el.classList.add('flex')
+        (el as HTMLElement).style.display = 'flex'
       })
     } else {
       console.log('❌ Usuario NO es admin - ocultando botones (role:', userRole, ')')
       adminElements.forEach(el => {
-        el.classList.add('hidden')
-        el.classList.remove('flex')
+        (el as HTMLElement).style.display = 'none'
       })
     }
   } catch (e) {
@@ -216,14 +214,12 @@ function attachUI() {
     if (userRole === 'admin') {
       console.log('✅ [attachUI] Usuario es ADMIN - mostrando botones')
       adminElements.forEach(el => {
-        el.classList.remove('hidden')
-        el.classList.add('flex')
+        (el as HTMLElement).style.display = 'flex'
       })
     } else {
       console.log('❌ [attachUI] Usuario NO es admin - ocultando botones')
       adminElements.forEach(el => {
-        el.classList.add('hidden')
-        el.classList.remove('flex')
+        (el as HTMLElement).style.display = 'none'
       })
     }
   } catch (e) {
