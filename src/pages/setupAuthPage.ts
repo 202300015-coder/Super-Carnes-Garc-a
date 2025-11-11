@@ -86,8 +86,9 @@ export function setupAuthPage() {
 
         console.log('✅ Login exitoso:', { email, role: profile?.role })
         
-        // Redirect to main app
-        window.location.reload()
+        // FORZAR recarga completa de la página para limpiar cache
+        localStorage.setItem('force_role_refresh', 'true')
+        window.location.href = window.location.origin + window.location.pathname
       }
 
     } catch (error: any) {

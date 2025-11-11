@@ -29,7 +29,10 @@ async function checkAuth() {
   const { data: { session } } = await supabase.auth.getSession()
   
   if (session) {
-    // SIEMPRE obtener el rol fresco de la BD (no cachear)
+    console.log('🔑 Sesión encontrada, obteniendo rol desde BD...')
+    
+    // SIEMPRE obtener el rol DIRECTAMENTE de la base de datos
+    // NO confiar en el JWT porque puede estar desactualizado
     const { data: profile, error } = await supabase
       .from('user_profiles')
       .select('role')
@@ -38,20 +41,27 @@ async function checkAuth() {
     
     if (error) {
       console.error('❌ Error obteniendo perfil:', error)
+      console.error('❌ Detalles:', { userId: session.user.id, email: session.user.email })
       userRole = 'user' // Default a user si hay error
+    } else if (!profile) {
+      console.error('❌ No se encontró perfil para el usuario')
+      userRole = 'user'
     } else {
-      userRole = profile?.role || 'user'
+      userRole = profile.role || 'user'
+      console.log('✅ Rol obtenido de BD:', userRole)
     }
     
     console.log('🔐 Usuario autenticado:', { 
       email: session.user.email, 
-      role: userRole,
-      profile_data: profile 
+      userId: session.user.id,
+      roleBD: userRole,
+      profileData: profile
     })
     return true
   }
   
   userRole = null
+  console.log('❌ No hay sesión activa')
   return false
 }
 
