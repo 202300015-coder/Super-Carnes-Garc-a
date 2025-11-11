@@ -88,26 +88,32 @@ function renderAuthPageView() {
 
 // Attach UI handlers solo para contenido dinámico (sin duplicar event listeners de la nav)
 function attachUIForContent() {
+  console.log('🔧 attachUIForContent - userRole:', userRole)
+  
   // Initialize auth handlers
   try {
     setupAuth()
     setupAddProductModal()
     
     // Show/hide admin elements based on role
+    const adminElements = document.querySelectorAll('.admin-only')
+    console.log('📊 Elementos admin encontrados:', adminElements.length)
+    
     if (userRole === 'admin') {
-      document.querySelectorAll('.admin-only').forEach(el => {
+      console.log('✅ Usuario es ADMIN - mostrando botones')
+      adminElements.forEach(el => {
         el.classList.remove('hidden')
         el.classList.add('flex')
       })
     } else {
-      // Asegurar que estén ocultos para usuarios normales
-      document.querySelectorAll('.admin-only').forEach(el => {
+      console.log('❌ Usuario NO es admin - ocultando botones (role:', userRole, ')')
+      adminElements.forEach(el => {
         el.classList.add('hidden')
         el.classList.remove('flex')
       })
     }
   } catch (e) {
-    // setupAuth may rely on DOM elements; ignore if not ready
+    console.error('❌ Error en attachUIForContent:', e)
   }
 }
 
@@ -204,21 +210,24 @@ function attachUI() {
     setupAddProductModal()
     
     // Show/hide admin elements based on role
+    const adminElements = document.querySelectorAll('.admin-only')
+    console.log('📊 [attachUI] Elementos admin encontrados:', adminElements.length, 'Role:', userRole)
+    
     if (userRole === 'admin') {
-      document.querySelectorAll('.admin-only').forEach(el => {
+      console.log('✅ [attachUI] Usuario es ADMIN - mostrando botones')
+      adminElements.forEach(el => {
         el.classList.remove('hidden')
         el.classList.add('flex')
       })
     } else {
-      // Asegurar que estén ocultos para usuarios normales
-      document.querySelectorAll('.admin-only').forEach(el => {
+      console.log('❌ [attachUI] Usuario NO es admin - ocultando botones')
+      adminElements.forEach(el => {
         el.classList.add('hidden')
         el.classList.remove('flex')
       })
     }
   } catch (e) {
-    // setupAuth may rely on DOM elements; ignore if not ready
-    // console.warn('setupAuth error', e)
+    console.error('❌ Error en attachUI:', e)
   }
 
   // Predictive search (global simple implementation)

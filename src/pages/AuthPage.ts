@@ -135,8 +135,9 @@ export function renderAuthPage() {
                   name="email"
                   required
                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  placeholder="tu@example.com"
+                  placeholder="usuario@gmail.com"
                 >
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Usa un email válido (ej: @gmail.com, @outlook.com)</p>
               </div>
 
               <div>
