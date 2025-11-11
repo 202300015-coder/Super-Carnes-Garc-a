@@ -8,7 +8,7 @@ export function renderProducts() {
           <!-- Add Product Button (admin only) -->
           <button 
             onclick="window.openAddProductModal()" 
-            class="admin-only hidden px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors flex items-center space-x-2"
+            class="admin-only px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors hidden items-center space-x-2"
             title="Añadir producto"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

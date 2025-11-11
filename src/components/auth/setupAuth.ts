@@ -1,4 +1,4 @@
-import { signIn, signUp, signOut, resetPassword, getCurrentUser } from '../../auth'
+import { signIn, signUp, resetPassword, getCurrentUser } from '../../auth'
 
 export function setupAuth() {
   // Event Listeners para el modal de login

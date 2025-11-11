@@ -230,7 +230,7 @@ export function renderAuthPage() {
       </div>
 
       <!-- Forgot Password Modal -->
-      <div id="forgotPasswordModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div id="forgotPasswordModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-8">
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Recuperar Contraseña</h3>

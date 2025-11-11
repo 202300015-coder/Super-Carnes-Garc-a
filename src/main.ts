@@ -19,7 +19,6 @@ if (isDarkMode) {
 }
 
 // Estado de autenticación
-let isAuthenticated = false
 let userRole: string | null = null
 
 // Initialize state
@@ -30,7 +29,6 @@ async function checkAuth() {
   const { data: { session } } = await supabase.auth.getSession()
   
   if (session) {
-    isAuthenticated = true
     // Get user role
     const { data: profile } = await supabase
       .from('user_profiles')
@@ -43,7 +41,6 @@ async function checkAuth() {
     return true
   }
   
-  isAuthenticated = false
   userRole = null
   return false
 }

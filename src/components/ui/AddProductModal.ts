@@ -1,6 +1,6 @@
 export function AddProductModal() {
   return `
-    <div id="addProductModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div id="addProductModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <!-- Header -->
         <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
