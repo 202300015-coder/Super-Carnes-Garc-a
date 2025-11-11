@@ -61,7 +61,7 @@ export function renderHome() {
         </div>
 
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-          <img src="/images/especialidades.jpg" alt="Especialidades" class="w-full h-48 object-cover">
+<img src="images/especialidades.jpg" alt="Especialidades" class="w-full h-48 object-cover">
           <div class="p-6">
             <h3 class="text-xl font-semibold text-primary-600 dark:text-primary-400 mb-2">Especialidades</h3>
             <p class="text-gray-600 dark:text-gray-300">Cortes especiales y preparados exclusivos.</p>
@@ -69,8 +69,9 @@ export function renderHome() {
         </div>
 
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-          <img src="/images/ofertas.jpeg" alt="Ofertas" class="w-full h-48 object-cover">
-          <div class="p-6">
+<img src="images/ofertas.jpeg" alt="Ofertas" class="w-full h-48 object-cover">
+
+        <div class="p-6">
             <h3 class="text-xl font-semibold text-primary-600 dark:text-primary-400 mb-2">Ofertas</h3>
             <p class="text-gray-600 dark:text-gray-300">Descuentos especiales de la semana.</p>
           </div>
