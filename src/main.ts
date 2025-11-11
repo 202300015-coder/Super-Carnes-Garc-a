@@ -29,15 +29,25 @@ async function checkAuth() {
   const { data: { session } } = await supabase.auth.getSession()
   
   if (session) {
-    // Get user role
-    const { data: profile } = await supabase
+    // SIEMPRE obtener el rol fresco de la BD (no cachear)
+    const { data: profile, error } = await supabase
       .from('user_profiles')
       .select('role')
       .eq('id', session.user.id)
       .single()
     
-    userRole = profile?.role || 'user'
-    console.log('🔐 Usuario autenticado:', { email: session.user.email, role: userRole })
+    if (error) {
+      console.error('❌ Error obteniendo perfil:', error)
+      userRole = 'user' // Default a user si hay error
+    } else {
+      userRole = profile?.role || 'user'
+    }
+    
+    console.log('🔐 Usuario autenticado:', { 
+      email: session.user.email, 
+      role: userRole,
+      profile_data: profile 
+    })
     return true
   }
   
