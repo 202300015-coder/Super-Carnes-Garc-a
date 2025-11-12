@@ -242,18 +242,31 @@ export function setupEditProductModal() {
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
         const filePath = `${categoria}/${fileName}`
 
-        const { error: uploadError } = await supabase.storage
-          .from('productos-imagenes')
-          .upload(filePath, selectedFile)
+        console.log('📤 Subiendo nueva imagen:', filePath)
 
-        if (uploadError) throw uploadError
+        const { error: uploadError, data: uploadData } = await supabase.storage
+          .from('productos-imagenes')
+          .upload(filePath, selectedFile, {
+            cacheControl: '3600',
+            upsert: false
+          })
+
+        if (uploadError) {
+          console.error('❌ Error subiendo imagen:', uploadError)
+          throw uploadError
+        }
+
+        console.log('✅ Nueva imagen subida:', uploadData)
 
         const { data: urlData } = supabase.storage
           .from('productos-imagenes')
           .getPublicUrl(filePath)
 
         updateData.imagen_url = urlData.publicUrl
+        console.log('🔗 Nueva URL pública:', updateData.imagen_url)
       }
+
+      console.log('📝 Datos a actualizar:', updateData)
 
       // Update product
       const { error: updateError } = await supabase
@@ -271,9 +284,23 @@ export function setupEditProductModal() {
       // Reload products
       reloadProducts()
 
-    } catch (error) {
-      console.error('Error updating product:', error)
-      alert('❌ Error al actualizar el producto. Verifica tu conexión y permisos.')
+    } catch (error: any) {
+      console.error('❌ Error updating product:', error)
+      console.error('❌ Error details:', {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint
+      })
+      
+      let errorMessage = '❌ Error al actualizar el producto.'
+      if (error.code === 'PGRST301') {
+        errorMessage += '\n\nNo tienes permisos para actualizar este producto.'
+      } else if (error.message) {
+        errorMessage += '\n\n' + error.message
+      }
+      
+      alert(errorMessage)
       
       isSubmitting = false
       const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement
@@ -290,13 +317,13 @@ function reloadProducts() {
   
   if (meatsGrid) {
     import('../../pages/loadProducts').then(module => {
-      module.renderProductsInGrid('meatsGrid', 'carnes')
+      module.renderProductsInGrid('meatsGrid', 'carnes', false)
     })
   }
   
   if (productsGrid) {
     import('../../pages/loadProducts').then(module => {
-      module.renderProductsInGrid('productsGrid')
+      module.renderProductsInGrid('productsGrid', 'productos', true) // Excluir carnes
     })
   }
 }

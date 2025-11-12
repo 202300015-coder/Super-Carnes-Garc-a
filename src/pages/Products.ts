@@ -1,8 +1,9 @@
 export function renderProducts() {
   // Iniciar carga de productos después del render
+  // Aquí NO mostramos carnes, solo otros productos
   setTimeout(() => {
     import('./loadProducts').then(module => {
-      module.renderProductsInGrid('productsGrid') // Sin filtro, muestra todos
+      module.renderProductsInGrid('productsGrid', 'productos', true) // true = excluir carnes
     })
   }, 0)
   

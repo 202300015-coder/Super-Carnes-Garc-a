@@ -167,11 +167,21 @@ export function setupAddProductModal() {
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
         const filePath = `${categoria}/${fileName}`
 
-        const { error: uploadError } = await supabase.storage
-          .from('productos-imagenes')
-          .upload(filePath, selectedFile)
+        console.log('📤 Subiendo imagen:', filePath)
 
-        if (uploadError) throw uploadError
+        const { error: uploadError, data: uploadData } = await supabase.storage
+          .from('productos-imagenes')
+          .upload(filePath, selectedFile, {
+            cacheControl: '3600',
+            upsert: false
+          })
+
+        if (uploadError) {
+          console.error('❌ Error subiendo imagen:', uploadError)
+          throw uploadError
+        }
+
+        console.log('✅ Imagen subida:', uploadData)
 
         // Get public URL
         const { data: urlData } = supabase.storage
@@ -179,6 +189,7 @@ export function setupAddProductModal() {
           .getPublicUrl(filePath)
 
         imagen_url = urlData.publicUrl
+        console.log('🔗 URL pública:', imagen_url)
       }
 
       // Get max orden for the category
@@ -220,19 +231,35 @@ export function setupAddProductModal() {
       
       if (meatsGrid) {
         import('../../pages/loadProducts').then(module => {
-          module.renderProductsInGrid('meatsGrid', 'carnes')
+          module.renderProductsInGrid('meatsGrid', 'carnes', false)
         })
       }
       
       if (productsGrid) {
         import('../../pages/loadProducts').then(module => {
-          module.renderProductsInGrid('productsGrid')
+          module.renderProductsInGrid('productsGrid', 'productos', true) // Excluir carnes
         })
       }
 
-    } catch (error) {
-      console.error('Error adding product:', error)
-      alert('❌ Error al añadir el producto. Verifica tu conexión y permisos.')
+    } catch (error: any) {
+      console.error('❌ Error adding product:', error)
+      console.error('❌ Error details:', {
+        message: error?.message,
+        code: error?.code,
+        details: error?.details,
+        hint: error?.hint
+      })
+      
+      let errorMessage = '❌ Error al añadir el producto.'
+      if (error?.code === 'PGRST301') {
+        errorMessage += '\n\nNo tienes permisos para crear productos.'
+      } else if (error?.code === '23505') {
+        errorMessage += '\n\nEste producto ya existe (duplicado).'
+      } else if (error?.message) {
+        errorMessage += '\n\n' + error.message
+      }
+      
+      alert(errorMessage)
       
       // Restore button and flag
       isSubmitting = false

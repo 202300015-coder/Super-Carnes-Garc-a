@@ -15,9 +15,10 @@ export interface Product {
 /**
  * Carga productos desde la base de datos
  * @param categoria - Filtro opcional por categoría
+ * @param excludeCarnes - Si es true, excluye productos de categoría 'carnes'
  * @returns Array de productos
  */
-export async function loadProductsFromDB(categoria?: string): Promise<Product[]> {
+export async function loadProductsFromDB(categoria?: string, excludeCarnes: boolean = false): Promise<Product[]> {
   try {
     let query = supabase
       .from('productos')
@@ -29,6 +30,11 @@ export async function loadProductsFromDB(categoria?: string): Promise<Product[]>
     if (categoria && categoria !== 'Todos') {
       query = query.eq('categoria', categoria)
     }
+    
+    // Excluir carnes si se solicita
+    if (excludeCarnes) {
+      query = query.neq('categoria', 'carnes')
+    }
 
     const { data, error } = await query
 
@@ -37,7 +43,7 @@ export async function loadProductsFromDB(categoria?: string): Promise<Product[]>
       return []
     }
 
-    console.log(`✅ Productos cargados: ${data?.length || 0}`)
+    console.log(`✅ Productos cargados: ${data?.length || 0}${excludeCarnes ? ' (sin carnes)' : ''}${categoria ? ` - categoría: ${categoria}` : ''}`)
     return data || []
   } catch (error) {
     console.error('❌ Error inesperado:', error)
@@ -49,8 +55,9 @@ export async function loadProductsFromDB(categoria?: string): Promise<Product[]>
  * Renderiza productos en el grid
  * @param containerId - ID del contenedor donde insertar las tarjetas
  * @param categoria - Categoría a filtrar (opcional)
+ * @param excludeCarnes - Si es true, excluye productos de categoría 'carnes'
  */
-export async function renderProductsInGrid(containerId: string, categoria?: string) {
+export async function renderProductsInGrid(containerId: string, categoria?: string, excludeCarnes: boolean = false) {
   const container = document.getElementById(containerId)
   if (!container) {
     console.error(`❌ No se encontró el contenedor: ${containerId}`)
@@ -66,7 +73,7 @@ export async function renderProductsInGrid(containerId: string, categoria?: stri
   `
 
   // Cargar productos
-  const productos = await loadProductsFromDB(categoria)
+  const productos = await loadProductsFromDB(categoria, excludeCarnes)
 
   // Si no hay productos
   if (productos.length === 0) {

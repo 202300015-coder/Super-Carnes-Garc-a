@@ -59,12 +59,13 @@ export function ProductCard(product: Product) {
         </button>
       </div>
 
-      <div class="relative aspect-w-4 aspect-h-3">
+      <div class="relative aspect-w-4 aspect-h-3 bg-gray-200 dark:bg-gray-700">
         <img 
           src="${product.image}" 
           alt="${product.name}"
           class="w-full h-48 object-cover"
-          onerror="this.src='/images/placeholder.jpg'"
+          onerror="this.src='/images/placeholder.jpg'; this.onerror=null;"
+          style="opacity: 1; transition: opacity 0.3s ease-in-out;"
         >
       </div>
 
