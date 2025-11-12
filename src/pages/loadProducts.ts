@@ -96,4 +96,11 @@ export async function renderProductsInGrid(containerId: string, categoria?: stri
       price: producto.precio
     })
   ).join('')
+  
+  // Re-aplicar visibilidad de botones admin después de renderizar
+  setTimeout(() => {
+    if (typeof window.updateAdminButtons === 'function') {
+      window.updateAdminButtons()
+    }
+  }, 100)
 }

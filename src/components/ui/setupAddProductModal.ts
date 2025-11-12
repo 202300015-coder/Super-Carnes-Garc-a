@@ -1,8 +1,15 @@
 import { supabase } from '../../lib/supabaseClient'
 
 let selectedFile: File | null = null
+let isInitialized = false // Flag para prevenir inicialización múltiple
 
 export function setupAddProductModal() {
+  // Prevenir inicialización múltiple
+  if (isInitialized) {
+    console.log('⚠️ setupAddProductModal ya está inicializado, saltando...')
+    return
+  }
+  
   const modal = document.getElementById('addProductModal')
   const form = document.getElementById('addProductForm') as HTMLFormElement
   const closeBtn = document.getElementById('closeAddProduct')
@@ -15,6 +22,10 @@ export function setupAddProductModal() {
   const removeImageBtn = document.getElementById('removeImage')
 
   if (!modal || !form || !dropZone || !imageInput) return
+  
+  // Marcar como inicializado
+  isInitialized = true
+  console.log('✅ setupAddProductModal inicializado')
 
   // Open modal function (called from pages)
   window.openAddProductModal = () => {
@@ -43,22 +54,29 @@ export function setupAddProductModal() {
   // Drag & Drop handlers
   // Solo permitir click en el dropZone, no en toda la zona
   dropZone.addEventListener('click', (e) => {
-    // Prevenir que el click se propague si viene del botón de remover
-    if ((e.target as HTMLElement).closest('#removeImage')) return
+    e.preventDefault()
+    e.stopPropagation()
+    // Prevenir que el click se propague si viene del botón de remover o de la imagen preview
+    const target = e.target as HTMLElement
+    if (target.closest('#removeImage') || target.closest('#imagePreview')) return
     imageInput.click()
   })
 
   dropZone.addEventListener('dragover', (e) => {
     e.preventDefault()
+    e.stopPropagation()
     dropZone.classList.add('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900')
   })
 
-  dropZone.addEventListener('dragleave', () => {
+  dropZone.addEventListener('dragleave', (e) => {
+    e.preventDefault()
+    e.stopPropagation()
     dropZone.classList.remove('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900')
   })
 
   dropZone.addEventListener('drop', (e) => {
     e.preventDefault()
+    e.stopPropagation()
     dropZone.classList.remove('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900')
     const files = e.dataTransfer?.files
     if (files && files[0]) {
@@ -67,6 +85,7 @@ export function setupAddProductModal() {
   })
 
   imageInput.addEventListener('change', (e) => {
+    e.stopPropagation()
     const files = (e.target as HTMLInputElement).files
     if (files && files[0]) {
       handleFileSelect(files[0])
@@ -201,7 +220,7 @@ export function setupAddProductModal() {
       
       if (meatsGrid) {
         import('../../pages/loadProducts').then(module => {
-          module.renderProductsInGrid('meatsGrid', 'Carnes')
+          module.renderProductsInGrid('meatsGrid', 'carnes')
         })
       }
       

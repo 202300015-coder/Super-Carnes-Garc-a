@@ -2,7 +2,7 @@ export function renderMeats() {
   // Iniciar carga de productos después del render
   setTimeout(() => {
     import('./loadProducts').then(module => {
-      module.renderProductsInGrid('meatsGrid', 'Carnes')
+      module.renderProductsInGrid('meatsGrid', 'carnes')
     })
   }, 0)
   

@@ -26,6 +26,25 @@ let userRole: string | null = null
 // Initialize state
 let currentPage = 'home'
 
+// Función global para actualizar visibilidad de botones admin
+function updateAdminButtons() {
+  const adminElements = document.querySelectorAll('.admin-only')
+  console.log('🔄 updateAdminButtons - Elementos encontrados:', adminElements.length, 'Role:', userRole)
+  
+  if (userRole === 'admin') {
+    adminElements.forEach(el => {
+      (el as HTMLElement).style.display = 'flex'
+    })
+  } else {
+    adminElements.forEach(el => {
+      (el as HTMLElement).style.display = 'none'
+    })
+  }
+}
+
+// Exponer función globalmente
+window.updateAdminButtons = updateAdminButtons
+
 // Check authentication status
 async function checkAuth() {
   const { data: { session } } = await supabase.auth.getSession()
@@ -292,3 +311,10 @@ async function init() {
 
 // Start app
 init()
+
+// Declaraciones globales para TypeScript
+declare global {
+  interface Window {
+    updateAdminButtons: () => void
+  }
+}

@@ -2,8 +2,15 @@ import { supabase } from '../../lib/supabaseClient'
 
 let selectedFile: File | null = null
 let currentProductId: number | null = null
+let isInitialized = false // Flag para prevenir inicialización múltiple
 
 export function setupEditProductModal() {
+  // Prevenir inicialización múltiple
+  if (isInitialized) {
+    console.log('⚠️ setupEditProductModal ya está inicializado, saltando...')
+    return
+  }
+  
   const modal = document.getElementById('editProductModal')
   const form = document.getElementById('editProductForm') as HTMLFormElement
   const closeBtn = document.getElementById('closeEditProduct')
@@ -17,6 +24,10 @@ export function setupEditProductModal() {
   const removeImageBtn = document.getElementById('editRemoveImage')
 
   if (!modal || !form || !dropZone || !imageInput) return
+  
+  // Marcar como inicializado
+  isInitialized = true
+  console.log('✅ setupEditProductModal inicializado')
 
   // Open modal function (called globally)
   window.openEditProductModal = async (productId: number) => {
@@ -84,21 +95,28 @@ export function setupEditProductModal() {
 
   // Drag & Drop handlers
   dropZone.addEventListener('click', (e) => {
-    if ((e.target as HTMLElement).closest('#editRemoveImage')) return
+    e.preventDefault()
+    e.stopPropagation()
+    const target = e.target as HTMLElement
+    if (target.closest('#editRemoveImage') || target.closest('#editImagePreview')) return
     imageInput.click()
   })
 
   dropZone.addEventListener('dragover', (e) => {
     e.preventDefault()
+    e.stopPropagation()
     dropZone.classList.add('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900')
   })
 
-  dropZone.addEventListener('dragleave', () => {
+  dropZone.addEventListener('dragleave', (e) => {
+    e.preventDefault()
+    e.stopPropagation()
     dropZone.classList.remove('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900')
   })
 
   dropZone.addEventListener('drop', (e) => {
     e.preventDefault()
+    e.stopPropagation()
     dropZone.classList.remove('border-primary-500', 'bg-primary-50', 'dark:bg-primary-900')
     const files = e.dataTransfer?.files
     if (files && files[0]) {
@@ -107,6 +125,7 @@ export function setupEditProductModal() {
   })
 
   imageInput.addEventListener('change', (e) => {
+    e.stopPropagation()
     const files = (e.target as HTMLInputElement).files
     if (files && files[0]) {
       handleFileSelect(files[0])
@@ -271,7 +290,7 @@ function reloadProducts() {
   
   if (meatsGrid) {
     import('../../pages/loadProducts').then(module => {
-      module.renderProductsInGrid('meatsGrid', 'Carnes')
+      module.renderProductsInGrid('meatsGrid', 'carnes')
     })
   }
   

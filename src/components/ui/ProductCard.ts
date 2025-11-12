@@ -64,7 +64,6 @@ export function ProductCard(product: Product) {
           src="${product.image}" 
           alt="${product.name}"
           class="w-full h-48 object-cover"
-          loading="lazy"
           onerror="this.src='/images/placeholder.jpg'"
         >
       </div>
