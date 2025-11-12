@@ -9,8 +9,10 @@ import { renderAuthPage } from './pages/AuthPage'
 import { setupAuthPage } from './pages/setupAuthPage'
 import { LoginModal } from './components/ui/LoginModal'
 import { AddProductModal } from './components/ui/AddProductModal'
+import { EditProductModal } from './components/ui/EditProductModal'
 import { setupAuth } from './components/auth/setupAuth'
 import { setupAddProductModal } from './components/ui/setupAddProductModal'
+import { setupEditProductModal } from './components/ui/setupEditProductModal'
 
 // Inicializar el modo oscuro
 const isDarkMode = localStorage.getItem('darkMode') === 'true'
@@ -92,6 +94,7 @@ function renderApp() {
       </main>
       ${LoginModal()}
       ${AddProductModal()}
+      ${EditProductModal()}
     </div>
   `
 
@@ -114,6 +117,7 @@ function attachUIForContent() {
   try {
     setupAuth()
     setupAddProductModal()
+    setupEditProductModal()
     
     // Show/hide admin elements based on role
     const adminElements = document.querySelectorAll('.admin-only')
@@ -226,6 +230,7 @@ function attachUI() {
   try {
     setupAuth()
     setupAddProductModal()
+    setupEditProductModal()
     
     // Show/hide admin elements based on role
     const adminElements = document.querySelectorAll('.admin-only')

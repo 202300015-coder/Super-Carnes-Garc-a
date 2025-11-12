@@ -1,24 +1,11 @@
-import { ProductCard } from '../components/ui/ProductCard.ts'
-
-const mockMeats = [
-  {
-    id: 1,
-    name: 'Ribeye',
-    description: 'Corte jugoso y tierno con excelente marmoleo',
-    image: '/images/carnes/ribeye.jpg',
-    category: 'Premium'
-  },
-  {
-    id: 2,
-    name: 'T-Bone',
-    description: 'Lo mejor de dos mundos: lomo y filete',
-    image: '/images/carnes/tbone.jpg',
-    category: 'Premium'
-  },
-  // Más productos aquí...
-]
-
 export function renderMeats() {
+  // Iniciar carga de productos después del render
+  setTimeout(() => {
+    import('./loadProducts').then(module => {
+      module.renderProductsInGrid('meatsGrid', 'Carnes')
+    })
+  }, 0)
+  
   return `
     <div class="container mx-auto px-4 py-8">
       <div class="flex justify-between items-center mb-8">
@@ -59,23 +46,23 @@ export function renderMeats() {
 
       <!-- Filters -->
       <div class="flex flex-wrap gap-4 mb-8">
-        <button class="px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors">
+        <button class="category-filter px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors" data-category="Todos">
           Todos
         </button>
-        <button class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" data-category="Premium">
           Premium
         </button>
-        <button class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" data-category="Res">
           Res
         </button>
-        <button class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" data-category="Cerdo">
           Cerdo
         </button>
       </div>
 
       <!-- Products Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="meatsGrid">
-        ${mockMeats.map(meat => ProductCard(meat)).join('')}
+        <!-- Los productos se cargarán dinámicamente -->
       </div>
 
       <!-- Pagination -->

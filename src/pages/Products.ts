@@ -1,4 +1,11 @@
 export function renderProducts() {
+  // Iniciar carga de productos después del render
+  setTimeout(() => {
+    import('./loadProducts').then(module => {
+      module.renderProductsInGrid('productsGrid') // Sin filtro, muestra todos
+    })
+  }, 0)
+  
   return `
     <div class="container mx-auto px-4 py-8">
       <div class="flex justify-between items-center mb-8">
@@ -39,7 +46,7 @@ export function renderProducts() {
 
       <!-- Products Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="productsGrid">
-        <!-- Products will be inserted here by JavaScript -->
+        <!-- Los productos se cargarán dinámicamente -->
       </div>
 
       <!-- Pagination -->

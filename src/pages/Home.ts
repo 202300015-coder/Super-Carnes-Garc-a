@@ -5,7 +5,7 @@ export function renderHome() {
       <div class="relative z-10 px-8 py-16 text-white">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">Bienvenidos a Super Carnes García</h1>
         <p class="text-xl mb-8">La mejor calidad en carnes para su mesa</p>
-        <a href="#productos" class="inline-block bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
+        <a href="#" data-page="products" class="nav-link inline-block bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
           Ver Productos
         </a>
       </div>

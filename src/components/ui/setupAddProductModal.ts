@@ -41,7 +41,12 @@ export function setupAddProductModal() {
   })
 
   // Drag & Drop handlers
-  dropZone.addEventListener('click', () => imageInput.click())
+  // Solo permitir click en el dropZone, no en toda la zona
+  dropZone.addEventListener('click', (e) => {
+    // Prevenir que el click se propague si viene del botón de remover
+    if ((e.target as HTMLElement).closest('#removeImage')) return
+    imageInput.click()
+  })
 
   dropZone.addEventListener('dragover', (e) => {
     e.preventDefault()
@@ -103,8 +108,16 @@ export function setupAddProductModal() {
   })
 
   // Form submit
+  let isSubmitting = false // Flag para prevenir doble envío
+  
   form.addEventListener('submit', async (e) => {
     e.preventDefault()
+
+    // Prevenir múltiples envíos
+    if (isSubmitting) {
+      console.log('⚠️ Ya hay un envío en proceso, ignorando...')
+      return
+    }
 
     const formData = new FormData(form)
     const nombre = formData.get('nombre') as string
@@ -122,7 +135,8 @@ export function setupAddProductModal() {
     const originalText = submitBtn.innerHTML
 
     try {
-      // Show loading state
+      // Activar flag y deshabilitar botón
+      isSubmitting = true
       submitBtn.disabled = true
       submitBtn.innerHTML = '<span class="animate-spin">⏳</span> Guardando...'
 
@@ -175,16 +189,34 @@ export function setupAddProductModal() {
       if (insertError) throw insertError
 
       alert('✅ Producto añadido exitosamente')
+      
+      // Restaurar flag antes de cerrar modal
+      isSubmitting = false
       closeModal()
 
-      // Reload page to show new product
-      window.location.reload()
+      // Recargar productos sin recargar la página completa
+      // Detectar qué grid está visible y recargarlo
+      const meatsGrid = document.getElementById('meatsGrid')
+      const productsGrid = document.getElementById('productsGrid')
+      
+      if (meatsGrid) {
+        import('../../pages/loadProducts').then(module => {
+          module.renderProductsInGrid('meatsGrid', 'Carnes')
+        })
+      }
+      
+      if (productsGrid) {
+        import('../../pages/loadProducts').then(module => {
+          module.renderProductsInGrid('productsGrid')
+        })
+      }
 
     } catch (error) {
       console.error('Error adding product:', error)
       alert('❌ Error al añadir el producto. Verifica tu conexión y permisos.')
       
-      // Restore button
+      // Restore button and flag
+      isSubmitting = false
       const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement
       submitBtn.disabled = false
       submitBtn.innerHTML = originalText
@@ -198,3 +230,4 @@ declare global {
     openAddProductModal: () => void
   }
 }
+
