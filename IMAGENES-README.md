@@ -79,12 +79,30 @@ USING (
 ### Paso 3: Verificar la configuración
 
 ```sql
--- Ver políticas del bucket
-SELECT * FROM storage.policies WHERE bucket_id = 'productos-imagenes';
+-- Ver si el bucket existe y es público
+SELECT 
+  id,
+  name,
+  public,
+  created_at
+FROM storage.buckets 
+WHERE name = 'productos-imagenes';
 
--- Ver si el bucket es público
-SELECT * FROM storage.buckets WHERE name = 'productos-imagenes';
+-- Ver todas las políticas del sistema relacionadas con storage
+-- (Las políticas de storage se muestran en la interfaz de Supabase, no en pg_policies)
+SELECT 
+  schemaname,
+  tablename,
+  policyname,
+  permissive,
+  roles,
+  cmd
+FROM pg_policies 
+WHERE tablename = 'objects' AND schemaname = 'storage';
 ```
+
+**Nota:** Las políticas de Storage se crean correctamente aunque no aparezcan en `pg_policies`. Puedes verificarlas en:
+- Supabase Dashboard → Storage → Bucket `productos-imagenes` → Policies
 
 ## 📁 Alternativa: Usar Imágenes Locales (NO recomendado)
 

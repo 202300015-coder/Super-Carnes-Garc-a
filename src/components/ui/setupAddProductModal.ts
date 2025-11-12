@@ -228,16 +228,23 @@ export function setupAddProductModal() {
       // Detectar qué grid está visible y recargarlo
       const meatsGrid = document.getElementById('meatsGrid')
       const productsGrid = document.getElementById('productsGrid')
+      const offersGrid = document.getElementById('offersGrid')
       
       if (meatsGrid) {
         import('../../pages/loadProducts').then(module => {
-          module.renderProductsInGrid('meatsGrid', 'carnes', false)
+          module.renderProductsInGrid('meatsGrid', 'carnes', false, false)
         })
       }
       
       if (productsGrid) {
         import('../../pages/loadProducts').then(module => {
-          module.renderProductsInGrid('productsGrid', 'productos', true) // Excluir carnes
+          module.renderProductsInGrid('productsGrid', 'productos', true, false) // Excluir carnes
+        })
+      }
+      
+      if (offersGrid) {
+        import('../../pages/loadProducts').then(module => {
+          module.renderProductsInGrid('offersGrid', undefined, false, true) // Solo ofertas
         })
       }
 
