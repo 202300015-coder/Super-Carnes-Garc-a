@@ -111,11 +111,28 @@ function renderApp() {
       <main id="pageContent">
         ${renderPage(currentPage)}
       </main>
-      ${LoginModal()}
-      ${AddProductModal()}
-      ${EditProductModal()}
     </div>
   `
+
+  // Renderizar modales directamente en el body (solo una vez)
+  if (!document.getElementById('loginModal')) {
+    console.log('✨ Renderizando loginModal por primera vez')
+    document.body.insertAdjacentHTML('beforeend', LoginModal())
+  } else {
+    console.log('⚠️ loginModal ya existe, saltando...')
+  }
+  if (!document.getElementById('addProductModal')) {
+    console.log('✨ Renderizando addProductModal por primera vez')
+    document.body.insertAdjacentHTML('beforeend', AddProductModal())
+  } else {
+    console.log('⚠️ addProductModal ya existe, saltando...')
+  }
+  if (!document.getElementById('editProductModal')) {
+    console.log('✨ Renderizando editProductModal por primera vez')
+    document.body.insertAdjacentHTML('beforeend', EditProductModal())
+  } else {
+    console.log('⚠️ editProductModal ya existe, saltando...')
+  }
 
   // After render, attach UI event handlers
   attachUI()
@@ -248,8 +265,12 @@ function attachUI() {
   // Initialize auth handlers
   try {
     setupAuth()
-    setupAddProductModal()
-    setupEditProductModal()
+    
+    // Dar tiempo al DOM para renderizar los modales antes de hacer setup
+    setTimeout(() => {
+      setupAddProductModal()
+      setupEditProductModal()
+    }, 100)
     
     // Show/hide admin elements based on role
     const adminElements = document.querySelectorAll('.admin-only')

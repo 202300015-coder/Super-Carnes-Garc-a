@@ -18,6 +18,62 @@ export function EditProductModal() {
           <!-- Hidden field for product ID -->
           <input type="hidden" id="editProductId" name="productId">
 
+          <!-- ========== SECCIÓN DE IMÁGENES - HASTA ARRIBA ========== -->
+          
+          <!-- Cambiar Imagen - ICONO DE GALERÍA -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              📸 Cambiar Imagen
+            </label>
+            <div id="editDropZone" class="relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center cursor-pointer hover:border-primary-500 dark:hover:border-primary-400 transition-colors">
+              <!-- Input file invisible pero funcional -->
+              <input 
+                type="file" 
+                id="editImageInput" 
+                accept="image/*" 
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+              >
+              
+              <!-- Default Content - Icono de Galería -->
+              <div id="editDropZoneContent" class="pointer-events-none">
+                <svg class="mx-auto h-10 w-10 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 font-medium">
+                  Click aquí o arrastra una imagen
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                  PNG, JPG, WEBP hasta 5MB
+                </p>
+              </div>
+
+              <!-- Preview -->
+              <div id="editImagePreview" class="hidden relative pointer-events-none">
+                <img id="editPreviewImage" src="" alt="Preview" class="max-h-40 mx-auto rounded">
+                <button type="button" id="editRemoveImage" class="pointer-events-auto absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Imagen Actual - JUSTO DEBAJO DEL ICONO -->
+          <div id="editCurrentImageContainer" class="hidden">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              🖼️ Imagen Actual
+            </label>
+            <div class="relative w-40 h-40 rounded-lg overflow-hidden border-2 border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700">
+              <img id="editCurrentImage" src="" alt="Imagen actual" class="w-full h-full object-cover">
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              💡 Si no seleccionas una nueva imagen, se mantendrá esta
+            </p>
+          </div>
+
+          <!-- ========== FIN SECCIÓN DE IMÁGENES ========== -->
+
           <!-- Nombre -->
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -95,52 +151,6 @@ export function EditProductModal() {
               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
               placeholder="0"
             >
-          </div>
-
-          <!-- Nueva Imagen (Drag & Drop) - AHORA ARRIBA -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Cambiar Imagen
-            </label>
-            <div id="editDropZone" class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center cursor-pointer hover:border-primary-500 dark:hover:border-primary-400 transition-colors">
-              <input type="file" id="editImageInput" accept="image/*" class="hidden">
-              
-              <!-- Default Content - Icono de Galería -->
-              <div id="editDropZoneContent">
-                <svg class="mx-auto h-10 w-10 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                  Arrastra una imagen o haz click para seleccionar
-                </p>
-                <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                  PNG, JPG, WEBP hasta 5MB
-                </p>
-              </div>
-
-              <!-- Preview -->
-              <div id="editImagePreview" class="hidden relative">
-                <img id="editPreviewImage" src="" alt="Preview" class="max-h-40 mx-auto rounded">
-                <button type="button" id="editRemoveImage" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Imagen Actual - AHORA ABAJO DEL SELECTOR -->
-          <div id="editCurrentImageContainer" class="hidden">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Imagen Actual
-            </label>
-            <div class="relative w-32 h-32 rounded-lg overflow-hidden border-2 border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700">
-              <img id="editCurrentImage" src="" alt="Imagen actual" class="w-full h-full object-cover">
-            </div>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              Si no seleccionas una nueva imagen, se mantendrá esta
-            </p>
           </div>
 
           <!-- Buttons -->

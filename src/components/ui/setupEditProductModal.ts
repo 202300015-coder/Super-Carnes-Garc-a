@@ -23,7 +23,18 @@ export function setupEditProductModal() {
   const previewImage = document.getElementById('editPreviewImage') as HTMLImageElement
   const removeImageBtn = document.getElementById('editRemoveImage')
 
-  if (!modal || !form || !dropZone || !imageInput) return
+  console.log('🔍 Elementos encontrados:', {
+    modal: !!modal,
+    form: !!form,
+    dropZone: !!dropZone,
+    imageInput: !!imageInput,
+    dropZoneContent: !!dropZoneContent
+  })
+
+  if (!modal || !form || !dropZone || !imageInput) {
+    console.error('❌ Elementos NO encontrados, abortando setup')
+    return
+  }
   
   // Marcar como inicializado
   isInitialized = true
@@ -93,14 +104,8 @@ export function setupEditProductModal() {
     if (e.target === modal) closeModal()
   })
 
-  // Drag & Drop handlers
-  dropZone.addEventListener('click', (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const target = e.target as HTMLElement
-    if (target.closest('#editRemoveImage') || target.closest('#editImagePreview')) return
-    imageInput.click()
-  })
+  // El input file ahora está posicionado encima del dropZone, no necesitamos click handler
+  // Solo manejamos drag & drop events
 
   dropZone.addEventListener('dragover', (e) => {
     e.preventDefault()
@@ -125,29 +130,37 @@ export function setupEditProductModal() {
   })
 
   imageInput.addEventListener('change', (e) => {
+    console.log('📁 Archivo seleccionado desde input')
     e.stopPropagation()
     const files = (e.target as HTMLInputElement).files
     if (files && files[0]) {
+      console.log('📄 Archivo:', files[0].name, files[0].type, files[0].size)
       handleFileSelect(files[0])
     }
   })
 
   function handleFileSelect(file: File) {
+    console.log('🔍 Validando archivo:', file.name)
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
     if (!validTypes.includes(file.type)) {
+      console.log('❌ Tipo de archivo inválido:', file.type)
       alert('Por favor selecciona una imagen válida (JPG, PNG o WEBP)')
       return
     }
 
     if (file.size > 5 * 1024 * 1024) {
+      console.log('❌ Archivo muy grande:', file.size)
       alert('La imagen no debe superar 5MB')
       return
     }
 
+    console.log('✅ Archivo válido, guardando...')
     selectedFile = file
 
+    // Show preview
     const reader = new FileReader()
     reader.onload = (e) => {
+      console.log('🖼️ Mostrando preview de imagen')
       previewImage.src = e.target?.result as string
       dropZoneContent?.classList.add('hidden')
       imagePreview?.classList.remove('hidden')
