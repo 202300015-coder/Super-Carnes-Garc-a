@@ -17,15 +17,26 @@ export interface Product {
  * @param categoria - Filtro opcional por categoría
  * @param excludeCarnes - Si es true, excluye productos de categoría 'carnes'
  * @param onlyOffers - Si es true, solo muestra productos con descuento > 0
+ * @param userRole - Rol del usuario actual ('admin' o 'user')
  * @returns Array de productos
  */
-export async function loadProductsFromDB(categoria?: string, excludeCarnes: boolean = false, onlyOffers: boolean = false): Promise<Product[]> {
+export async function loadProductsFromDB(
+  categoria?: string, 
+  excludeCarnes: boolean = false, 
+  onlyOffers: boolean = false,
+  userRole: string = 'user'
+): Promise<Product[]> {
   try {
     let query = supabase
       .from('productos')
       .select('*')
-      .eq('activo', true) // Solo productos activos (no eliminados lógicamente)
-      .order('orden', { ascending: true })
+
+    // Solo filtrar productos activos si NO es admin
+    if (userRole !== 'admin') {
+      query = query.eq('activo', true)
+    }
+    
+    query = query.order('orden', { ascending: true})
 
     // Aplicar filtro de categoría si existe
     if (categoria && categoria !== 'Todos') {
@@ -72,6 +83,9 @@ export async function renderProductsInGrid(containerId: string, categoria?: stri
     return
   }
 
+  // Obtener rol del usuario desde window
+  const userRole = (window as any).userRole || 'user'
+
   // Mostrar loading
   container.innerHTML = `
     <div class="col-span-full flex justify-center items-center py-12">
@@ -80,8 +94,8 @@ export async function renderProductsInGrid(containerId: string, categoria?: stri
     </div>
   `
 
-  // Cargar productos
-  const productos = await loadProductsFromDB(categoria, excludeCarnes, onlyOffers)
+  // Cargar productos pasando el rol del usuario
+  const productos = await loadProductsFromDB(categoria, excludeCarnes, onlyOffers, userRole)
 
   // Si no hay productos
   if (productos.length === 0) {

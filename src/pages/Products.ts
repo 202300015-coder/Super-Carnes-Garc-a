@@ -5,6 +5,17 @@ export function renderProducts() {
     import('./loadProducts').then(module => {
       module.renderProductsInGrid('productsGrid', 'productos', true) // true = excluir carnes
     })
+    
+    // Configurar búsqueda específica para productos (excluyendo carnes)
+    import('./searchProducts').then(module => {
+      module.setupSearch({
+        inputId: 'searchProducts',
+        resultsId: 'searchProductsResults',
+        gridId: 'productsGrid',
+        categoria: 'productos', // Solo buscar productos
+        excludeCarnes: true
+      })
+    })
   }, 0)
   
   return `

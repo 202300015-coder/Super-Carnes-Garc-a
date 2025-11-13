@@ -4,6 +4,16 @@ export function renderMeats() {
     import('./loadProducts').then(module => {
       module.renderProductsInGrid('meatsGrid', 'carnes')
     })
+    
+    // Configurar búsqueda específica para carnes
+    import('./searchProducts').then(module => {
+      module.setupSearch({
+        inputId: 'searchMeats',
+        resultsId: 'searchMeatsResults',
+        gridId: 'meatsGrid',
+        categoria: 'carnes' // Solo buscar en carnes
+      })
+    })
   }, 0)
   
   return `
