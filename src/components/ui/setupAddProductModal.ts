@@ -220,8 +220,11 @@ export function setupAddProductModal() {
 
       alert('✅ Producto añadido exitosamente')
       
-      // Restaurar flag antes de cerrar modal
+      // Restaurar botón ANTES de cerrar modal
+      submitBtn.disabled = false
+      submitBtn.innerHTML = originalText
       isSubmitting = false
+      
       closeModal()
 
       // Recargar productos sin recargar la página completa

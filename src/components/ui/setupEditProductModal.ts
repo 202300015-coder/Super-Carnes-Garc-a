@@ -278,7 +278,11 @@ export function setupEditProductModal() {
 
       alert('✅ Producto actualizado exitosamente')
       
+      // Restaurar botón ANTES de cerrar modal
+      submitBtn.disabled = false
+      submitBtn.innerHTML = originalText
       isSubmitting = false
+      
       closeModal()
 
       // Reload products
