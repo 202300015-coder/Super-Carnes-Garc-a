@@ -54,18 +54,24 @@ async function activateProduct(productId: number) {
     
     if (error) throw error
     
-    alert('✅ Producto activado correctamente')
+    console.log('✅ Producto activado, recargando página...')
     
-    // Recargar productos en la página actual
+    // Recargar productos en la página actual SIN setTimeout
     if (currentPage === 'home') {
-      renderHome()
+      await renderHome()
     } else if (currentPage === 'carnes') {
-      renderMeats()
+      await renderMeats()
     } else if (currentPage === 'productos') {
-      renderProducts()
+      await renderProducts()
     } else if (currentPage === 'ofertas') {
-      renderOffers()
+      await renderOffers()
     }
+    
+    // Actualizar botones admin después de recargar
+    setTimeout(() => {
+      updateAdminButtons()
+    }, 100)
+    
   } catch (error) {
     console.error('❌ Error activando producto:', error)
     alert('❌ Error al activar el producto')
@@ -288,9 +294,14 @@ function attachUI() {
       const page = link.dataset.page
       if (page) {
         currentPage = page
+        
+        // Scroll suave al inicio al cambiar de sección
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+        
         // re-render page content only
         const pageContent = document.getElementById('pageContent')
         if (pageContent) pageContent.innerHTML = renderPage(currentPage)
+        
         // re-attach UI for new content (pero NO para la navegación)
         attachUIForContent()
       }
