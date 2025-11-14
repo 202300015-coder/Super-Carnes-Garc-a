@@ -82,19 +82,29 @@ export function setupSearch(config: SearchConfig) {
   input.addEventListener('input', async (e) => {
     const searchTerm = (e.target as HTMLInputElement).value.trim()
 
-    // Si está vacío, restaurar todos los productos
+    // Si está vacío, restaurar todos los productos CON paginación
     if (searchTerm === '') {
       resultsContainer.classList.add('hidden')
       resultsContainer.innerHTML = ''
       
-      // Recargar productos completos
-      const { renderProductsInGrid } = await import('./loadProducts')
-      renderProductsInGrid(
-        config.gridId,
-        config.categoria,
-        config.excludeCarnes,
-        config.onlyOffers
-      )
+      // Reinicializar paginación según la sección actual
+      const { setupPagination } = await import('./pagination')
+      
+      // Determinar IDs de paginación basado en el gridId
+      let paginationId = ''
+      if (config.gridId === 'meatsGrid') paginationId = 'meatsPagination'
+      else if (config.gridId === 'productsGrid') paginationId = 'productsPagination'
+      else if (config.gridId === 'offersGrid') paginationId = 'offersPagination'
+      
+      if (paginationId) {
+        await setupPagination(
+          config.gridId,
+          paginationId,
+          config.categoria,
+          config.excludeCarnes,
+          config.onlyOffers
+        )
+      }
       return
     }
 
@@ -142,31 +152,36 @@ export function setupSearch(config: SearchConfig) {
           const productId = item.getAttribute('data-id')
           console.log('🎯 Producto seleccionado:', productId)
           
-          // Obtener el producto completo
-          const product = results.find(p => p.id.toString() === productId)
-          if (product) {
-            // Renderizar solo ese producto en el grid (mapeando los campos correctamente)
-            const { ProductCard } = await import('../components/ui/ProductCard')
-            grid.innerHTML = ProductCard({
-              id: product.id,
-              name: product.nombre,
-              description: product.descripcion || '',
-              image: product.imagen_url || '/images/placeholder.jpg',
-              category: product.categoria,
-              discount: product.descuento,
-              price: product.precio,
-              activo: product.activo
-            })
-            
-            // Actualizar botones de admin
-            if (typeof window.updateAdminButtons === 'function') {
-              window.updateAdminButtons()
-            }
+          // Limpiar input y dropdown
+          input.value = ''
+          resultsContainer.classList.add('hidden')
+          resultsContainer.innerHTML = ''
+          
+          // Restaurar TODOS los productos con paginación
+          const { setupPagination } = await import('./pagination')
+          
+          let paginationId = ''
+          if (config.gridId === 'meatsGrid') paginationId = 'meatsPagination'
+          else if (config.gridId === 'productsGrid') paginationId = 'productsPagination'
+          else if (config.gridId === 'offersGrid') paginationId = 'offersPagination'
+          
+          if (paginationId) {
+            await setupPagination(
+              config.gridId,
+              paginationId,
+              config.categoria,
+              config.excludeCarnes,
+              config.onlyOffers
+            )
           }
           
-          // Cerrar dropdown
-          resultsContainer.classList.add('hidden')
-          input.value = ''
+          // Scroll suave hacia el producto
+          setTimeout(() => {
+            const productCard = document.querySelector(`[data-product-id="${productId}"]`)
+            if (productCard) {
+              productCard.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            }
+          }, 300)
         })
       })
     } else {
@@ -198,7 +213,6 @@ export function setupSearch(config: SearchConfig) {
       )
 
       // Renderizar resultados en el grid (mapeando correctamente)
-      const { renderProductsInGrid } = await import('./loadProducts')
       const ProductCard = (await import('../components/ui/ProductCard')).ProductCard
 
       grid.innerHTML = results.length

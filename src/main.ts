@@ -42,6 +42,136 @@ function updateAdminButtons() {
   }
 }
 
+// Función global para actualizar el orden de productos
+async function updateProductOrder(productId: number, newOrder: number) {
+  try {
+    console.log('🔄 Actualizando orden:', productId, '→', newOrder)
+    
+    const { error } = await supabase
+      .from('productos')
+      .update({ orden: newOrder })
+      .eq('id', productId)
+    
+    if (error) throw error
+    
+    console.log('✅ Orden actualizado')
+    return true
+  } catch (error) {
+    console.error('❌ Error actualizando orden:', error)
+    return false
+  }
+}
+
+// Función global para configurar drag & drop (solo admin)
+function setupDragAndDrop() {
+  if (userRole !== 'admin') {
+    console.log('⚠️ Drag & drop solo disponible para admin')
+    return
+  }
+  
+  console.log('🎯 Configurando drag & drop para admin')
+  
+  const productCards = document.querySelectorAll('.product-card')
+  let draggedElement: HTMLElement | null = null
+  let draggedId: number | null = null
+  
+  productCards.forEach((card) => {
+    const element = card as HTMLElement
+    
+    // Hacer draggable solo si es admin
+    element.setAttribute('draggable', 'true')
+    element.style.cursor = 'move'
+    
+    // Evento: inicio del drag
+    element.addEventListener('dragstart', (_e) => {
+      draggedElement = element
+      draggedId = parseInt(element.getAttribute('data-product-id') || '0')
+      element.classList.add('opacity-50')
+      console.log('🎯 Arrastrando producto:', draggedId)
+    })
+    
+    // Evento: fin del drag
+    element.addEventListener('dragend', () => {
+      element.classList.remove('opacity-50')
+      draggedElement = null
+      draggedId = null
+    })
+    
+    // Evento: cuando otro elemento pasa por encima
+    element.addEventListener('dragover', (e) => {
+      e.preventDefault()
+      if (draggedElement && draggedElement !== element) {
+        element.classList.add('border-2', 'border-primary-500')
+      }
+    })
+    
+    // Evento: cuando sale de encima
+    element.addEventListener('dragleave', () => {
+      element.classList.remove('border-2', 'border-primary-500')
+    })
+    
+    // Evento: cuando se suelta encima
+    element.addEventListener('drop', async (e) => {
+      e.preventDefault()
+      element.classList.remove('border-2', 'border-primary-500')
+      
+      if (!draggedElement || draggedElement === element) return
+      
+      const targetId = parseInt(element.getAttribute('data-product-id') || '0')
+      
+      if (!draggedId || !targetId) return
+      
+      console.log('📦 Intercambiando orden:', draggedId, '↔', targetId)
+      
+      // Obtener órdenes actuales
+      const { data: products } = await supabase
+        .from('productos')
+        .select('id, orden')
+        .in('id', [draggedId, targetId])
+      
+      if (!products || products.length !== 2) return
+      
+      const draggedProduct = products.find(p => p.id === draggedId)
+      const targetProduct = products.find(p => p.id === targetId)
+      
+      if (!draggedProduct || !targetProduct) return
+      
+      // Intercambiar órdenes
+      await updateProductOrder(draggedId, targetProduct.orden)
+      await updateProductOrder(targetId, draggedProduct.orden)
+      
+      // Recargar página actual con animación
+      console.log('🔄 Recargando vista...')
+      const pageContent = document.getElementById('pageContent')
+      
+      if (pageContent && currentPage) {
+        if (currentPage === 'carnes') {
+          pageContent.innerHTML = renderMeats()
+        } else if (currentPage === 'productos') {
+          pageContent.innerHTML = renderProducts()
+        } else if (currentPage === 'ofertas') {
+          pageContent.innerHTML = renderOffers()
+        }
+        
+        attachUIForContent()
+        
+        // Reinicializar paginación
+        const { setupPagination } = await import('./pages/pagination')
+        
+        if (currentPage === 'carnes') {
+          await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
+        } else if (currentPage === 'productos') {
+          await setupPagination('productsGrid', 'productsPagination', 'productos', true)
+        } else if (currentPage === 'ofertas') {
+          await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
+        }
+        
+        console.log('✅ Vista actualizada con nuevo orden')
+      }
+    })
+  })
+}
+
 // Función global para activar productos inactivos
 async function activateProduct(productId: number) {
   try {
@@ -88,6 +218,18 @@ async function activateProduct(productId: number) {
     // Re-adjuntar eventos DESPUÉS de renderizar
     attachUIForContent()
     
+    // ✨ NUEVO: Reinicializar paginación según la página actual
+    const { setupPagination } = await import('./pages/pagination')
+    
+    if (currentPage === 'carnes') {
+      await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
+    } else if (currentPage === 'productos') {
+      await setupPagination('productsGrid', 'productsPagination', 'productos', true)
+    } else if (currentPage === 'ofertas') {
+      await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
+    }
+    
+    console.log('✅ Paginación reinicializada')
     console.log('✅ Eventos re-adjuntados')
     
     // Mostrar mensaje DESPUÉS de todo
@@ -104,6 +246,8 @@ async function activateProduct(productId: number) {
 // Exponer funciones globalmente
 window.updateAdminButtons = updateAdminButtons
 window.activateProduct = activateProduct
+window.setupDragAndDrop = setupDragAndDrop
+window.updateProductOrder = updateProductOrder
 
 // Check authentication status
 async function checkAuth() {
@@ -228,6 +372,11 @@ function attachUIForContent() {
       adminElements.forEach(el => {
         (el as HTMLElement).style.display = 'flex'
       })
+      
+      // ✨ NUEVO: Configurar drag & drop para admin
+      setTimeout(() => {
+        setupDragAndDrop()
+      }, 200)
     } else {
       console.log('❌ Usuario NO es admin - ocultando botones (role:', userRole, ')')
       adminElements.forEach(el => {
@@ -312,7 +461,7 @@ function attachUI() {
 
   // Navigation links (router)
   document.querySelectorAll<HTMLAnchorElement>('.nav-link').forEach(link => {
-    link.addEventListener('click', (e) => {
+    link.addEventListener('click', async (e) => {
       e.preventDefault()
       const page = link.dataset.page
       if (page) {
@@ -327,6 +476,17 @@ function attachUI() {
         
         // re-attach UI for new content (pero NO para la navegación)
         attachUIForContent()
+        
+        // ✨ NUEVO: Reinicializar paginación después de cambiar sección
+        const { setupPagination } = await import('./pages/pagination')
+        
+        if (currentPage === 'meats') {
+          await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
+        } else if (currentPage === 'products') {
+          await setupPagination('productsGrid', 'productsPagination', 'productos', true)
+        } else if (currentPage === 'offers') {
+          await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
+        }
       }
     })
   })

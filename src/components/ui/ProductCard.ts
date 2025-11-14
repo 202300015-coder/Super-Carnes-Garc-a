@@ -41,7 +41,7 @@ export function ProductCard(product: Product) {
   }
   
   return `
-    <div class="group relative bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 ${isInactive ? 'opacity-50 order-last' : ''}" data-product-id="${product.id}" data-activo="${product.activo !== false}">
+    <div class="product-card group relative bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 ${isInactive ? 'opacity-50 order-last' : ''}" data-product-id="${product.id}" data-activo="${product.activo !== false}">
       ${hasDiscount ? `
         <div class="absolute top-0 left-0 bg-red-500 text-white px-3 py-1 rounded-br-lg z-10">
           -${product.discount}%
