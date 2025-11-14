@@ -122,7 +122,8 @@ export async function renderProductsInGrid(containerId: string, categoria?: stri
       image: producto.imagen_url || '/images/placeholder.jpg',
       category: producto.categoria,
       discount: producto.descuento,
-      price: producto.precio
+      price: producto.precio,
+      activo: producto.activo // ✨ Nuevo: pasar estado activo
     })
   ).join('')
   

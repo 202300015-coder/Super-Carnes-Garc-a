@@ -42,8 +42,39 @@ function updateAdminButtons() {
   }
 }
 
-// Exponer función globalmente
+// Función global para activar productos inactivos
+async function activateProduct(productId: number) {
+  try {
+    console.log('🟢 Activando producto:', productId)
+    
+    const { error } = await supabase
+      .from('productos')
+      .update({ activo: true })
+      .eq('id', productId)
+    
+    if (error) throw error
+    
+    alert('✅ Producto activado correctamente')
+    
+    // Recargar productos en la página actual
+    if (currentPage === 'home') {
+      renderHome()
+    } else if (currentPage === 'carnes') {
+      renderMeats()
+    } else if (currentPage === 'productos') {
+      renderProducts()
+    } else if (currentPage === 'ofertas') {
+      renderOffers()
+    }
+  } catch (error) {
+    console.error('❌ Error activando producto:', error)
+    alert('❌ Error al activar el producto')
+  }
+}
+
+// Exponer funciones globalmente
 window.updateAdminButtons = updateAdminButtons
+window.activateProduct = activateProduct
 
 // Check authentication status
 async function checkAuth() {
@@ -64,11 +95,14 @@ async function checkAuth() {
       console.error('❌ Error obteniendo perfil:', error)
       console.error('❌ Detalles:', { userId: session.user.id, email: session.user.email })
       userRole = 'user' // Default a user si hay error
+      window.userRole = 'user'
     } else if (!profile) {
       console.error('❌ No se encontró perfil para el usuario')
       userRole = 'user'
+      window.userRole = 'user'
     } else {
       userRole = profile.role || 'user'
+      window.userRole = userRole
       console.log('✅ Rol obtenido de BD:', userRole)
     }
     
@@ -82,6 +116,7 @@ async function checkAuth() {
   }
   
   userRole = null
+  window.userRole = null
   console.log('❌ No hay sesión activa')
   return false
 }

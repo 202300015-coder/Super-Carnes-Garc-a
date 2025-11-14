@@ -180,7 +180,7 @@ export function setupEditProductModal() {
   deleteBtn?.addEventListener('click', async () => {
     if (!currentProductId) return
 
-    const confirmed = confirm('¿Estás seguro de que deseas eliminar este producto?\n\nEsta acción es reversible (eliminación lógica).')
+    const confirmed = confirm('¿Estás seguro de que deseas INACTIVAR este producto?\n\nEl producto quedará oculto para usuarios normales pero seguirá visible para administradores con efecto fantasma.')
     if (!confirmed) return
 
     try {
@@ -206,7 +206,7 @@ export function setupEditProductModal() {
 
       if (error) throw error
 
-      alert('✅ Producto eliminado correctamente')
+      alert('✅ Producto inactivado correctamente')
       closeModal()
 
       // Reload products
@@ -214,7 +214,7 @@ export function setupEditProductModal() {
 
     } catch (error) {
       console.error('❌ Error deleting product:', error)
-      alert('❌ Error al eliminar el producto')
+      alert('❌ Error al inactivar el producto')
     }
   })
 
