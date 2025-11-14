@@ -23,8 +23,8 @@ if (isDarkMode) {
 // Estado de autenticación
 let userRole: string | null = null
 
-// Initialize state
-let currentPage = 'home'
+// Initialize state - recuperar de localStorage si existe
+let currentPage = localStorage.getItem('currentPage') || 'home'
 
 // Función global para actualizar visibilidad de botones admin
 function updateAdminButtons() {
@@ -80,19 +80,22 @@ function setupDragAndDrop() {
     
     // Hacer draggable solo si es admin
     element.setAttribute('draggable', 'true')
-    element.style.cursor = 'move'
+    element.style.cursor = 'grab'
     
     // Evento: inicio del drag
     element.addEventListener('dragstart', (_e) => {
       draggedElement = element
       draggedId = parseInt(element.getAttribute('data-product-id') || '0')
-      element.classList.add('opacity-50')
+      element.style.cursor = 'grabbing'
+      element.classList.add('opacity-40', 'scale-95')
+      element.style.transition = 'all 0.2s ease'
       console.log('🎯 Arrastrando producto:', draggedId)
     })
     
     // Evento: fin del drag
     element.addEventListener('dragend', () => {
-      element.classList.remove('opacity-50')
+      element.classList.remove('opacity-40', 'scale-95')
+      element.style.cursor = 'grab'
       draggedElement = null
       draggedId = null
     })
@@ -101,25 +104,35 @@ function setupDragAndDrop() {
     element.addEventListener('dragover', (e) => {
       e.preventDefault()
       if (draggedElement && draggedElement !== element) {
-        element.classList.add('border-2', 'border-primary-500')
+        element.classList.add('ring-4', 'ring-primary-500', 'ring-offset-2', 'scale-105')
+        element.style.transition = 'all 0.2s ease'
       }
     })
     
     // Evento: cuando sale de encima
     element.addEventListener('dragleave', () => {
-      element.classList.remove('border-2', 'border-primary-500')
+      element.classList.remove('ring-4', 'ring-primary-500', 'ring-offset-2', 'scale-105')
     })
     
     // Evento: cuando se suelta encima
     element.addEventListener('drop', async (e) => {
       e.preventDefault()
-      element.classList.remove('border-2', 'border-primary-500')
+      element.classList.remove('ring-4', 'ring-primary-500', 'ring-offset-2', 'scale-105')
       
       if (!draggedElement || draggedElement === element) return
       
       const targetId = parseInt(element.getAttribute('data-product-id') || '0')
       
       if (!draggedId || !targetId) return
+      
+      // Confirmación antes de reordenar
+      const confirmed = confirm('¿Intercambiar el orden de estos productos?')
+      if (!confirmed) {
+        if (draggedElement) {
+          draggedElement.classList.remove('opacity-40', 'scale-95')
+        }
+        return
+      }
       
       console.log('📦 Intercambiando orden:', draggedId, '↔', targetId)
       
@@ -464,6 +477,7 @@ function attachUI() {
       const page = link.dataset.page
       if (page) {
         currentPage = page
+        localStorage.setItem('currentPage', page) // Guardar en localStorage
         
         // Scroll suave al inicio al cambiar de sección
         window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -542,6 +556,17 @@ async function init() {
   
   if (authenticated) {
     renderApp()
+    
+    // 🆕 Inicializar paginación si estamos en una página con productos
+    const { setupPagination } = await import('./pages/pagination')
+    
+    if (currentPage === 'meats') {
+      await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
+    } else if (currentPage === 'products') {
+      await setupPagination('productsGrid', 'productsPagination', 'productos', true)
+    } else if (currentPage === 'offers') {
+      await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
+    }
   } else {
     renderAuthPageView()
   }
