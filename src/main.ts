@@ -47,14 +47,18 @@ async function updateProductOrder(productId: number, newOrder: number) {
   try {
     console.log('🔄 Actualizando orden:', productId, '→', newOrder)
     
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('productos')
       .update({ orden: newOrder })
       .eq('id', productId)
+      .select()
     
-    if (error) throw error
+    if (error) {
+      console.error('❌ Error en UPDATE:', error)
+      throw error
+    }
     
-    console.log('✅ Orden actualizado')
+    console.log('✅ Orden actualizado exitosamente:', data)
     return true
   } catch (error) {
     console.error('❌ Error actualizando orden:', error)
@@ -92,12 +96,12 @@ function setupDragAndDrop() {
       console.log('🎯 Arrastrando producto:', draggedId)
     })
     
-    // Evento: fin del drag
+    // Evento: fin del drag - NO resetear draggedId aquí porque drop lo necesita
     element.addEventListener('dragend', () => {
       element.classList.remove('opacity-40', 'scale-95')
       element.style.cursor = 'grab'
-      draggedElement = null
-      draggedId = null
+      // NO resetear draggedElement ni draggedId aquí
+      // Se resetean en drop después de usarlos
     })
     
     // Evento: cuando otro elemento pasa por encima
@@ -135,6 +139,7 @@ function setupDragAndDrop() {
       }
       
       console.log('📦 Intercambiando orden:', draggedId, '↔', targetId)
+      console.log('📍 Página actual:', currentPage) // 🆕 Debug
       
       // Obtener órdenes actuales
       const { data: products } = await supabase
@@ -142,19 +147,54 @@ function setupDragAndDrop() {
         .select('id, orden')
         .in('id', [draggedId, targetId])
       
-      if (!products || products.length !== 2) return
+      console.log('📊 Productos obtenidos:', products)
       
-      const draggedProduct = products.find(p => p.id === draggedId)
-      const targetProduct = products.find(p => p.id === targetId)
+      if (!products || products.length !== 2) {
+        console.error('❌ Error: No se obtuvieron 2 productos. Recibidos:', products?.length)
+        return
+      }
       
-      if (!draggedProduct || !targetProduct) return
+      // 🔧 CORREGIDO: Comparar IDs convirtiendo a número
+      const draggedProduct = products.find(p => Number(p.id) === Number(draggedId))
+      const targetProduct = products.find(p => Number(p.id) === Number(targetId))
+      
+      console.log('🔍 Productos encontrados:', { draggedProduct, targetProduct }) // 🆕 Debug
+      
+      if (!draggedProduct || !targetProduct) {
+        console.error('❌ Error: No se encontraron productos en la respuesta')
+        console.error('❌ Buscando IDs:', { draggedId, targetId })
+        console.error('❌ IDs en respuesta:', products.map(p => ({ id: p.id, tipo: typeof p.id })))
+        return
+      }
+      
+      console.log('🔄 Actualizando órdenes en BD...')
+      
+      // 🔧 MEJORADO: Usar órdenes únicas basadas en ID si los órdenes son iguales
+      let newDraggedOrder = targetProduct.orden
+      let newTargetOrder = draggedProduct.orden
+      
+      // Si ambos tienen el mismo orden, usar los IDs como orden temporal
+      if (draggedProduct.orden === targetProduct.orden) {
+        console.log('⚠️ Advertencia: Ambos productos tienen el mismo orden, usando IDs como base')
+        newDraggedOrder = targetId
+        newTargetOrder = draggedId
+      }
       
       // Intercambiar órdenes
-      await updateProductOrder(draggedId, targetProduct.orden)
-      await updateProductOrder(targetId, draggedProduct.orden)
+      const result1 = await updateProductOrder(draggedId, newDraggedOrder)
+      const result2 = await updateProductOrder(targetId, newTargetOrder)
+      
+      console.log('✅ Resultado actualizaciones:', { result1, result2 })
+      
+      if (!result1 || !result2) {
+        console.error('❌ Error al actualizar órdenes en BD')
+        alert('❌ Error al reordenar productos. Verifica la consola.')
+        return
+      }
       
       // Recargar página actual con animación
       console.log('🔄 Recargando vista...')
+      console.log('📍 currentPage:', currentPage)
       const pageContent = document.getElementById('pageContent')
       
       if (pageContent && currentPage) {
@@ -181,6 +221,10 @@ function setupDragAndDrop() {
         
         console.log('✅ Vista actualizada con nuevo orden')
       }
+      
+      // 🔧 IMPORTANTE: Resetear draggedElement y draggedId DESPUÉS de usarlos
+      draggedElement = null
+      draggedId = null
     })
   })
 }
