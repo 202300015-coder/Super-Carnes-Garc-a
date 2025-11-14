@@ -1,12 +1,29 @@
--- Arreglar políticas RLS para permitir UPDATE del campo activo
+-- ⚠️ SOLUCIÓN DEFINITIVA: Eliminar TODAS las políticas UPDATE y crear una nueva permisiva
 -- Ejecutar en el SQL Editor de Supabase
 
--- Primero, eliminar TODAS las políticas UPDATE existentes
-DROP POLICY IF EXISTS "Admin can update productos" ON productos;
-DROP POLICY IF EXISTS "Solo admins pueden actualizar productos" ON productos;
+-- PASO 1: Ver todas las políticas UPDATE actuales
+SELECT policyname FROM pg_policies 
+WHERE tablename = 'productos' AND cmd = 'UPDATE';
 
--- Crear política UPDATE simplificada y permisiva para admins
-CREATE POLICY "Admin full update productos"
+-- PASO 2: Eliminar TODAS las políticas UPDATE (ajustar nombres según resultado anterior)
+DO $$ 
+DECLARE
+    pol RECORD;
+BEGIN
+    FOR pol IN 
+        SELECT policyname 
+        FROM pg_policies 
+        WHERE tablename = 'productos' 
+        AND schemaname = 'public'
+        AND cmd = 'UPDATE'
+    LOOP
+        EXECUTE format('DROP POLICY IF EXISTS %I ON productos', pol.policyname);
+        RAISE NOTICE 'Política eliminada: %', pol.policyname;
+    END LOOP;
+END $$;
+
+-- PASO 3: Crear política UPDATE nueva y permisiva
+CREATE POLICY "admins_can_update_productos"
 ON productos
 FOR UPDATE
 TO authenticated
@@ -17,18 +34,20 @@ USING (
     AND user_profiles.role = 'admin'
   )
 )
-WITH CHECK (true);  -- Permitir cualquier valor en el UPDATE si es admin
+WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM user_profiles
+    WHERE user_profiles.id = auth.uid()
+    AND user_profiles.role = 'admin'
+  )
+);
 
--- Verificar que la política se creó correctamente
+-- PASO 4: Verificar que solo existe la nueva política
 SELECT 
-  schemaname,
-  tablename,
   policyname,
-  permissive,
-  roles,
   cmd,
-  qual,
-  with_check
+  qual AS "condicion_USING",
+  with_check AS "condicion_WITH_CHECK"
 FROM pg_policies
 WHERE tablename = 'productos'
 AND cmd = 'UPDATE';

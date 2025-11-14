@@ -184,11 +184,25 @@ export function setupEditProductModal() {
     if (!confirmed) return
 
     try {
+      // 🔍 DIAGNÓSTICO: Verificar sesión antes del UPDATE
+      const { data: { session } } = await supabase.auth.getSession()
+      console.log('🔑 Sesión activa al eliminar:', session ? '✅ SÍ' : '❌ NO')
+      console.log('📧 Usuario:', session?.user?.email)
+      console.log('🆔 User ID:', session?.user?.id)
+      
+      if (!session) {
+        alert('❌ Error: No hay sesión activa. Por favor, vuelve a iniciar sesión.')
+        return
+      }
+
       // Eliminación lógica: marcar como inactivo
-      const { error } = await supabase
+      const { error, data } = await supabase
         .from('productos')
         .update({ activo: false })
         .eq('id', currentProductId)
+        .select()
+
+      console.log('📊 Respuesta UPDATE:', { data, error })
 
       if (error) throw error
 
@@ -199,7 +213,7 @@ export function setupEditProductModal() {
       reloadProducts()
 
     } catch (error) {
-      console.error('Error deleting product:', error)
+      console.error('❌ Error deleting product:', error)
       alert('❌ Error al eliminar el producto')
     }
   })
