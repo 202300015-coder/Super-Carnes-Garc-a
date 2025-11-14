@@ -1,15 +1,4 @@
-// Estado de paginación
-const productsPerPage = 16
-let currentHomePage = 1
-
 export function renderHome() {
-  // Renderizar productos después de que el HTML esté en el DOM
-  requestAnimationFrame(() => {
-    setTimeout(() => {
-      loadHomePage(1)
-    }, 100)
-  })
-
   return `
     <section class="relative bg-primary-600 dark:bg-gray-800 rounded-lg overflow-hidden mb-12">
       <div class="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-900 dark:from-gray-800 dark:to-gray-900 opacity-90"></div>

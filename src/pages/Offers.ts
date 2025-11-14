@@ -1,3 +1,6 @@
+// Offers.ts
+import { setupPagination } from './pagination'
+
 export function renderOffers() {
   // Iniciar carga de productos con ofertas (descuento > 0)
   setTimeout(() => {
@@ -11,10 +14,18 @@ export function renderOffers() {
         inputId: 'searchOffers',
         resultsId: 'searchOffersResults',
         gridId: 'offersGrid',
-        onlyOffers: true // Solo productos con descuento
+        onlyOffers: true
       })
     })
   }, 0)
+
+  // 👉 AGREGADO: inicialización de paginación (después del render)
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      setupPagination('offersGrid', 'offersPagination', undefined, false, true)
+      // último parámetro: onlyOffers = true
+    }, 100)
+  })
   
   return `
     <div class="container mx-auto px-4 py-8">
@@ -47,7 +58,7 @@ export function renderOffers() {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            
+
             <!-- Search Results Dropdown -->
             <div id="searchOffersResults" class="hidden absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg max-h-96 overflow-y-auto"></div>
           </div>
@@ -61,25 +72,11 @@ export function renderOffers() {
       </div>
 
       <!-- Offers Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="offersGrid">
-        <!-- Los productos con ofertas se cargarán dinámicamente -->
-      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="offersGrid"></div>
 
-      <!-- Pagination -->
-      <div class="flex justify-center space-x-2 mt-8">
-        <button class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-          Anterior
-        </button>
-        <button class="px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors">
-          1
-        </button>
-        <button class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-          2
-        </button>
-        <button class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-          Siguiente
-        </button>
-      </div>
+      <!-- Pagination dinámica -->
+      <div id="offersPagination" class="flex justify-center space-x-2 mt-8"></div>
+
     </div>
   `
 }

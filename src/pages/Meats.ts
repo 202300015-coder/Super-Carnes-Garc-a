@@ -1,3 +1,6 @@
+// Meats.ts
+import { setupPagination } from './pagination'
+
 export function renderMeats() {
   // Iniciar carga de productos después del render
   setTimeout(() => {
@@ -16,13 +19,22 @@ export function renderMeats() {
     })
   }, 0)
   
+  // 👉 AGREGADO: Inicializar paginación DESPUÉS de que el DOM existe
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      setupPagination('meatsGrid', 'meatsPagination', 'carnes')
+    }, 100)
+  })
+
   return `
     <div class="container mx-auto px-4 py-8">
+
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Nuestras Carnes</h1>
         
         <div class="flex items-center space-x-4">
-          <!-- Add Product Button (admin only) -->
+
+          <!-- Add Product Button -->
           <button 
             onclick="window.openAddProductModal()" 
             class="admin-only px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors hidden items-center space-x-2"
@@ -71,28 +83,11 @@ export function renderMeats() {
       </div>
 
       <!-- Products Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="meatsGrid">
-        <!-- Los productos se cargarán dinámicamente -->
-      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="meatsGrid"></div>
 
       <!-- Pagination -->
-      <div class="flex justify-center space-x-2 mt-8">
-        <button class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-          Anterior
-        </button>
-        <button class="px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors">
-          1
-        </button>
-        <button class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-          2
-        </button>
-        <button class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-          3
-        </button>
-        <button class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-          Siguiente
-        </button>
-      </div>
+      <div id="meatsPagination" class="flex justify-center space-x-2 mt-8"></div>
+
     </div>
   `
 }

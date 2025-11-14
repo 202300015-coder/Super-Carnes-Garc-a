@@ -54,7 +54,8 @@ async function activateProduct(productId: number) {
     
     if (error) throw error
     
-    console.log('✅ Producto activado, recargando página...')
+    console.log('✅ Producto activado exitosamente')
+    console.log('📍 Página actual:', currentPage)
     
     // Obtener referencia a pageContent ANTES del setTimeout
     const pageContent = document.getElementById('pageContent')
@@ -65,19 +66,29 @@ async function activateProduct(productId: number) {
       return
     }
     
+    console.log('🔄 Iniciando recarga de página:', currentPage)
+    
     // Recargar INMEDIATAMENTE sin setTimeout
     if (currentPage === 'home') {
+      console.log('🏠 Recargando Home...')
       pageContent.innerHTML = renderHome()
     } else if (currentPage === 'carnes') {
+      console.log('🥩 Recargando Carnes...')
       pageContent.innerHTML = renderMeats()
     } else if (currentPage === 'productos') {
+      console.log('📦 Recargando Productos...')
       pageContent.innerHTML = renderProducts()
     } else if (currentPage === 'ofertas') {
+      console.log('🏷️ Recargando Ofertas...')
       pageContent.innerHTML = renderOffers()
     }
     
+    console.log('✅ HTML actualizado, re-adjuntando eventos...')
+    
     // Re-adjuntar eventos DESPUÉS de renderizar
     attachUIForContent()
+    
+    console.log('✅ Eventos re-adjuntados')
     
     // Mostrar mensaje DESPUÉS de todo
     setTimeout(() => {
