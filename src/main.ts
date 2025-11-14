@@ -56,21 +56,33 @@ async function activateProduct(productId: number) {
     
     console.log('✅ Producto activado, recargando página...')
     
-    // Recargar productos en la página actual SIN setTimeout
-    if (currentPage === 'home') {
-      await renderHome()
-    } else if (currentPage === 'carnes') {
-      await renderMeats()
-    } else if (currentPage === 'productos') {
-      await renderProducts()
-    } else if (currentPage === 'ofertas') {
-      await renderOffers()
+    // Obtener referencia a pageContent ANTES del setTimeout
+    const pageContent = document.getElementById('pageContent')
+    
+    if (!pageContent) {
+      console.error('❌ No se encontró pageContent')
+      alert('✅ Producto activado correctamente')
+      return
     }
     
-    // Actualizar botones admin después de recargar
+    // Recargar INMEDIATAMENTE sin setTimeout
+    if (currentPage === 'home') {
+      pageContent.innerHTML = renderHome()
+    } else if (currentPage === 'carnes') {
+      pageContent.innerHTML = renderMeats()
+    } else if (currentPage === 'productos') {
+      pageContent.innerHTML = renderProducts()
+    } else if (currentPage === 'ofertas') {
+      pageContent.innerHTML = renderOffers()
+    }
+    
+    // Re-adjuntar eventos DESPUÉS de renderizar
+    attachUIForContent()
+    
+    // Mostrar mensaje DESPUÉS de todo
     setTimeout(() => {
-      updateAdminButtons()
-    }, 100)
+      alert('✅ Producto activado correctamente')
+    }, 200)
     
   } catch (error) {
     console.error('❌ Error activando producto:', error)

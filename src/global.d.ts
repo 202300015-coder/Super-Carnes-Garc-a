@@ -3,9 +3,10 @@
 declare global {
   interface Window {
     updateAdminButtons: () => void
-    openEditProductModal: (productId: number) => Promise<void>
+    openEditProductModal: (productId: number) => void
     activateProduct: (productId: number) => Promise<void>
     userRole: string | null
+    goToHomePage: (page: number) => void
   }
 }
 

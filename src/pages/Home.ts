@@ -1,14 +1,14 @@
-import { renderProductsInGrid } from './loadProducts'
-
 // Estado de paginación
+const productsPerPage = 16
 let currentHomePage = 1
-const productsPerPage = 12
 
 export function renderHome() {
   // Renderizar productos después de que el HTML esté en el DOM
-  setTimeout(() => {
-    loadHomePage(1)
-  }, 0)
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      loadHomePage(1)
+    }, 100)
+  })
 
   return `
     <section class="relative bg-primary-600 dark:bg-gray-800 rounded-lg overflow-hidden mb-12">
@@ -119,6 +119,7 @@ export function renderHome() {
 
 // Función para cargar página específica de productos
 async function loadHomePage(page: number) {
+  console.log('📄 Cargando Home página:', page)
   currentHomePage = page
   const { loadProductsFromDB } = await import('./loadProducts')
   const { ProductCard } = await import('../components/ui/ProductCard')
@@ -126,7 +127,12 @@ async function loadHomePage(page: number) {
   const grid = document.getElementById('homeProductsGrid')
   const pagination = document.getElementById('homePagination')
   
-  if (!grid || !pagination) return
+  if (!grid || !pagination) {
+    console.warn('⚠️ Elementos no encontrados - grid:', !!grid, 'pagination:', !!pagination)
+    return
+  }
+
+  console.log('✅ Elementos encontrados correctamente')
 
   // Obtener rol del usuario
   const userRole = (window as any).userRole || 'user'
@@ -134,12 +140,16 @@ async function loadHomePage(page: number) {
   // Cargar todos los productos
   const allProducts = await loadProductsFromDB(undefined, false, false, userRole)
   
+  console.log('📦 Productos cargados:', allProducts.length)
+  
   // Calcular paginación
   const totalProducts = allProducts.length
   const totalPages = Math.ceil(totalProducts / productsPerPage)
   const startIndex = (page - 1) * productsPerPage
   const endIndex = startIndex + productsPerPage
   const productsToShow = allProducts.slice(startIndex, endIndex)
+
+  console.log(`📊 Página ${page}/${totalPages} - Mostrando ${productsToShow.length} productos`)
 
   // Renderizar productos
   if (productsToShow.length > 0) {
@@ -160,6 +170,7 @@ async function loadHomePage(page: number) {
   }
 
   // Renderizar paginación
+  console.log('🎯 Renderizando paginación - Página actual:', page, 'Total páginas:', totalPages)
   renderPagination(pagination, page, totalPages)
 
   // Actualizar botones admin
@@ -172,11 +183,15 @@ async function loadHomePage(page: number) {
 
 // Función para renderizar botones de paginación
 function renderPagination(container: HTMLElement, currentPage: number, totalPages: number) {
+  console.log('🔘 renderPagination llamada - Página:', currentPage, 'Total:', totalPages)
+  
   if (totalPages <= 1) {
+    console.log('⚠️ Solo hay 1 página, ocultando paginación')
     container.innerHTML = ''
     return
   }
 
+  console.log('✅ Generando botones de paginación')
   let paginationHTML = ''
 
   // Botón Anterior
@@ -222,7 +237,7 @@ function renderPagination(container: HTMLElement, currentPage: number, totalPage
 }
 
 // Exponer función de navegación globalmente
-;(window as any).goToHomePage = (page: number) => {
+window.goToHomePage = (page: number) => {
   window.scrollTo({ top: 600, behavior: 'smooth' }) // Scroll a la sección de productos
   loadHomePage(page)
 }
