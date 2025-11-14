@@ -145,11 +145,11 @@ function setupDragAndDrop() {
       const pageContent = document.getElementById('pageContent')
       
       if (pageContent && currentPage) {
-        if (currentPage === 'carnes') {
+        if (currentPage === 'meats') {
           pageContent.innerHTML = renderMeats()
-        } else if (currentPage === 'productos') {
+        } else if (currentPage === 'products') {
           pageContent.innerHTML = renderProducts()
-        } else if (currentPage === 'ofertas') {
+        } else if (currentPage === 'offers') {
           pageContent.innerHTML = renderOffers()
         }
         
@@ -158,11 +158,11 @@ function setupDragAndDrop() {
         // Reinicializar paginación
         const { setupPagination } = await import('./pages/pagination')
         
-        if (currentPage === 'carnes') {
+        if (currentPage === 'meats') {
           await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
-        } else if (currentPage === 'productos') {
+        } else if (currentPage === 'products') {
           await setupPagination('productsGrid', 'productsPagination', 'productos', true)
-        } else if (currentPage === 'ofertas') {
+        } else if (currentPage === 'offers') {
           await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
         }
         
@@ -202,13 +202,13 @@ async function activateProduct(productId: number) {
     if (currentPage === 'home') {
       console.log('🏠 Recargando Home...')
       pageContent.innerHTML = renderHome()
-    } else if (currentPage === 'carnes') {
+    } else if (currentPage === 'meats') {
       console.log('🥩 Recargando Carnes...')
       pageContent.innerHTML = renderMeats()
-    } else if (currentPage === 'productos') {
+    } else if (currentPage === 'products') {
       console.log('📦 Recargando Productos...')
       pageContent.innerHTML = renderProducts()
-    } else if (currentPage === 'ofertas') {
+    } else if (currentPage === 'offers') {
       console.log('🏷️ Recargando Ofertas...')
       pageContent.innerHTML = renderOffers()
     }
@@ -221,11 +221,11 @@ async function activateProduct(productId: number) {
     // ✨ NUEVO: Reinicializar paginación según la página actual
     const { setupPagination } = await import('./pages/pagination')
     
-    if (currentPage === 'carnes') {
+    if (currentPage === 'meats') {
       await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
-    } else if (currentPage === 'productos') {
+    } else if (currentPage === 'products') {
       await setupPagination('productsGrid', 'productsPagination', 'productos', true)
-    } else if (currentPage === 'ofertas') {
+    } else if (currentPage === 'offers') {
       await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
     }
     
@@ -373,10 +373,8 @@ function attachUIForContent() {
         (el as HTMLElement).style.display = 'flex'
       })
       
-      // ✨ NUEVO: Configurar drag & drop para admin
-      setTimeout(() => {
-        setupDragAndDrop()
-      }, 200)
+      // Nota: setupDragAndDrop() se llama automáticamente desde pagination.ts
+      // después de renderizar productos, así que no es necesario llamarlo aquí
     } else {
       console.log('❌ Usuario NO es admin - ocultando botones (role:', userRole, ')')
       adminElements.forEach(el => {

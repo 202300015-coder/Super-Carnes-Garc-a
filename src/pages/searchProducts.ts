@@ -152,36 +152,37 @@ export function setupSearch(config: SearchConfig) {
           const productId = item.getAttribute('data-id')
           console.log('🎯 Producto seleccionado:', productId)
           
+          // Obtener el producto completo
+          const product = results.find(p => p.id.toString() === productId)
+          if (product) {
+            // Renderizar SOLO ese producto en el grid
+            const { ProductCard } = await import('../components/ui/ProductCard')
+            grid.innerHTML = ProductCard({
+              id: product.id,
+              name: product.nombre,
+              description: product.descripcion || '',
+              image: product.imagen_url || '/images/placeholder.jpg',
+              category: product.categoria,
+              discount: product.descuento,
+              price: product.precio,
+              activo: product.activo
+            })
+            
+            // Actualizar botones admin
+            if (typeof window.updateAdminButtons === 'function') {
+              window.updateAdminButtons()
+            }
+            
+            // Scroll suave al producto
+            setTimeout(() => {
+              grid.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }, 100)
+          }
+          
           // Limpiar input y dropdown
           input.value = ''
           resultsContainer.classList.add('hidden')
           resultsContainer.innerHTML = ''
-          
-          // Restaurar TODOS los productos con paginación
-          const { setupPagination } = await import('./pagination')
-          
-          let paginationId = ''
-          if (config.gridId === 'meatsGrid') paginationId = 'meatsPagination'
-          else if (config.gridId === 'productsGrid') paginationId = 'productsPagination'
-          else if (config.gridId === 'offersGrid') paginationId = 'offersPagination'
-          
-          if (paginationId) {
-            await setupPagination(
-              config.gridId,
-              paginationId,
-              config.categoria,
-              config.excludeCarnes,
-              config.onlyOffers
-            )
-          }
-          
-          // Scroll suave hacia el producto
-          setTimeout(() => {
-            const productCard = document.querySelector(`[data-product-id="${productId}"]`)
-            if (productCard) {
-              productCard.scrollIntoView({ behavior: 'smooth', block: 'center' })
-            }
-          }, 300)
         })
       })
     } else {
@@ -231,6 +232,13 @@ export function setupSearch(config: SearchConfig) {
       // Actualizar botones de admin después de renderizar
       if (typeof window.updateAdminButtons === 'function') {
         window.updateAdminButtons()
+      }
+      
+      // Configurar drag & drop si es admin
+      if (typeof window.setupDragAndDrop === 'function') {
+        setTimeout(() => {
+          window.setupDragAndDrop()
+        }, 100)
       }
     }
   })
