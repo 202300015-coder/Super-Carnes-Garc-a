@@ -19,12 +19,12 @@ function setupCategoryFilters() {
       button.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300')
       button.classList.add('bg-primary-600', 'text-white')
       
-      // Filtrar productos
+      // Filtrar productos (excluyendo carnes)
       const userRole = (window as any).userRole || 'user'
       let query = supabase
         .from('productos')
         .select('*')
-        .eq('categoria', 'productos')
+        .neq('categoria', 'carnes') // Excluir carnes
         .order('orden', { ascending: true })
       
       // Filtrar por activo si no es admin
