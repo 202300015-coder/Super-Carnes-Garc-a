@@ -139,15 +139,26 @@ export function renderMeats() {
       </div>
 
       <!-- Filters -->
-      <div class="flex flex-wrap gap-4 mb-8">
-        <button class="category-filter px-4 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors" data-category="Todos">
+      <div class="mb-4 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <button class="category-filter px-3 py-1.5 rounded-md text-sm bg-primary-600 text-white transition-colors whitespace-nowrap flex-shrink-0" data-category="Todos">
           Todos
         </button>
-        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" data-category="Premium">
+        <button class="category-filter px-3 py-1.5 rounded-md text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Premium">
           Premium
         </button>
-        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" data-category="Res">
+        <button class="category-filter px-3 py-1.5 rounded-md text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Res">
           Res
+        </button>
+        <button class="category-filter px-3 py-1.5 rounded-md text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Cerdo">
+          Cerdo
+        </button>
+        <button class="category-filter px-3 py-1.5 rounded-md text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Pollo">
+          Pollo
+        </button>
+        <button class="category-filter px-3 py-1.5 rounded-md text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Cortes Especiales">
+          Cortes Especiales
+        </button>
+      </div>
         </button>
         <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" data-category="Cerdo">
           Cerdo
