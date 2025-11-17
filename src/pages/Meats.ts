@@ -159,11 +159,6 @@ export function renderMeats() {
           Cortes Especiales
         </button>
       </div>
-        </button>
-        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" data-category="Cerdo">
-          Cerdo
-        </button>
-      </div>
 
       <!-- Products Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="meatsGrid"></div>
