@@ -36,7 +36,6 @@ export async function setupPagination(
           image: producto.imagen_url || '/images/placeholder.jpg',
           category: producto.categoria,
           discount: producto.descuento,
-          price: producto.precio,
           activo: producto.activo
         })
       ).join('')

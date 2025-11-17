@@ -103,8 +103,8 @@ export function EditProductModal() {
             ></textarea>
           </div>
 
-          <!-- Categoría y Precio -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Categoría -->
+          <div>
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Categoría *
@@ -119,21 +119,6 @@ export function EditProductModal() {
                 <option value="carnes">Carnes</option>
                 <option value="productos">Productos</option>
               </select>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Precio
-              </label>
-              <input
-                type="number"
-                id="editPrecio"
-                name="precio"
-                step="0.01"
-                min="0"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
-                placeholder="0.00"
-              >
             </div>
           </div>
 

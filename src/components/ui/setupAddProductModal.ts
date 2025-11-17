@@ -142,7 +142,6 @@ export function setupAddProductModal() {
     const nombre = formData.get('nombre') as string
     const descripcion = formData.get('descripcion') as string
     const categoria = formData.get('categoria') as string
-    const precio = parseFloat(formData.get('precio') as string) || 0
     const descuento = parseInt(formData.get('descuento') as string) || 0
 
     if (!nombre || !categoria) {
@@ -210,7 +209,6 @@ export function setupAddProductModal() {
           descripcion,
           imagen_url,
           categoria,
-          precio,
           descuento,
           orden: nextOrden,
           activo: true

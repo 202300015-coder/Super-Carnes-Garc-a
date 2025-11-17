@@ -164,7 +164,6 @@ export function setupSearch(config: SearchConfig) {
               image: product.imagen_url || '/images/placeholder.jpg',
               category: product.categoria,
               discount: product.descuento,
-              price: product.precio,
               activo: product.activo
             })
             
@@ -224,7 +223,6 @@ export function setupSearch(config: SearchConfig) {
             image: product.imagen_url || '/images/placeholder.jpg',
             category: product.categoria,
             discount: product.descuento,
-            price: product.precio,
             activo: product.activo
           })).join('')
         : '<p class="col-span-full text-center text-gray-500 dark:text-gray-400 py-8">No se encontraron productos</p>'

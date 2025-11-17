@@ -5,40 +5,12 @@ interface Product {
   image: string;
   category: string;
   discount?: number;
-  price?: number;
   activo?: boolean; // Nuevo: para mostrar efecto fantasma
 }
 
 export function ProductCard(product: Product) {
   const hasDiscount = typeof product.discount !== 'undefined' && product.discount > 0;
-  const hasPrice = typeof product.price !== 'undefined';
   const isInactive = product.activo === false; // Producto inactivo
-  
-  // Calcular precio con descuento
-  let priceDisplay = '';
-  if (hasPrice) {
-    const originalPrice = product.price!;
-    const finalPrice = hasDiscount 
-      ? originalPrice * (1 - product.discount! / 100) 
-      : originalPrice;
-    
-    priceDisplay = hasDiscount
-      ? `
-        <div class="flex items-center space-x-2">
-          <span class="text-lg font-bold text-primary-600 dark:text-primary-400">
-            $${finalPrice.toFixed(2)}
-          </span>
-          <span class="text-sm text-gray-500 line-through">
-            $${originalPrice.toFixed(2)}
-          </span>
-        </div>
-      `
-      : `
-        <span class="text-lg font-bold text-primary-600 dark:text-primary-400">
-          $${finalPrice.toFixed(2)}
-        </span>
-      `;
-  }
   
   return `
     <div class="product-card group relative bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 ${isInactive ? 'opacity-50 order-last' : ''}" data-product-id="${product.id}" data-activo="${product.activo !== false}">
@@ -98,11 +70,10 @@ export function ProductCard(product: Product) {
         <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
           ${product.description}
         </p>
-        <div class="mt-4 flex items-center justify-between">
+        <div class="mt-4">
           <span class="text-sm font-medium text-primary-600 dark:text-primary-400">
             ${product.category}
           </span>
-          ${priceDisplay}
         </div>
       </div>
     </div>
