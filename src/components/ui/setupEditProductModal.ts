@@ -65,6 +65,7 @@ export function setupEditProductModal() {
         (document.getElementById('editNombre') as HTMLInputElement).value = data.nombre || '';
         (document.getElementById('editDescripcion') as HTMLTextAreaElement).value = data.descripcion || '';
         (document.getElementById('editCategoria') as HTMLSelectElement).value = data.categoria || '';
+        (document.getElementById('editSubcategoria') as HTMLSelectElement).value = data.subcategoria || '';
         (document.getElementById('editDescuento') as HTMLInputElement).value = data.descuento?.toString() || '';
 
         // Show current image if exists
@@ -237,6 +238,7 @@ export function setupEditProductModal() {
     const nombre = formData.get('nombre') as string
     const descripcion = formData.get('descripcion') as string
     const categoria = formData.get('categoria') as string
+    const subcategoria = formData.get('subcategoria') as string || null
     const descuento = parseInt(formData.get('descuento') as string) || 0
 
     if (!nombre || !categoria) {
@@ -257,6 +259,7 @@ export function setupEditProductModal() {
         nombre,
         descripcion,
         categoria,
+        subcategoria,
         descuento,
       }
 

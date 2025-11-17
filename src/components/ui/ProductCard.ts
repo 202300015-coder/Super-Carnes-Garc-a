@@ -70,11 +70,6 @@ export function ProductCard(product: Product) {
         <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
           ${product.description}
         </p>
-        <div class="mt-4">
-          <span class="text-sm font-medium text-primary-600 dark:text-primary-400">
-            ${product.category}
-          </span>
-        </div>
       </div>
     </div>
   `

@@ -91,6 +91,36 @@ export function AddProductModal() {
             </select>
           </div>
 
+          <!-- Subcategoría -->
+          <div>
+            <label for="productSubcategory" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Subcategoría
+            </label>
+            <select 
+              id="productSubcategory" 
+              name="subcategoria"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
+            >
+              <option value="">Selecciona una subcategoría</option>
+              <!-- Carnes -->
+              <optgroup label="Carnes">
+                <option value="Premium">Premium</option>
+                <option value="Res">Res</option>
+                <option value="Cerdo">Cerdo</option>
+                <option value="Pollo">Pollo</option>
+                <option value="Cortes Especiales">Cortes Especiales</option>
+              </optgroup>
+              <!-- Productos -->
+              <optgroup label="Productos">
+                <option value="Abarrotes">Abarrotes</option>
+                <option value="Lácteos">Lácteos</option>
+                <option value="Embutidos">Embutidos</option>
+                <option value="Condimentos">Condimentos</option>
+                <option value="General">General</option>
+              </optgroup>
+            </select>
+          </div>
+
           <!-- Descuento -->
           <div>
             <div>

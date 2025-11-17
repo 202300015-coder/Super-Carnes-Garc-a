@@ -1,5 +1,74 @@
 // Products.ts
 import { setupPagination } from './pagination'
+import { supabase } from '../lib/supabaseClient'
+import { ProductCard } from '../components/ui/ProductCard'
+
+// Función para configurar los filtros de subcategoría
+function setupCategoryFilters() {
+  const filterButtons = document.querySelectorAll('.category-filter')
+  
+  filterButtons.forEach(button => {
+    button.addEventListener('click', async () => {
+      const subcategory = button.getAttribute('data-category')
+      
+      // Actualizar estilos de botones
+      filterButtons.forEach(btn => {
+        btn.classList.remove('bg-primary-600', 'text-white')
+        btn.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300')
+      })
+      button.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300')
+      button.classList.add('bg-primary-600', 'text-white')
+      
+      // Filtrar productos
+      const userRole = (window as any).userRole || 'user'
+      let query = supabase
+        .from('productos')
+        .select('*')
+        .eq('categoria', 'productos')
+        .order('orden', { ascending: true })
+      
+      // Filtrar por activo si no es admin
+      if (userRole !== 'admin') {
+        query = query.eq('activo', true)
+      }
+      
+      // Filtrar por subcategoría si no es "Todos"
+      if (subcategory && subcategory !== 'Todos') {
+        query = query.eq('subcategoria', subcategory)
+      }
+      
+      const { data: products } = await query
+      
+      // Renderizar productos filtrados
+      const grid = document.getElementById('productsGrid')
+      if (grid && products) {
+        grid.innerHTML = products.map(producto => 
+          ProductCard({
+            id: producto.id,
+            name: producto.nombre,
+            description: producto.descripcion || '',
+            image: producto.imagen_url || '/images/placeholder.jpg',
+            category: producto.categoria,
+            discount: producto.descuento,
+            activo: producto.activo
+          })
+        ).join('')
+        
+        // Actualizar botones admin
+        if (typeof window.updateAdminButtons === 'function') {
+          window.updateAdminButtons()
+        }
+        
+        // Configurar drag & drop
+        if (typeof window.setupDragAndDrop === 'function') {
+          setTimeout(() => {
+            window.setupDragAndDrop()
+          }, 100)
+        }
+      }
+    })
+  })
+}
 
 export function renderProducts() {
   // Iniciar carga de productos después del render
@@ -19,6 +88,9 @@ export function renderProducts() {
         excludeCarnes: true
       })
     })
+    
+    // 🆕 Configurar filtros de subcategoría
+    setupCategoryFilters()
   }, 0)
 
   // 👉 AGREGADO: Inicializar paginación DESPUÉS de que el DOM existe
@@ -64,7 +136,28 @@ export function renderProducts() {
             <!-- Search Results Dropdown -->
             <div id="searchProductsResults" class="hidden absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg"></div>
           </div>
-        </div>
+      <div class="mb-6 flex space-x-2 overflow-x-auto pb-2">
+        <button class="category-filter px-4 py-2 rounded-lg bg-primary-600 text-white transition-colors whitespace-nowrap" data-category="Todos">
+          Todos
+        </button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="Abarrotes">
+          Abarrotes
+        </button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="Lácteos">
+          Lácteos
+        </button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="Embutidos">
+          Embutidos
+        </button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="Condimentos">
+          Condimentos
+        </button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="General">
+          General
+        </button>
+      </div>
+
+      <!-- Products Grid -->
       </div>
 
       <!-- Products Grid -->
