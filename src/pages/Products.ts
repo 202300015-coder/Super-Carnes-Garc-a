@@ -136,6 +136,9 @@ export function renderProducts() {
             <!-- Search Results Dropdown -->
             <div id="searchProductsResults" class="hidden absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg"></div>
           </div>
+        </div>
+      </div>
+
       <!-- Filtros de Subcategoría -->
       <div class="mb-6 flex space-x-2 overflow-x-auto pb-2">
         <button class="category-filter px-4 py-2 rounded-lg bg-primary-600 text-white transition-colors whitespace-nowrap" data-category="Todos">
@@ -156,9 +159,6 @@ export function renderProducts() {
         <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="General">
           General
         </button>
-      </div>
-
-      <!-- Products Grid -->
       </div>
 
       <!-- Products Grid -->
