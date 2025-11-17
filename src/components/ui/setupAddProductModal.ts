@@ -210,6 +210,7 @@ export function setupAddProductModal() {
           descripcion,
           imagen_url,
           categoria,
+          subcategoria,
           descuento,
           orden: nextOrden,
           activo: true
