@@ -143,42 +143,16 @@ export function renderOffers() {
         <p class="text-primary-100 dark:text-primary-200">Aprovecha nuestras ofertas especiales. Solo productos con descuento activo.</p>
       </div>
 
-      <!-- Filtros de Subcategoría (todas las categorías) -->
+      <!-- Filtros de Subcategoría -->
       <div class="mb-6 flex space-x-2 overflow-x-auto pb-2">
         <button class="category-filter px-4 py-2 rounded-lg bg-primary-600 text-white transition-colors whitespace-nowrap" data-category="Todos">
           Todos
         </button>
-        <!-- Carnes -->
         <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="Premium">
           Premium
         </button>
         <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="Res">
           Res
-        </button>
-        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="Cerdo">
-          Cerdo
-        </button>
-        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="Pollo">
-          Pollo
-        </button>
-        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="Cortes Especiales">
-          Cortes Especiales
-        </button>
-        <!-- Productos -->
-        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="Abarrotes">
-          Abarrotes
-        </button>
-        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="Lácteos">
-          Lácteos
-        </button>
-        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="Embutidos">
-          Embutidos
-        </button>
-        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="Condimentos">
-          Condimentos
-        </button>
-        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap" data-category="General">
-          General
         </button>
       </div>
 
