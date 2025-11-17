@@ -1,10 +1,10 @@
 export function Navigation() {
   return `
     <header class="bg-primary-600 dark:bg-primary-900 text-white">
-      <nav class="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+      <nav class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <a href="#" class="text-lg sm:text-xl md:text-2xl font-bold truncate">Super Carnes García</a>
+          <div class="flex items-center space-x-4">
+            <a href="#" class="text-xl md:text-2xl font-bold">Super Carnes García</a>
           </div>
           
           <div class="hidden md:flex space-x-8">
@@ -14,8 +14,8 @@ export function Navigation() {
             <a href="#" class="nav-link" data-page="offers">Ofertas</a>
           </div>
 
-          <div class="flex items-center space-x-2 sm:space-x-4">
-            <button id="darkModeToggle" class="p-1.5 sm:p-2 hover:bg-primary-500 rounded-full">
+          <div class="flex items-center space-x-4">
+            <button id="darkModeToggle" class="p-2 hover:bg-primary-500 rounded-full">
               <svg class="w-6 h-6 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
               </svg>
@@ -60,12 +60,12 @@ export function Navigation() {
         </div>
 
         <!-- Mobile menu -->
-        <div id="mobileMenu" class="hidden md:hidden mt-3 pb-3 border-t border-primary-500 pt-3">
-          <div class="flex flex-col space-y-2">
-            <a href="#" class="nav-link text-center py-2 hover:bg-primary-500 rounded-lg" data-page="home">Inicio</a>
-            <a href="#" class="nav-link text-center py-2 hover:bg-primary-500 rounded-lg" data-page="meats">Carnes</a>
-            <a href="#" class="nav-link text-center py-2 hover:bg-primary-500 rounded-lg" data-page="products">Productos</a>
-            <a href="#" class="nav-link text-center py-2 hover:bg-primary-500 rounded-lg" data-page="offers">Ofertas</a>
+        <div id="mobileMenu" class="hidden md:hidden mt-4 pb-4">
+          <div class="flex flex-col space-y-4">
+            <a href="#" class="nav-link" data-page="home">Inicio</a>
+            <a href="#" class="nav-link" data-page="meats">Carnes</a>
+            <a href="#" class="nav-link" data-page="products">Productos</a>
+            <a href="#" class="nav-link" data-page="offers">Ofertas</a>
             <button class="w-full px-4 py-2 bg-white text-primary-600 rounded-lg hover:bg-primary-50 transition-colors">
               Iniciar Sesión
             </button>
