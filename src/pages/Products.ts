@@ -102,15 +102,15 @@ export function renderProducts() {
   })
   
   return `
-    <div class="container mx-auto px-4 py-8">
-      <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Nuestros Productos</h1>
+    <div class="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Nuestros Productos</h1>
         
-        <div class="flex items-center space-x-4">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
           <!-- Add Product Button (admin only) -->
           <button 
             onclick="window.openAddProductModal()" 
-            class="admin-only px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors hidden items-center space-x-2"
+            class="admin-only px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors hidden items-center justify-center space-x-2"
             title="Añadir producto"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +120,7 @@ export function renderProducts() {
           </button>
 
           <!-- Search Bar -->
-          <div class="relative w-64">
+          <div class="relative w-full sm:w-64">
             <input
               type="text"
               id="searchProducts"

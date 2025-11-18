@@ -1,10 +1,10 @@
 export function Navigation() {
   return `
     <header class="bg-primary-600 dark:bg-primary-900 text-white">
-      <nav class="container mx-auto px-4 py-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <a href="#" class="text-xl md:text-2xl font-bold">Super Carnes García</a>
+      <nav class="container mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+        <div class="flex items-center justify-between gap-2 sm:gap-4">
+          <div class="flex items-center space-x-2 sm:space-x-4">
+            <a href="#" class="text-base sm:text-xl md:text-2xl font-bold whitespace-nowrap">Super Carnes García</a>
           </div>
           
           <div class="hidden md:flex space-x-8">
@@ -14,8 +14,8 @@ export function Navigation() {
             <a href="#" class="nav-link" data-page="offers">Ofertas</a>
           </div>
 
-          <div class="flex items-center space-x-4">
-            <button id="darkModeToggle" class="p-2 hover:bg-primary-500 rounded-full">
+          <div class="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
+            <button id="darkModeToggle" class="p-1.5 sm:p-2 hover:bg-primary-500 rounded-full">
               <svg class="w-6 h-6 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
               </svg>
@@ -26,11 +26,11 @@ export function Navigation() {
             
             <!-- User Menu -->
             <div class="relative">
-              <button id="userMenuButton" class="hidden md:flex items-center space-x-2 px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button id="userMenuButton" class="hidden md:flex items-center space-x-2 px-3 lg:px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors">
+                <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                 </svg>
-                <span id="userEmail" class="text-sm"></span>
+                <span id="userEmail" class="text-xs lg:text-sm max-w-[120px] lg:max-w-none truncate"></span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                 </svg>
