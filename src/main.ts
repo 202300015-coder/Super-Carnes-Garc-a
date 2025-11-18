@@ -594,25 +594,63 @@ function attachUI() {
   })
 }
 
-// Initial render - check auth first
+// Initial render - NO requiere auth para visitantes
 async function init() {
+  // Por defecto, renderizar app como visitante
+  renderApp()
+  
+  // Intentar verificar si hay sesión de admin
   const authenticated = await checkAuth()
   
   if (authenticated) {
-    renderApp()
-    
-    // 🆕 Inicializar paginación si estamos en una página con productos
-    const { setupPagination } = await import('./pages/pagination')
-    
-    if (currentPage === 'meats') {
-      await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
-    } else if (currentPage === 'products') {
-      await setupPagination('productsGrid', 'productsPagination', 'productos', true)
-    } else if (currentPage === 'offers') {
-      await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
-    }
+    console.log('✅ Admin autenticado')
+    updateAdminButtons()
   } else {
-    renderAuthPageView()
+    console.log('👤 Visitante (sin login)')
+  }
+  
+  // 🆕 Configurar acceso secreto para admin (doble click en el logo)
+  setTimeout(() => {
+    const logo = document.getElementById('adminSecretAccess')
+    if (logo) {
+      let clickCount = 0
+      let clickTimer: NodeJS.Timeout | null = null
+      
+      logo.addEventListener('click', (e) => {
+        e.preventDefault()
+        clickCount++
+        
+        if (clickCount === 1) {
+          clickTimer = setTimeout(() => {
+            clickCount = 0
+          }, 500) // Reset después de 500ms
+        } else if (clickCount === 2) {
+          if (clickTimer) clearTimeout(clickTimer)
+          clickCount = 0
+          
+          // Abrir modal de login para admin
+          const loginModal = document.getElementById('loginModal')
+          if (loginModal) {
+            loginModal.classList.remove('hidden')
+            loginModal.classList.add('flex')
+          } else {
+            // Si no existe el modal, navegar a página de auth
+            renderAuthPageView()
+          }
+        }
+      })
+    }
+  }, 500)
+  
+  // 🆕 Inicializar paginación si estamos en una página con productos
+  const { setupPagination } = await import('./pages/pagination')
+  
+  if (currentPage === 'meats') {
+    await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
+  } else if (currentPage === 'products') {
+    await setupPagination('productsGrid', 'productsPagination', 'productos', true)
+  } else if (currentPage === 'offers') {
+    await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
   }
   
   // Listen for auth changes
@@ -621,7 +659,8 @@ async function init() {
     if (event === 'SIGNED_IN' && session) {
       window.location.reload()
     } else if (event === 'SIGNED_OUT') {
-      renderAuthPageView()
+      userRole = null
+      updateAdminButtons()
     }
   })
 }

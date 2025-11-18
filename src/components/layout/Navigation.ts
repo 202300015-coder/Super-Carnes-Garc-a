@@ -4,7 +4,7 @@ export function Navigation() {
       <nav class="container mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
         <div class="flex items-center justify-between gap-2 sm:gap-4">
           <div class="flex items-center space-x-2 sm:space-x-4">
-            <a href="#" class="text-base sm:text-xl md:text-2xl font-bold whitespace-nowrap">Super Carnes García</a>
+            <a href="#" id="adminSecretAccess" class="text-base sm:text-xl md:text-2xl font-bold whitespace-nowrap" title="Doble click para acceso admin">Super Carnes García</a>
           </div>
           
           <div class="hidden md:flex space-x-8">
@@ -66,9 +66,6 @@ export function Navigation() {
             <a href="#" class="nav-link" data-page="meats">Carnes</a>
             <a href="#" class="nav-link" data-page="products">Productos</a>
             <a href="#" class="nav-link" data-page="offers">Ofertas</a>
-            <button class="w-full px-4 py-2 bg-white text-primary-600 rounded-lg hover:bg-primary-50 transition-colors">
-              Iniciar Sesión
-            </button>
           </div>
         </div>
       </nav>
