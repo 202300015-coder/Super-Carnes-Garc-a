@@ -3,46 +3,46 @@ import { setupPagination } from './pagination'
 import { supabase } from '../lib/supabaseClient'
 import { ProductCard } from '../components/ui/ProductCard'
 
-// Función para configurar los filtros de subcategoría (incluyendo todas las subcategorías)
+// Función para configurar los filtros de subcategoría
 function setupCategoryFilters() {
   const filterButtons = document.querySelectorAll('.category-filter')
   
   filterButtons.forEach(button => {
     button.addEventListener('click', async () => {
       const subcategory = button.getAttribute('data-category')
-      
+
       // Actualizar estilos de botones
       filterButtons.forEach(btn => {
         btn.classList.remove('bg-primary-600', 'text-white')
         btn.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300')
       })
+
       button.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300')
       button.classList.add('bg-primary-600', 'text-white')
-      
+
       // Filtrar productos
       const userRole = (window as any).userRole || 'user'
+
       let query = supabase
         .from('productos')
         .select('*')
-        .gt('descuento', 0) // Solo ofertas
+        .gt('descuento', 0) // solo ofertas
         .order('orden', { ascending: true })
-      
-      // Filtrar por activo si no es admin
+
       if (userRole !== 'admin') {
         query = query.eq('activo', true)
       }
-      
-      // Filtrar por subcategoría si no es "Todos"
+
       if (subcategory && subcategory !== 'Todos') {
         query = query.eq('subcategoria', subcategory)
       }
-      
+
       const { data: products } = await query
-      
-      // Renderizar productos filtrados
+
       const grid = document.getElementById('offersGrid')
+
       if (grid && products) {
-        grid.innerHTML = products.map(producto => 
+        grid.innerHTML = products.map(producto =>
           ProductCard({
             id: producto.id,
             name: producto.nombre,
@@ -53,17 +53,13 @@ function setupCategoryFilters() {
             activo: producto.activo
           })
         ).join('')
-        
-        // Actualizar botones admin
+
         if (typeof window.updateAdminButtons === 'function') {
           window.updateAdminButtons()
         }
-        
-        // Configurar drag & drop
+
         if (typeof window.setupDragAndDrop === 'function') {
-          setTimeout(() => {
-            window.setupDragAndDrop()
-          }, 100)
+          setTimeout(() => window.setupDragAndDrop(), 100)
         }
       }
     })
@@ -71,13 +67,12 @@ function setupCategoryFilters() {
 }
 
 export function renderOffers() {
-  // Iniciar carga de productos con ofertas (descuento > 0)
+  // Cargar productos con ofertas
   setTimeout(() => {
     import('./loadProducts').then(module => {
-      module.renderProductsInGrid('offersGrid', undefined, false, true) // true = solo ofertas
+      module.renderProductsInGrid('offersGrid', undefined, false, true)
     })
-    
-    // Configurar búsqueda en ofertas (ambos tipos: carnes y productos)
+
     import('./searchProducts').then(module => {
       module.setupSearch({
         inputId: 'searchOffers',
@@ -86,26 +81,25 @@ export function renderOffers() {
         onlyOffers: true
       })
     })
-    
-    // 🆕 Configurar filtros de subcategoría
+
+    // Subcategorías
     setupCategoryFilters()
   }, 0)
 
-  // 👉 AGREGADO: inicialización de paginación (después del render)
+  // Paginación
   requestAnimationFrame(() => {
     setTimeout(() => {
       setupPagination('offersGrid', 'offersPagination', undefined, false, true)
-      // último parámetro: onlyOffers = true
     }, 100)
   })
-  
+
   return `
     <div class="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
+      
       <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Ofertas Especiales</h1>
-        
+
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
-          <!-- Add Product Button (admin only) -->
           <button 
             onclick="window.openAddProductModal()" 
             class="admin-only px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors hidden items-center justify-center space-x-2"
@@ -117,7 +111,7 @@ export function renderOffers() {
             <span>Añadir</span>
           </button>
 
-          <!-- Search Bar -->
+          <!-- Search bar -->
           <div class="relative w-full sm:w-64">
             <input
               type="text"
@@ -130,101 +124,45 @@ export function renderOffers() {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-
-            <!-- Search Results Dropdown -->
             <div id="searchOffersResults" class="hidden absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg max-h-96 overflow-y-auto"></div>
           </div>
         </div>
       </div>
 
-      <!-- Banner de Ofertas -->
+      <!-- Banner -->
       <div class="bg-gradient-to-r from-primary-600 to-primary-800 dark:from-primary-700 dark:to-primary-900 rounded-lg p-6 mb-8 text-white">
         <h2 class="text-2xl font-bold mb-2">¡Grandes Descuentos!</h2>
-        <p class="text-primary-100 dark:text-primary-200">Aprovecha nuestras ofertas especiales. Solo productos con descuento activo.</p>
+        <p class="text-primary-100 dark:text-primary-200">
+          Aprovecha nuestras ofertas especiales. Solo productos con descuento activo.
+        </p>
       </div>
 
-      <!-- Filtros de Subcategoría (todas las categorías) -->
+      <!-- Filtros -->
       <div class="mb-6 flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-3 px-3 sm:mx-0 sm:px-0">
-        <button class="category-filter px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-primary-600 text-white transition-colors whitespace-nowrap flex-shrink-0" data-category="Todos">
+        <button class="category-filter px-4 py-2 rounded-lg bg-primary-600 text-white" data-category="Todos">
           Todos
         </button>
+
         <!-- Carnes -->
-        <button class="category-filter px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Premium">
-          Premium
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Res">
-          Res
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Cerdo">
-          Cerdo
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Pollo">
-          Pollo
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Cortes Especiales">
-          Cortes Especiales
-        </button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300" data-category="Premium">Premium</button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300" data-category="Res">Res</button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300" data-category="Cerdo">Cerdo</button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300" data-category="Pollo">Pollo</button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300" data-category="Cortes Especiales">Cortes Especiales</button>
+
         <!-- Productos -->
-        <button class="category-filter px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Abarrotes">
-          Abarrotes
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Lácteos">
-          Lácteos
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Embutidos">
-          Embutidos
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Condimentos">
-          Condimentos
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="General">
-          General
-        </button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300" data-category="Abarrotes">Abarrotes</button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300" data-category="Lácteos">Lácteos</button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300" data-category="Embutidos">Embutidos</button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300" data-category="Condimentos">Condimentos</button>
+        <button class="category-filter px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300" data-category="General">General</button>
       </div>
 
       <!-- Offers Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="offersGrid"></div>
 
-      <!-- Pagination dinámica -->
+      <!-- Pagination -->
       <div id="offersPagination" class="flex justify-center space-x-2 mt-8"></div>
-        <button class="category-filter px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Premium">
-          Premium
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Res">
-          Res
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Cerdo">
-          Cerdo
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Pollo">
-          Pollo
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Cortes Especiales">
-          Cortes Esp.
-        </button>
-        <!-- Productos -->
-        <button class="category-filter px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Abarrotes">
-          Abarrotes
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Lácteos">
-          Lácteos
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Embutidos">
-          Embutidos
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="Condimentos">
-          Condimentos
-        </button>
-        <button class="category-filter px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0" data-category="General">
-          General
-        </button>
-      </div>
-
-      <!-- Offers Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6" id="offersGrid"></div>
-
-      <!-- Pagination dinámica -->
-      <div id="offersPagination" class="flex justify-center gap-1 sm:gap-2 mt-6 sm:mt-8 flex-wrap"></div>
 
     </div>
   `
