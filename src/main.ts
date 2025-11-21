@@ -78,6 +78,248 @@ function setupDragAndDrop() {
   const productCards = document.querySelectorAll('.product-card')
   let draggedElement: HTMLElement | null = null
   let draggedId: number | null = null
+  const pageNavigationArrows: HTMLElement[] = [] // Flechas de navegación entre páginas
+  
+  // 🆕 Funciones para manejar flechas de navegación entre páginas
+  const showPageNavigationArrows = () => {
+    // Limpiar flechas anteriores si existen
+    hidePageNavigationArrows()
+    
+    const container = document.querySelector('.container') as HTMLElement
+    if (!container) return
+    
+    // Crear flecha izquierda (página anterior)
+    const leftArrow = document.createElement('div')
+    leftArrow.id = 'pageNavLeft'
+    leftArrow.className = 'fixed left-4 top-1/2 transform -translate-y-1/2 z-50 bg-red-600 hover:bg-red-700 text-white rounded-full p-6 shadow-2xl cursor-pointer transition-all duration-300 hover:scale-110 animate-pulse'
+    leftArrow.innerHTML = `
+      <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/>
+      </svg>
+      <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs whitespace-nowrap bg-gray-900 px-2 py-1 rounded">
+        Página Anterior
+      </div>
+    `
+    
+    // Crear flecha derecha (página siguiente)
+    const rightArrow = document.createElement('div')
+    rightArrow.id = 'pageNavRight'
+    rightArrow.className = 'fixed right-4 top-1/2 transform -translate-y-1/2 z-50 bg-red-600 hover:bg-red-700 text-white rounded-full p-6 shadow-2xl cursor-pointer transition-all duration-300 hover:scale-110 animate-pulse'
+    rightArrow.innerHTML = `
+      <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/>
+      </svg>
+      <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs whitespace-nowrap bg-gray-900 px-2 py-1 rounded">
+        Página Siguiente
+      </div>
+    `
+    
+    // Eventos de drag sobre las flechas
+    leftArrow.addEventListener('dragover', (e) => {
+      e.preventDefault()
+      leftArrow.classList.add('scale-125', 'ring-4', 'ring-yellow-400')
+    })
+    
+    leftArrow.addEventListener('dragleave', () => {
+      leftArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
+    })
+    
+    leftArrow.addEventListener('drop', async (e) => {
+      e.preventDefault()
+      leftArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
+      await moveProductToPreviousPage()
+    })
+    
+    rightArrow.addEventListener('dragover', (e) => {
+      e.preventDefault()
+      rightArrow.classList.add('scale-125', 'ring-4', 'ring-yellow-400')
+    })
+    
+    rightArrow.addEventListener('dragleave', () => {
+      rightArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
+    })
+    
+    rightArrow.addEventListener('drop', async (e) => {
+      e.preventDefault()
+      rightArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
+      await moveProductToNextPage()
+    })
+    
+    document.body.appendChild(leftArrow)
+    document.body.appendChild(rightArrow)
+    
+    pageNavigationArrows.push(leftArrow, rightArrow)
+  }
+  
+  const hidePageNavigationArrows = () => {
+    pageNavigationArrows.forEach(arrow => {
+      if (arrow && arrow.parentNode) {
+        arrow.parentNode.removeChild(arrow)
+      }
+    })
+    pageNavigationArrows.length = 0
+  }
+  
+  const moveProductToPreviousPage = async () => {
+    if (!draggedId) return
+    
+    const confirmed = confirm('¿Mover este producto a la página anterior?')
+    if (!confirmed) {
+      hidePageNavigationArrows()
+      draggedElement = null
+      draggedId = null
+      return
+    }
+    
+    await moveProductBetweenPages(draggedId, 'previous')
+    hidePageNavigationArrows()
+    draggedElement = null
+    draggedId = null
+  }
+  
+  const moveProductToNextPage = async () => {
+    if (!draggedId) return
+    
+    const confirmed = confirm('¿Mover este producto a la página siguiente?')
+    if (!confirmed) {
+      hidePageNavigationArrows()
+      draggedElement = null
+      draggedId = null
+      return
+    }
+    
+    await moveProductBetweenPages(draggedId, 'next')
+    hidePageNavigationArrows()
+    draggedElement = null
+    draggedId = null
+  }
+  
+  const moveProductBetweenPages = async (productId: number, direction: 'previous' | 'next') => {
+    console.log(`📄 Moviendo producto ${productId} a la página ${direction === 'next' ? 'siguiente' : 'anterior'}`)
+    
+    // Determinar la categoría según la página actual
+    let categoria = ''
+    if (currentPage === 'meats') {
+      categoria = 'carnes'
+    } else if (currentPage === 'products') {
+      // Para productos, necesitamos excluir carnes en lugar de filtrar por categoría específica
+      const { data: allProducts } = await supabase
+        .from('productos')
+        .select('id, orden')
+        .neq('categoria', 'carnes')
+        .order('orden', { ascending: true })
+      
+      if (!allProducts) return
+      
+      const currentIndex = allProducts.findIndex(p => p.id === productId)
+      if (currentIndex === -1) return
+      
+      const PRODUCTS_PER_PAGE = 16
+      const targetOffset = direction === 'next' ? PRODUCTS_PER_PAGE : -PRODUCTS_PER_PAGE
+      const targetIndex = currentIndex + targetOffset
+      
+      if (targetIndex < 0 || targetIndex >= allProducts.length) {
+        alert('No hay página ' + (direction === 'next' ? 'siguiente' : 'anterior'))
+        return
+      }
+      
+      const currentProduct = allProducts[currentIndex]
+      const targetProduct = allProducts[targetIndex]
+      
+      await updateProductOrder(currentProduct.id, targetProduct.orden)
+      await updateProductOrder(targetProduct.id, currentProduct.orden)
+      
+      await reloadCurrentPage()
+      return
+    } else if (currentPage === 'offers') {
+      // Para ofertas, filtrar por descuento > 0
+      const { data: allProducts } = await supabase
+        .from('productos')
+        .select('id, orden')
+        .gt('descuento', 0)
+        .order('orden', { ascending: true })
+      
+      if (!allProducts) return
+      
+      const currentIndex = allProducts.findIndex(p => p.id === productId)
+      if (currentIndex === -1) return
+      
+      const PRODUCTS_PER_PAGE = 16
+      const targetOffset = direction === 'next' ? PRODUCTS_PER_PAGE : -PRODUCTS_PER_PAGE
+      const targetIndex = currentIndex + targetOffset
+      
+      if (targetIndex < 0 || targetIndex >= allProducts.length) {
+        alert('No hay página ' + (direction === 'next' ? 'siguiente' : 'anterior'))
+        return
+      }
+      
+      const currentProduct = allProducts[currentIndex]
+      const targetProduct = allProducts[targetIndex]
+      
+      await updateProductOrder(currentProduct.id, targetProduct.orden)
+      await updateProductOrder(targetProduct.id, currentProduct.orden)
+      
+      await reloadCurrentPage()
+      return
+    }
+    
+    // Para carnes (categoría específica)
+    const { data: allProducts } = await supabase
+      .from('productos')
+      .select('id, orden')
+      .eq('categoria', categoria)
+      .order('orden', { ascending: true })
+    
+    if (!allProducts) return
+    
+    const currentIndex = allProducts.findIndex(p => p.id === productId)
+    if (currentIndex === -1) return
+    
+    const PRODUCTS_PER_PAGE = 16
+    const targetOffset = direction === 'next' ? PRODUCTS_PER_PAGE : -PRODUCTS_PER_PAGE
+    const targetIndex = currentIndex + targetOffset
+    
+    if (targetIndex < 0 || targetIndex >= allProducts.length) {
+      alert('No hay página ' + (direction === 'next' ? 'siguiente' : 'anterior'))
+      return
+    }
+    
+    const currentProduct = allProducts[currentIndex]
+    const targetProduct = allProducts[targetIndex]
+    
+    await updateProductOrder(currentProduct.id, targetProduct.orden)
+    await updateProductOrder(targetProduct.id, currentProduct.orden)
+    
+    await reloadCurrentPage()
+  }
+  
+  const reloadCurrentPage = async () => {
+    const pageContent = document.getElementById('pageContent')
+    
+    if (pageContent && currentPage) {
+      if (currentPage === 'meats') {
+        pageContent.innerHTML = renderMeats()
+      } else if (currentPage === 'products') {
+        pageContent.innerHTML = renderProducts()
+      } else if (currentPage === 'offers') {
+        pageContent.innerHTML = renderOffers()
+      }
+      
+      attachUIForContent()
+      
+      const { setupPagination } = await import('./pages/pagination')
+      
+      if (currentPage === 'meats') {
+        await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
+      } else if (currentPage === 'products') {
+        await setupPagination('productsGrid', 'productsPagination', 'productos', true)
+      } else if (currentPage === 'offers') {
+        await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
+      }
+      
+      console.log('✅ Página recargada después de mover producto')
+    }
+  }
   
   productCards.forEach((card) => {
     const element = card as HTMLElement
@@ -94,14 +336,18 @@ function setupDragAndDrop() {
       element.classList.add('opacity-40', 'scale-95')
       element.style.transition = 'all 0.2s ease'
       console.log('🎯 Arrastrando producto:', draggedId)
+      
+      // 🆕 Mostrar flechas de navegación entre páginas
+      showPageNavigationArrows()
     })
     
-    // Evento: fin del drag - NO resetear draggedId aquí porque drop lo necesita
+    // Evento: fin del drag
     element.addEventListener('dragend', () => {
       element.classList.remove('opacity-40', 'scale-95')
       element.style.cursor = 'grab'
-      // NO resetear draggedElement ni draggedId aquí
-      // Se resetean en drop después de usarlos
+      
+      // 🆕 Ocultar flechas de navegación
+      hidePageNavigationArrows()
     })
     
     // Evento: cuando otro elemento pasa por encima
