@@ -36,12 +36,21 @@ export function LoginModal() {
                 <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Contraseña
                 </label>
-                <input
-                  type="password"
-                  id="password"
-                  class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-                  required
-                >
+                <div class="relative mt-1">
+                  <input
+                    type="password"
+                    id="password"
+                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white pr-10"
+                    required
+                  >
+                  <button
+                    type="button"
+                    id="togglePassword"
+                    class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  >
+                    <span id="passwordIcon">👁️</span>
+                  </button>
+                </div>
               </div>
 
               <div class="flex items-center justify-between">
@@ -104,24 +113,42 @@ export function LoginModal() {
                 <label for="registerPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Contraseña
                 </label>
-                <input
-                  type="password"
-                  id="registerPassword"
-                  class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-                  required
-                >
+                <div class="relative mt-1">
+                  <input
+                    type="password"
+                    id="registerPassword"
+                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white pr-10"
+                    required
+                  >
+                  <button
+                    type="button"
+                    id="toggleRegisterPassword"
+                    class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  >
+                    <span id="registerPasswordIcon">👁️</span>
+                  </button>
+                </div>
               </div>
 
               <div>
                 <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Confirmar Contraseña
                 </label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-                  required
-                >
+                <div class="relative mt-1">
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    class="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-700 dark:text-white pr-10"
+                    required
+                  >
+                  <button
+                    type="button"
+                    id="toggleConfirmPassword"
+                    class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  >
+                    <span id="confirmPasswordIcon">👁️</span>
+                  </button>
+                </div>
               </div>
 
               <div>

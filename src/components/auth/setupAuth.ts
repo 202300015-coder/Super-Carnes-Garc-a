@@ -10,6 +10,48 @@ export function setupAuth() {
     document.getElementById('loginModal')?.classList.add('hidden')
   })
 
+  // 👁️ Toggle password visibility - Login
+  document.getElementById('togglePassword')?.addEventListener('click', () => {
+    const passwordInput = document.getElementById('password') as HTMLInputElement
+    const passwordIcon = document.getElementById('passwordIcon')!
+    
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text'
+      passwordIcon.textContent = '👁️‍🗨️'
+    } else {
+      passwordInput.type = 'password'
+      passwordIcon.textContent = '👁️'
+    }
+  })
+
+  // 👁️ Toggle password visibility - Register Password
+  document.getElementById('toggleRegisterPassword')?.addEventListener('click', () => {
+    const passwordInput = document.getElementById('registerPassword') as HTMLInputElement
+    const passwordIcon = document.getElementById('registerPasswordIcon')!
+    
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text'
+      passwordIcon.textContent = '👁️‍🗨️'
+    } else {
+      passwordInput.type = 'password'
+      passwordIcon.textContent = '👁️'
+    }
+  })
+
+  // 👁️ Toggle password visibility - Confirm Password
+  document.getElementById('toggleConfirmPassword')?.addEventListener('click', () => {
+    const passwordInput = document.getElementById('confirmPassword') as HTMLInputElement
+    const passwordIcon = document.getElementById('confirmPasswordIcon')!
+    
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text'
+      passwordIcon.textContent = '👁️‍🗨️'
+    } else {
+      passwordInput.type = 'password'
+      passwordIcon.textContent = '👁️'
+    }
+  })
+
   // Switch entre formularios
   document.getElementById('switchToRegister')?.addEventListener('click', () => {
     document.getElementById('loginForm')?.classList.add('hidden')

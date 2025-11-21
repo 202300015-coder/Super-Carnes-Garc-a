@@ -22,6 +22,7 @@ if (isDarkMode) {
 
 // Estado de autenticación
 let userRole: string | null = null
+let isReloading: boolean = false // 🆕 Bandera para evitar recargas duplicadas
 
 // Initialize state - recuperar de localStorage si existe
 let currentPage = localStorage.getItem('currentPage') || 'home'
@@ -88,67 +89,99 @@ function setupDragAndDrop() {
     const container = document.querySelector('.container') as HTMLElement
     if (!container) return
     
-    // Crear flecha izquierda (página anterior)
+    // 🔴 FRANJA ROJA IZQUIERDA (página anterior)
+    const leftStripe = document.createElement('div')
+    leftStripe.id = 'leftPageStripe'
+    leftStripe.className = 'fixed left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-red-600 to-transparent opacity-70 z-40 pointer-events-auto'
+    leftStripe.style.transition = 'opacity 0.3s ease'
+    
+    // Flecha izquierda centrada en la franja
     const leftArrow = document.createElement('div')
     leftArrow.id = 'pageNavLeft'
-    leftArrow.className = 'fixed left-4 top-1/2 transform -translate-y-1/2 z-50 bg-red-600 hover:bg-red-700 text-white rounded-full p-6 shadow-2xl cursor-pointer transition-all duration-300 hover:scale-110 animate-pulse'
+    leftArrow.className = 'fixed left-6 top-1/2 transform -translate-y-1/2 z-50 bg-red-600 text-white rounded-full p-4 shadow-2xl animate-pulse pointer-events-none'
     leftArrow.innerHTML = `
-      <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/>
       </svg>
-      <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs whitespace-nowrap bg-gray-900 px-2 py-1 rounded">
-        Página Anterior
-      </div>
     `
     
-    // Crear flecha derecha (página siguiente)
+    // 🔴 FRANJA ROJA DERECHA (página siguiente)
+    const rightStripe = document.createElement('div')
+    rightStripe.id = 'rightPageStripe'
+    rightStripe.className = 'fixed right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-red-600 to-transparent opacity-70 z-40 pointer-events-auto'
+    rightStripe.style.transition = 'opacity 0.3s ease'
+    
+    // Flecha derecha centrada en la franja
     const rightArrow = document.createElement('div')
     rightArrow.id = 'pageNavRight'
-    rightArrow.className = 'fixed right-4 top-1/2 transform -translate-y-1/2 z-50 bg-red-600 hover:bg-red-700 text-white rounded-full p-6 shadow-2xl cursor-pointer transition-all duration-300 hover:scale-110 animate-pulse'
+    rightArrow.className = 'fixed right-6 top-1/2 transform -translate-y-1/2 z-50 bg-red-600 text-white rounded-full p-4 shadow-2xl animate-pulse pointer-events-none'
     rightArrow.innerHTML = `
-      <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/>
       </svg>
-      <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs whitespace-nowrap bg-gray-900 px-2 py-1 rounded">
-        Página Siguiente
-      </div>
     `
     
-    // Eventos de drag sobre las flechas
-    leftArrow.addEventListener('dragover', (e) => {
+    // Eventos de drag sobre la FRANJA izquierda
+    leftStripe.addEventListener('dragenter', (e) => {
       e.preventDefault()
+      leftStripe.style.opacity = '1'
       leftArrow.classList.add('scale-125', 'ring-4', 'ring-yellow-400')
     })
     
-    leftArrow.addEventListener('dragleave', () => {
-      leftArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
+    leftStripe.addEventListener('dragover', (e) => {
+      e.preventDefault()
     })
     
-    leftArrow.addEventListener('drop', async (e) => {
+    leftStripe.addEventListener('dragleave', (e) => {
+      // Solo ocultar si realmente salimos de la franja
+      const rect = leftStripe.getBoundingClientRect()
+      if (e.clientX > rect.right) {
+        leftStripe.style.opacity = '0.7'
+        leftArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
+      }
+    })
+    
+    leftStripe.addEventListener('drop', async (e) => {
       e.preventDefault()
+      leftStripe.style.opacity = '0.7'
       leftArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
       await moveProductToPreviousPage()
     })
     
-    rightArrow.addEventListener('dragover', (e) => {
+    // Eventos de drag sobre la FRANJA derecha
+    rightStripe.addEventListener('dragenter', (e) => {
       e.preventDefault()
+      rightStripe.style.opacity = '1'
       rightArrow.classList.add('scale-125', 'ring-4', 'ring-yellow-400')
     })
     
-    rightArrow.addEventListener('dragleave', () => {
-      rightArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
+    rightStripe.addEventListener('dragover', (e) => {
+      e.preventDefault()
     })
     
-    rightArrow.addEventListener('drop', async (e) => {
+    rightStripe.addEventListener('dragleave', (e) => {
+      // Solo ocultar si realmente salimos de la franja
+      const rect = rightStripe.getBoundingClientRect()
+      if (e.clientX < rect.left) {
+        rightStripe.style.opacity = '0.7'
+        rightArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
+      }
+    })
+    
+    rightStripe.addEventListener('drop', async (e) => {
       e.preventDefault()
+      rightStripe.style.opacity = '0.7'
       rightArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
       await moveProductToNextPage()
     })
     
+    // Agregar al DOM
+    document.body.appendChild(leftStripe)
     document.body.appendChild(leftArrow)
+    document.body.appendChild(rightStripe)
     document.body.appendChild(rightArrow)
     
-    pageNavigationArrows.push(leftArrow, rightArrow)
+    pageNavigationArrows.push(leftStripe, leftArrow, rightStripe, rightArrow)
   }
   
   const hidePageNavigationArrows = () => {
@@ -161,11 +194,21 @@ function setupDragAndDrop() {
   }
   
   const moveProductToPreviousPage = async () => {
-    if (!draggedId) return
+    if (!draggedId) {
+      console.error('❌ No hay producto arrastrado')
+      return
+    }
+    
+    console.log('📄 Intentando mover producto', draggedId, 'a página anterior')
     
     const confirmed = confirm('¿Mover este producto a la página anterior?')
     if (!confirmed) {
+      console.log('❌ Usuario canceló el movimiento')
       hidePageNavigationArrows()
+      if (draggedElement) {
+        draggedElement.classList.remove('opacity-40', 'scale-95')
+        draggedElement.style.cursor = 'grab'
+      }
       draggedElement = null
       draggedId = null
       return
@@ -173,16 +216,30 @@ function setupDragAndDrop() {
     
     await moveProductBetweenPages(draggedId, 'previous')
     hidePageNavigationArrows()
+    if (draggedElement) {
+      draggedElement.classList.remove('opacity-40', 'scale-95')
+      draggedElement.style.cursor = 'grab'
+    }
     draggedElement = null
     draggedId = null
   }
   
   const moveProductToNextPage = async () => {
-    if (!draggedId) return
+    if (!draggedId) {
+      console.error('❌ No hay producto arrastrado')
+      return
+    }
+    
+    console.log('📄 Intentando mover producto', draggedId, 'a página siguiente')
     
     const confirmed = confirm('¿Mover este producto a la página siguiente?')
     if (!confirmed) {
+      console.log('❌ Usuario canceló el movimiento')
       hidePageNavigationArrows()
+      if (draggedElement) {
+        draggedElement.classList.remove('opacity-40', 'scale-95')
+        draggedElement.style.cursor = 'grab'
+      }
       draggedElement = null
       draggedId = null
       return
@@ -190,6 +247,10 @@ function setupDragAndDrop() {
     
     await moveProductBetweenPages(draggedId, 'next')
     hidePageNavigationArrows()
+    if (draggedElement) {
+      draggedElement.classList.remove('opacity-40', 'scale-95')
+      draggedElement.style.cursor = 'grab'
+    }
     draggedElement = null
     draggedId = null
   }
@@ -294,31 +355,53 @@ function setupDragAndDrop() {
   }
   
   const reloadCurrentPage = async () => {
+    if (isReloading) {
+      console.log('⚠️ Ya hay una recarga en proceso, saltando...')
+      return
+    }
+    
+    isReloading = true
+    console.log('🔄 Recargando página actual:', currentPage)
     const pageContent = document.getElementById('pageContent')
     
-    if (pageContent && currentPage) {
-      if (currentPage === 'meats') {
-        pageContent.innerHTML = renderMeats()
-      } else if (currentPage === 'products') {
-        pageContent.innerHTML = renderProducts()
-      } else if (currentPage === 'offers') {
-        pageContent.innerHTML = renderOffers()
-      }
-      
-      attachUIForContent()
-      
-      const { setupPagination } = await import('./pages/pagination')
-      
-      if (currentPage === 'meats') {
-        await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
-      } else if (currentPage === 'products') {
-        await setupPagination('productsGrid', 'productsPagination', 'productos', true)
-      } else if (currentPage === 'offers') {
-        await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
-      }
-      
-      console.log('✅ Página recargada después de mover producto')
+    if (!pageContent || !currentPage) {
+      console.error('❌ No se puede recargar: pageContent o currentPage no disponible')
+      isReloading = false
+      return
     }
+    
+    // Limpiar el contenido primero
+    pageContent.innerHTML = ''
+    
+    // Renderizar el contenido nuevo
+    if (currentPage === 'meats') {
+      pageContent.innerHTML = renderMeats()
+    } else if (currentPage === 'products') {
+      pageContent.innerHTML = renderProducts()
+    } else if (currentPage === 'offers') {
+      pageContent.innerHTML = renderOffers()
+    }
+    
+    // Esperar a que el DOM se actualice antes de adjuntar eventos
+    await new Promise(resolve => setTimeout(resolve, 100))
+    
+    // Adjuntar eventos y funcionalidad
+    attachUIForContent()
+    
+    // Importar y configurar paginación
+    const { setupPagination } = await import('./pages/pagination')
+    
+    if (currentPage === 'meats') {
+      await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
+    } else if (currentPage === 'products') {
+      await setupPagination('productsGrid', 'productsPagination', 'productos', true)
+    } else if (currentPage === 'offers') {
+      await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
+    }
+    
+    console.log('✅ Página recargada exitosamente')
+    isReloading = false
+    alert('✅ Producto movido correctamente')
   }
   
   productCards.forEach((card) => {
@@ -439,11 +522,24 @@ function setupDragAndDrop() {
       }
       
       // Recargar página actual con animación
-      console.log('🔄 Recargando vista...')
+      console.log('🔄 Recargando vista después de intercambio...')
       console.log('📍 currentPage:', currentPage)
+      
+      if (isReloading) {
+        console.log('⚠️ Ya hay una recarga en proceso, saltando...')
+        draggedElement = null
+        draggedId = null
+        return
+      }
+      
+      isReloading = true
       const pageContent = document.getElementById('pageContent')
       
       if (pageContent && currentPage) {
+        // Limpiar contenido
+        pageContent.innerHTML = ''
+        
+        // Renderizar de nuevo
         if (currentPage === 'meats') {
           pageContent.innerHTML = renderMeats()
         } else if (currentPage === 'products') {
@@ -451,6 +547,9 @@ function setupDragAndDrop() {
         } else if (currentPage === 'offers') {
           pageContent.innerHTML = renderOffers()
         }
+        
+        // Esperar un momento antes de adjuntar eventos
+        await new Promise(resolve => setTimeout(resolve, 100))
         
         attachUIForContent()
         
@@ -466,6 +565,9 @@ function setupDragAndDrop() {
         }
         
         console.log('✅ Vista actualizada con nuevo orden')
+        isReloading = false
+      } else {
+        isReloading = false
       }
       
       // 🔧 IMPORTANTE: Resetear draggedElement y draggedId DESPUÉS de usarlos
