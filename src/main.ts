@@ -258,99 +258,89 @@ function setupDragAndDrop() {
   const moveProductBetweenPages = async (productId: number, direction: 'previous' | 'next') => {
     console.log(`📄 Moviendo producto ${productId} a la página ${direction === 'next' ? 'siguiente' : 'anterior'}`)
     
-    // Determinar la categoría según la página actual
-    let categoria = ''
+    const PRODUCTS_PER_PAGE = 16
+    let allProducts: any[] = []
+    
+    // Obtener los productos según la página actual
     if (currentPage === 'meats') {
-      categoria = 'carnes'
+      // Para carnes, filtrar por categoría
+      const { data } = await supabase
+        .from('productos')
+        .select('id, orden')
+        .eq('categoria', 'carnes')
+        .order('orden', { ascending: true })
+      
+      allProducts = data || []
     } else if (currentPage === 'products') {
-      // Para productos, necesitamos excluir carnes en lugar de filtrar por categoría específica
-      const { data: allProducts } = await supabase
+      // Para productos, excluir carnes
+      const { data } = await supabase
         .from('productos')
         .select('id, orden')
         .neq('categoria', 'carnes')
         .order('orden', { ascending: true })
       
-      if (!allProducts) return
-      
-      const currentIndex = allProducts.findIndex(p => p.id === productId)
-      if (currentIndex === -1) return
-      
-      const PRODUCTS_PER_PAGE = 16
-      const targetOffset = direction === 'next' ? PRODUCTS_PER_PAGE : -PRODUCTS_PER_PAGE
-      const targetIndex = currentIndex + targetOffset
-      
-      if (targetIndex < 0 || targetIndex >= allProducts.length) {
-        alert('No hay página ' + (direction === 'next' ? 'siguiente' : 'anterior'))
-        return
-      }
-      
-      const currentProduct = allProducts[currentIndex]
-      const targetProduct = allProducts[targetIndex]
-      
-      await updateProductOrder(currentProduct.id, targetProduct.orden)
-      await updateProductOrder(targetProduct.id, currentProduct.orden)
-      
-      await reloadCurrentPage()
-      return
+      allProducts = data || []
     } else if (currentPage === 'offers') {
       // Para ofertas, filtrar por descuento > 0
-      const { data: allProducts } = await supabase
+      const { data } = await supabase
         .from('productos')
         .select('id, orden')
         .gt('descuento', 0)
         .order('orden', { ascending: true })
       
-      if (!allProducts) return
-      
-      const currentIndex = allProducts.findIndex(p => p.id === productId)
-      if (currentIndex === -1) return
-      
-      const PRODUCTS_PER_PAGE = 16
-      const targetOffset = direction === 'next' ? PRODUCTS_PER_PAGE : -PRODUCTS_PER_PAGE
-      const targetIndex = currentIndex + targetOffset
-      
-      if (targetIndex < 0 || targetIndex >= allProducts.length) {
-        alert('No hay página ' + (direction === 'next' ? 'siguiente' : 'anterior'))
-        return
-      }
-      
-      const currentProduct = allProducts[currentIndex]
-      const targetProduct = allProducts[targetIndex]
-      
-      await updateProductOrder(currentProduct.id, targetProduct.orden)
-      await updateProductOrder(targetProduct.id, currentProduct.orden)
-      
-      await reloadCurrentPage()
+      allProducts = data || []
+    } else {
+      console.error('❌ Página actual no soportada para mover productos:', currentPage)
       return
     }
     
-    // Para carnes (categoría específica)
-    const { data: allProducts } = await supabase
-      .from('productos')
-      .select('id, orden')
-      .eq('categoria', categoria)
-      .order('orden', { ascending: true })
+    if (!allProducts || allProducts.length === 0) {
+      console.error('❌ No se obtuvieron productos')
+      return
+    }
     
-    if (!allProducts) return
-    
+    // Encontrar el índice del producto actual
     const currentIndex = allProducts.findIndex(p => p.id === productId)
-    if (currentIndex === -1) return
+    if (currentIndex === -1) {
+      console.error('❌ No se encontró el producto en la lista')
+      return
+    }
     
-    const PRODUCTS_PER_PAGE = 16
+    // Calcular el índice objetivo
     const targetOffset = direction === 'next' ? PRODUCTS_PER_PAGE : -PRODUCTS_PER_PAGE
     const targetIndex = currentIndex + targetOffset
     
+    console.log('📊 Debug movimiento:', {
+      currentIndex,
+      targetIndex,
+      targetOffset,
+      totalProducts: allProducts.length,
+      direction
+    })
+    
+    // Validar que el índice objetivo existe
     if (targetIndex < 0 || targetIndex >= allProducts.length) {
       alert('No hay página ' + (direction === 'next' ? 'siguiente' : 'anterior'))
+      console.log('⚠️ Índice objetivo fuera de rango:', targetIndex)
       return
     }
     
+    // Obtener los productos a intercambiar
     const currentProduct = allProducts[currentIndex]
     const targetProduct = allProducts[targetIndex]
     
+    console.log('🔄 Intercambiando orden:', {
+      currentId: currentProduct.id,
+      currentOrder: currentProduct.orden,
+      targetId: targetProduct.id,
+      targetOrder: targetProduct.orden
+    })
+    
+    // Intercambiar órdenes
     await updateProductOrder(currentProduct.id, targetProduct.orden)
     await updateProductOrder(targetProduct.id, currentProduct.orden)
     
+    // Recargar la página actual
     await reloadCurrentPage()
   }
   
