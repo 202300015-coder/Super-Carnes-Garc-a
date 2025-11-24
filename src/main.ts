@@ -338,20 +338,49 @@ function setupDragAndDrop() {
       return
     }
     
-    // Calcular el índice objetivo
-    const targetOffset = direction === 'next' ? PRODUCTS_PER_PAGE : -PRODUCTS_PER_PAGE
-    const targetIndex = currentIndex + targetOffset
+    // 🆕 NUEVA LÓGICA: Calcular página actual y determinar si existe página destino
+    const currentPageNum = Math.floor(currentIndex / PRODUCTS_PER_PAGE) + 1
+    const totalPages = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE)
+    
+    let targetPageNum: number
+    let targetIndex: number
+    
+    if (direction === 'next') {
+      targetPageNum = currentPageNum + 1
+      // Validar que existe la página siguiente
+      if (targetPageNum > totalPages) {
+        alert('No hay página siguiente')
+        console.log('⚠️ No existe página siguiente. Página actual:', currentPageNum, 'Total páginas:', totalPages)
+        return
+      }
+      // Mover al PRIMER producto de la página siguiente
+      targetIndex = (targetPageNum - 1) * PRODUCTS_PER_PAGE
+    } else {
+      targetPageNum = currentPageNum - 1
+      // Validar que existe la página anterior
+      if (targetPageNum < 1) {
+        alert('No hay página anterior')
+        console.log('⚠️ No existe página anterior. Página actual:', currentPageNum)
+        return
+      }
+      // Mover al ÚLTIMO producto de la página anterior
+      const startOfPrevPage = (targetPageNum - 1) * PRODUCTS_PER_PAGE
+      const endOfPrevPage = Math.min(targetPageNum * PRODUCTS_PER_PAGE - 1, allProducts.length - 1)
+      targetIndex = endOfPrevPage
+    }
     
     console.log('📊 Debug movimiento:', {
       currentIndex,
+      currentPageNum,
+      targetPageNum,
       targetIndex,
-      targetOffset,
       totalProducts: allProducts.length,
+      totalPages,
       direction,
       currentProductId: productId
     })
     
-    // Validar que el índice objetivo existe en el array
+    // Validar que el índice objetivo existe (doble verificación)
     if (targetIndex < 0 || targetIndex >= allProducts.length) {
       alert('No hay página ' + (direction === 'next' ? 'siguiente' : 'anterior'))
       console.log('⚠️ Índice objetivo fuera de rango:', targetIndex, '(total productos:', allProducts.length, ')')
@@ -366,7 +395,9 @@ function setupDragAndDrop() {
       currentId: currentProduct.id,
       currentOrder: currentProduct.orden,
       targetId: targetProduct.id,
-      targetOrder: targetProduct.orden
+      targetOrder: targetProduct.orden,
+      movingFrom: `Página ${currentPageNum}, índice ${currentIndex}`,
+      movingTo: `Página ${targetPageNum}, índice ${targetIndex}`
     })
     
     // Intercambiar órdenes
