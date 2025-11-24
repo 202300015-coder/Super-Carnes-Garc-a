@@ -261,33 +261,57 @@ function setupDragAndDrop() {
     const PRODUCTS_PER_PAGE = 16
     let allProducts: any[] = []
     
+    // 🔧 CRÍTICO: Obtener productos aplicando los MISMOS filtros que la paginación
+    // Esto asegura que estamos trabajando con el mismo conjunto de datos visible
+    
     // Obtener los productos según la página actual
     if (currentPage === 'meats') {
       // Para carnes, filtrar por categoría
-      const { data } = await supabase
+      let query = supabase
         .from('productos')
         .select('id, orden')
         .eq('categoria', 'carnes')
-        .order('orden', { ascending: true })
       
+      // 🆕 IMPORTANTE: Filtrar por activo si NO es admin (igual que la paginación)
+      if (userRole !== 'admin') {
+        query = query.eq('activo', true)
+      }
+      
+      query = query.order('orden', { ascending: true })
+      
+      const { data } = await query
       allProducts = data || []
     } else if (currentPage === 'products') {
       // Para productos, excluir carnes
-      const { data } = await supabase
+      let query = supabase
         .from('productos')
         .select('id, orden')
         .neq('categoria', 'carnes')
-        .order('orden', { ascending: true })
       
+      // 🆕 IMPORTANTE: Filtrar por activo si NO es admin
+      if (userRole !== 'admin') {
+        query = query.eq('activo', true)
+      }
+      
+      query = query.order('orden', { ascending: true })
+      
+      const { data } = await query
       allProducts = data || []
     } else if (currentPage === 'offers') {
       // Para ofertas, filtrar por descuento > 0
-      const { data } = await supabase
+      let query = supabase
         .from('productos')
         .select('id, orden')
         .gt('descuento', 0)
-        .order('orden', { ascending: true })
       
+      // 🆕 IMPORTANTE: Filtrar por activo si NO es admin
+      if (userRole !== 'admin') {
+        query = query.eq('activo', true)
+      }
+      
+      query = query.order('orden', { ascending: true })
+      
+      const { data } = await query
       allProducts = data || []
     } else {
       console.error('❌ Página actual no soportada para mover productos:', currentPage)
@@ -299,10 +323,18 @@ function setupDragAndDrop() {
       return
     }
     
-    // Encontrar el índice del producto actual
+    console.log('📊 Productos obtenidos para movimiento:', {
+      total: allProducts.length,
+      userRole,
+      currentPage,
+      productIds: allProducts.map(p => p.id)
+    })
+    
+    // Encontrar el índice del producto actual en el array filtrado
     const currentIndex = allProducts.findIndex(p => p.id === productId)
     if (currentIndex === -1) {
       console.error('❌ No se encontró el producto en la lista')
+      alert('❌ Error: El producto no se encuentra en la lista actual')
       return
     }
     
@@ -315,13 +347,14 @@ function setupDragAndDrop() {
       targetIndex,
       targetOffset,
       totalProducts: allProducts.length,
-      direction
+      direction,
+      currentProductId: productId
     })
     
-    // Validar que el índice objetivo existe
+    // Validar que el índice objetivo existe en el array
     if (targetIndex < 0 || targetIndex >= allProducts.length) {
       alert('No hay página ' + (direction === 'next' ? 'siguiente' : 'anterior'))
-      console.log('⚠️ Índice objetivo fuera de rango:', targetIndex)
+      console.log('⚠️ Índice objetivo fuera de rango:', targetIndex, '(total productos:', allProducts.length, ')')
       return
     }
     
