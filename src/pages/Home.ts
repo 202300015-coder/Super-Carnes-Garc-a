@@ -84,18 +84,18 @@ export function renderHome() {
 
         <!-- Tarjeta 2 -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
-          <img src="images/especialidades.jpg" alt="Especialidades" class="w-full h-56 object-cover">
+          <img src="images/abarrotes.webp" alt="Abarrotes" class="w-full h-56 object-cover">
           <div class="p-6 text-center">
-            <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Especialidades</h3>
-            <p class="text-gray-600 dark:text-gray-300">Cortes especiales y preparados exclusivos.</p>
+            <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Productos</h3>
+            <p class="text-gray-600 dark:text-gray-300">Todo tipo de abarrotes.</p>
           </div>
         </div>
 
         <!-- Tarjeta 3 -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
-          <img src="images/ofertas.jpeg" alt="Ofertas" class="w-full h-56 object-cover">
+          <img src="images/ofertas2.jpg" alt="Ofertas" class="w-full h-56 object-cover">
           <div class="p-6 text-center">
-            <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Ofertas</h3>
+            <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Grandes Ofertas</h3>
             <p class="text-gray-600 dark:text-gray-300">Descuentos especiales de la semana.</p>
           </div>
         </div>
