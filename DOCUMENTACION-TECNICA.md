@@ -14,7 +14,7 @@
 
 ## 🎯 Introducción
 
-**Super Carnes García** es una aplicación web moderna para gestionar y mostrar productos de una carnicería. Está construida con TypeScript, Vite, Tailwind CSS y Supabase como base de datos.
+**Super Carnes Garcíaaaaaaaa** es una aplicación web moderna para gestionar y mostrar productos de una carnicería. Está construida con TypeScript, Vite, Tailwind CSS y Supabase como base de datos.
 
 ### Características Principales
 - ✨ Catálogo de productos con imágenes
