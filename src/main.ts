@@ -364,7 +364,6 @@ function setupDragAndDrop() {
         return
       }
       // Mover al ÚLTIMO producto de la página anterior
-      const startOfPrevPage = (targetPageNum - 1) * PRODUCTS_PER_PAGE
       const endOfPrevPage = Math.min(targetPageNum * PRODUCTS_PER_PAGE - 1, allProducts.length - 1)
       targetIndex = endOfPrevPage
     }
