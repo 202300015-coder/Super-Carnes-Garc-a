@@ -52,7 +52,7 @@ export async function setupPagination(
         window.updateAdminButtons()
       }
       
-      // ✨ NUEVO: Configurar drag & drop después de renderizar
+      //  NUEVO: Configurar drag & drop después de renderizar
       if (typeof window.setupDragAndDrop === 'function') {
         window.setupDragAndDrop()
       }
