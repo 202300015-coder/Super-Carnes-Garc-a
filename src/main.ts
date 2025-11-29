@@ -98,9 +98,9 @@ function setupDragAndDrop() {
     // Flecha izquierda centrada en la franja
     const leftArrow = document.createElement('div')
     leftArrow.id = 'pageNavLeft'
-    leftArrow.className = 'fixed left-2 top-1/2 transform -translate-y-1/2 z-50 text-white animate-pulse pointer-events-none drop-shadow-lg'
+    leftArrow.className = 'fixed left-8 top-1/2 transform -translate-y-1/2 z-50 text-white animate-pulse pointer-events-none drop-shadow-lg'
     leftArrow.innerHTML = `
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/>
       </svg>
     `
@@ -114,9 +114,9 @@ function setupDragAndDrop() {
     // Flecha derecha centrada en la franja
     const rightArrow = document.createElement('div')
     rightArrow.id = 'pageNavRight'
-    rightArrow.className = 'fixed right-2 top-1/2 transform -translate-y-1/2 z-50 text-white animate-pulse pointer-events-none drop-shadow-lg'
+    rightArrow.className = 'fixed right-8 top-1/2 transform -translate-y-1/2 z-50 text-white animate-pulse pointer-events-none drop-shadow-lg'
     rightArrow.innerHTML = `
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/>
       </svg>
     `
