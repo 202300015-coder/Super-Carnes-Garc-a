@@ -98,9 +98,9 @@ function setupDragAndDrop() {
     // Flecha izquierda centrada en la franja
     const leftArrow = document.createElement('div')
     leftArrow.id = 'pageNavLeft'
-    leftArrow.className = 'fixed left-6 top-1/2 transform -translate-y-1/2 z-50 bg-red-600 text-white rounded-full p-4 shadow-2xl animate-pulse pointer-events-none'
+    leftArrow.className = 'fixed left-2 top-1/2 transform -translate-y-1/2 z-50 text-white animate-pulse pointer-events-none drop-shadow-lg'
     leftArrow.innerHTML = `
-      <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/>
       </svg>
     `
@@ -114,9 +114,9 @@ function setupDragAndDrop() {
     // Flecha derecha centrada en la franja
     const rightArrow = document.createElement('div')
     rightArrow.id = 'pageNavRight'
-    rightArrow.className = 'fixed right-6 top-1/2 transform -translate-y-1/2 z-50 bg-red-600 text-white rounded-full p-4 shadow-2xl animate-pulse pointer-events-none'
+    rightArrow.className = 'fixed right-2 top-1/2 transform -translate-y-1/2 z-50 text-white animate-pulse pointer-events-none drop-shadow-lg'
     rightArrow.innerHTML = `
-      <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/>
       </svg>
     `
@@ -125,7 +125,7 @@ function setupDragAndDrop() {
     leftStripe.addEventListener('dragenter', (e) => {
       e.preventDefault()
       leftStripe.style.opacity = '1'
-      leftArrow.classList.add('scale-125', 'ring-4', 'ring-yellow-400')
+      leftArrow.classList.add('scale-110')
     })
     
     leftStripe.addEventListener('dragover', (e) => {
@@ -137,14 +137,14 @@ function setupDragAndDrop() {
       const rect = leftStripe.getBoundingClientRect()
       if (e.clientX > rect.right) {
         leftStripe.style.opacity = '0.7'
-        leftArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
+        leftArrow.classList.remove('scale-110')
       }
     })
     
     leftStripe.addEventListener('drop', async (e) => {
       e.preventDefault()
       leftStripe.style.opacity = '0.7'
-      leftArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
+      leftArrow.classList.remove('scale-110')
       await moveProductToPreviousPage()
     })
     
@@ -152,7 +152,7 @@ function setupDragAndDrop() {
     rightStripe.addEventListener('dragenter', (e) => {
       e.preventDefault()
       rightStripe.style.opacity = '1'
-      rightArrow.classList.add('scale-125', 'ring-4', 'ring-yellow-400')
+      rightArrow.classList.add('scale-110')
     })
     
     rightStripe.addEventListener('dragover', (e) => {
@@ -164,14 +164,14 @@ function setupDragAndDrop() {
       const rect = rightStripe.getBoundingClientRect()
       if (e.clientX < rect.left) {
         rightStripe.style.opacity = '0.7'
-        rightArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
+        rightArrow.classList.remove('scale-110')
       }
     })
     
     rightStripe.addEventListener('drop', async (e) => {
       e.preventDefault()
       rightStripe.style.opacity = '0.7'
-      rightArrow.classList.remove('scale-125', 'ring-4', 'ring-yellow-400')
+      rightArrow.classList.remove('scale-110')
       await moveProductToNextPage()
     })
     
