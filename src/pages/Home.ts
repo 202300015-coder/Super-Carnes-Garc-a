@@ -16,7 +16,7 @@ export function renderHome() {
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div class="prose dark:prose-invert max-w-none">
           <p class="text-lg">
-            Con más de 30 años de experiencia, Super Carnes García se ha convertido en 
+            Desde 1988, Super Carnes García se ha convertido en 
             sinónimo de calidad y excelencia en el mercado de carnes. Nos especializamos 
             en ofrecer los mejores cortes, seleccionados cuidadosamente para garantizar 
             la mejor experiencia culinaria para nuestros clientes.
@@ -49,22 +49,7 @@ export function renderHome() {
       </div>
     </section>
 
-    <!-- Sección de Productos Destacados con Paginación -->
-    <section class="mb-12">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-        Nuestros Productos
-      </h2>
-      
-      <!-- Grid de productos -->
-      <div id="homeProductsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-        <!-- Productos se cargarán aquí -->
-      </div>
 
-      <!-- Paginación -->
-      <div id="homePagination" class="flex justify-center items-center space-x-2">
-        <!-- Botones de paginación se generarán aquí -->
-      </div>
-    </section>
 
     <section class="mb-12 px-4">
       <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
@@ -73,32 +58,32 @@ export function renderHome() {
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         
-        <!-- Tarjeta 1 -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
+        <!-- Tarjeta 1 - Carnes -->
+        <a href="#" data-page="meats" class="nav-link bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer">
           <img src="images/carnes-frescas.jpeg" alt="Carnes Frescas" class="w-full h-56 object-cover">
           <div class="p-6 text-center">
             <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Carnes Frescas</h3>
             <p class="text-gray-600 dark:text-gray-300">La mejor selección de cortes frescos para tu mesa.</p>
           </div>
-        </div>
+        </a>
 
-        <!-- Tarjeta 2 -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
+        <!-- Tarjeta 2 - Productos -->
+        <a href="#" data-page="products" class="nav-link bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer">
           <img src="images/abarrotes.webp" alt="Abarrotes" class="w-full h-56 object-cover">
           <div class="p-6 text-center">
-            <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Productos</h3>
+            <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Productos Increíbles</h3>
             <p class="text-gray-600 dark:text-gray-300">Todo tipo de abarrotes.</p>
           </div>
-        </div>
+        </a>
 
-        <!-- Tarjeta 3 -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
+        <!-- Tarjeta 3 - Ofertas -->
+        <a href="#" data-page="offers" class="nav-link bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer">
           <img src="images/ofertas2.jpg" alt="Ofertas" class="w-full h-56 object-cover">
           <div class="p-6 text-center">
             <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Grandes Ofertas</h3>
             <p class="text-gray-600 dark:text-gray-300">Descuentos especiales de la semana.</p>
           </div>
-        </div>
+        </a>
 
       </div>
     </section>
