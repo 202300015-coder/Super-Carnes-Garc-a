@@ -884,19 +884,36 @@ function attachUI() {
     }
   })
 
+  // Mobile logout button
+  document.getElementById('mobileLogoutButton')?.addEventListener('click', async () => {
+    const { error } = await supabase.auth.signOut()
+    if (!error) {
+      console.log('✅ Sesión cerrada')
+      window.location.reload()
+    } else {
+      console.error('❌ Error al cerrar sesión:', error)
+    }
+  })
+
   // Show user email in nav
   supabase.auth.getSession().then(({ data: { session } }) => {
     if (session) {
       const userEmail = document.getElementById('userEmail')
       const dropdownEmail = document.getElementById('dropdownEmail')
+      const mobileUserEmail = document.getElementById('mobileUserEmail')
+      const mobileUserInfo = document.getElementById('mobileUserInfo')
       const email = session.user.email || ''
       const shortEmail = email.length > 20 ? email.substring(0, 17) + '...' : email
       
+      // Desktop
       if (userEmail) userEmail.textContent = shortEmail
       if (dropdownEmail) dropdownEmail.textContent = email
-      
       userMenuButton?.classList.remove('hidden')
       userMenuButton?.classList.add('flex')
+      
+      // Mobile
+      if (mobileUserEmail) mobileUserEmail.textContent = email
+      mobileUserInfo?.classList.remove('hidden')
     }
   })
 
