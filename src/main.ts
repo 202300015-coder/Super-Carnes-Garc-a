@@ -932,38 +932,46 @@ function attachUI() {
     }
   })
 
-  // Navigation links (router)
-  document.querySelectorAll<HTMLAnchorElement>('.nav-link').forEach(link => {
-    link.addEventListener('click', async (e) => {
-      e.preventDefault()
-      const page = link.dataset.page
-      if (page) {
-        currentPage = page
-        localStorage.setItem('currentPage', page) // Guardar en localStorage
-        
-        // Scroll suave al inicio al cambiar de sección
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-        
-        // re-render page content only
-        const pageContent = document.getElementById('pageContent')
-        if (pageContent) pageContent.innerHTML = renderPage(currentPage)
-        
-        // re-attach UI for new content (pero NO para la navegación)
-        attachUIForContent()
-        
-        // ✨ NUEVO: Reinicializar paginación después de cambiar sección
-        const { setupPagination } = await import('./pages/pagination')
-        
-        if (currentPage === 'meats') {
-          await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
-        } else if (currentPage === 'products') {
-          await setupPagination('productsGrid', 'productsPagination', 'productos', true)
-        } else if (currentPage === 'offers') {
-          await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
+  // Función para registrar event listeners de navegación
+  function setupNavigationListeners() {
+    document.querySelectorAll<HTMLAnchorElement>('.nav-link').forEach(link => {
+      link.addEventListener('click', async (e) => {
+        e.preventDefault()
+        const page = link.dataset.page
+        if (page) {
+          currentPage = page
+          localStorage.setItem('currentPage', page) // Guardar en localStorage
+          
+          // Scroll suave al inicio al cambiar de sección
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+          
+          // re-render page content only
+          const pageContent = document.getElementById('pageContent')
+          if (pageContent) pageContent.innerHTML = renderPage(currentPage)
+          
+          // re-attach UI for new content (pero NO para la navegación)
+          attachUIForContent()
+          
+          // ✨ Volver a registrar listeners de navegación para el nuevo contenido
+          setupNavigationListeners()
+          
+          // ✨ NUEVO: Reinicializar paginación después de cambiar sección
+          const { setupPagination } = await import('./pages/pagination')
+          
+          if (currentPage === 'meats') {
+            await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
+          } else if (currentPage === 'products') {
+            await setupPagination('productsGrid', 'productsPagination', 'productos', true)
+          } else if (currentPage === 'offers') {
+            await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
+          }
         }
-      }
+      })
     })
-  })
+  }
+
+  // Navigation links (router) - Llamar la función al inicio
+  setupNavigationListeners()
 
   // Initialize auth handlers
   try {
