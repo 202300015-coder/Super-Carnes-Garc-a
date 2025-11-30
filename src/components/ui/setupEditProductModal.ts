@@ -138,14 +138,30 @@ export function setupEditProductModal() {
           .select('subcategoria')
           .eq('producto_id', productId);
 
+        if (subcatError) {
+          console.error('⚠️ Error cargando subcategorías:', subcatError);
+        }
+
         const subcategorias = subcategoriasData?.map(item => item.subcategoria) || [];
+        console.log('📋 Subcategorías cargadas:', subcategorias);
 
         // Mostrar grupo de checkboxes según la categoría
         toggleSubcategoryGroup(data.categoria);
 
-        // Marcar los checkboxes correspondientes
+        // PRIMERO: Desmarcar TODOS los checkboxes
         document.querySelectorAll('input[name="subcategorias"]').forEach((checkbox: any) => {
-          checkbox.checked = subcategorias.includes(checkbox.value);
+          checkbox.checked = false;
+        });
+
+        // SEGUNDO: Marcar solo los checkboxes correspondientes
+        subcategorias.forEach(subcat => {
+          const checkbox = document.querySelector(`input[name="subcategorias"][value="${subcat}"]`) as HTMLInputElement;
+          if (checkbox) {
+            checkbox.checked = true;
+            console.log(`✅ Marcado checkbox: ${subcat}`);
+          } else {
+            console.warn(`⚠️ No se encontró checkbox para: ${subcat}`);
+          }
         });
 
         // Update price preview
@@ -177,6 +193,15 @@ export function setupEditProductModal() {
     dropZoneContent?.classList.remove('hidden')
     imagePreview?.classList.add('hidden')
     document.getElementById('editCurrentImageContainer')?.classList.add('hidden')
+    
+    // IMPORTANTE: Desmarcar TODOS los checkboxes al cerrar
+    document.querySelectorAll('input[name="subcategorias"]').forEach((checkbox: any) => {
+      checkbox.checked = false;
+    });
+    
+    // Ocultar ambos grupos de checkboxes
+    document.getElementById('editSubcategoriaCarnes')?.classList.add('hidden');
+    document.getElementById('editSubcategoriaProductos')?.classList.add('hidden');
   }
 
   closeBtn?.addEventListener('click', closeModal)
@@ -398,34 +423,64 @@ export function setupEditProductModal() {
       if (updateError) throw updateError
 
       // Actualizar subcategorías en tabla producto_subcategorias
-      // 1. Eliminar subcategorías existentes
-      const { error: deleteSubcatError } = await supabase
+      // Nueva estrategia: Comparar y actualizar solo lo necesario
+      
+      console.log('🔄 Actualizando subcategorías...');
+      console.log('📝 Subcategorías seleccionadas:', selectedSubcategorias);
+      
+      // 1. Obtener subcategorías actuales en la BD
+      const { data: currentSubcats } = await supabase
         .from('producto_subcategorias')
-        .delete()
+        .select('subcategoria')
         .eq('producto_id', currentProductId);
-
-      if (deleteSubcatError) {
-        console.error('⚠️ Error eliminando subcategorías antiguas:', deleteSubcatError);
+      
+      const currentSubcategorias = currentSubcats?.map(s => s.subcategoria) || [];
+      console.log('📋 Subcategorías actuales en BD:', currentSubcategorias);
+      
+      // 2. Determinar qué eliminar y qué agregar
+      const toDelete = currentSubcategorias.filter(s => !selectedSubcategorias.includes(s));
+      const toAdd = selectedSubcategorias.filter(s => !currentSubcategorias.includes(s));
+      
+      console.log('🗑️ A eliminar:', toDelete);
+      console.log('➕ A agregar:', toAdd);
+      
+      // 3. Eliminar las que ya no están seleccionadas
+      if (toDelete.length > 0) {
+        for (const subcat of toDelete) {
+          const { error: delError } = await supabase
+            .from('producto_subcategorias')
+            .delete()
+            .eq('producto_id', currentProductId)
+            .eq('subcategoria', subcat);
+          
+          if (delError) {
+            console.error(`❌ Error eliminando ${subcat}:`, delError);
+          } else {
+            console.log(`✅ Eliminado: ${subcat}`);
+          }
+        }
       }
-
-      // 2. Insertar nuevas subcategorías
-      if (selectedSubcategorias.length > 0) {
-        const subcategoriasToInsert = selectedSubcategorias.map(subcat => ({
+      
+      // 4. Agregar las nuevas
+      if (toAdd.length > 0) {
+        const subcategoriasToInsert = toAdd.map(subcat => ({
           producto_id: currentProductId,
           subcategoria: subcat
         }));
-
-        const { error: insertSubcatError } = await supabase
+        
+        const { error: insertError } = await supabase
           .from('producto_subcategorias')
           .insert(subcategoriasToInsert);
-
-        if (insertSubcatError) {
-          console.error('❌ Error insertando subcategorías:', insertSubcatError);
-          throw insertSubcatError;
+        
+        if (insertError) {
+          console.error('❌ Error insertando nuevas subcategorías:', insertError);
+          throw insertError;
         }
-
-        console.log('✅ Subcategorías actualizadas:', selectedSubcategorias);
+        
+        console.log('✅ Agregadas:', toAdd);
       }
+      
+      console.log('✅ Subcategorías actualizadas correctamente');
 
       alert('✅ Producto actualizado exitosamente')
       

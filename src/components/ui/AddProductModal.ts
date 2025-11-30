@@ -93,31 +93,62 @@ export function AddProductModal() {
 
           <!-- Subcategoría -->
           <div>
-            <label for="productSubcategory" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Subcategoría
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Subcategorías *
             </label>
-            <select 
-              id="productSubcategory" 
-              name="subcategoria"
-              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-            >
-              <option value="">Selecciona una subcategoría</option>
-              <!-- Carnes -->
-              <optgroup label="Carnes">
-                <option value="Premium">Premium</option>
-                <option value="Res">Res</option>
-                <option value="Cerdo">Cerdo</option>
-                <option value="Pollo">Pollo</option>
-                <option value="Cortes Especiales">Cortes Especiales</option>
-              </optgroup>
-              <!-- Productos -->
-              <optgroup label="Productos">
-                <option value="Abarrotes">Abarrotes</option>
-                <option value="Lácteos">Lácteos</option>
-                <option value="Embutidos">Embutidos</option>
-                <option value="Condimentos">Condimentos</option>
-              </optgroup>
-            </select>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
+              ✨ Puedes seleccionar múltiples subcategorías para este producto
+            </p>
+            
+            <!-- Subcategorías de Carnes -->
+            <div id="addSubcategoriaCarnes" class="space-y-2 mb-4 hidden">
+              <p class="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">🥩 Carnes</p>
+              <div class="grid grid-cols-2 gap-2">
+                <label class="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <input type="checkbox" name="subcategorias" value="Premium" class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500">
+                  <span class="text-sm text-gray-700 dark:text-gray-300">Premium</span>
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <input type="checkbox" name="subcategorias" value="Res" class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500">
+                  <span class="text-sm text-gray-700 dark:text-gray-300">Res</span>
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <input type="checkbox" name="subcategorias" value="Cerdo" class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500">
+                  <span class="text-sm text-gray-700 dark:text-gray-300">Cerdo</span>
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <input type="checkbox" name="subcategorias" value="Pollo" class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500">
+                  <span class="text-sm text-gray-700 dark:text-gray-300">Pollo</span>
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <input type="checkbox" name="subcategorias" value="Cortes Especiales" class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500">
+                  <span class="text-sm text-gray-700 dark:text-gray-300">Cortes Especiales</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Subcategorías de Productos -->
+            <div id="addSubcategoriaProductos" class="space-y-2 hidden">
+              <p class="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">🛒 Productos</p>
+              <div class="grid grid-cols-2 gap-2">
+                <label class="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <input type="checkbox" name="subcategorias" value="Abarrotes" class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500">
+                  <span class="text-sm text-gray-700 dark:text-gray-300">Abarrotes</span>
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <input type="checkbox" name="subcategorias" value="Lácteos" class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500">
+                  <span class="text-sm text-gray-700 dark:text-gray-300">Lácteos</span>
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <input type="checkbox" name="subcategorias" value="Embutidos" class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500">
+                  <span class="text-sm text-gray-700 dark:text-gray-300">Embutidos</span>
+                </label>
+                <label class="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <input type="checkbox" name="subcategorias" value="Condimentos" class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500">
+                  <span class="text-sm text-gray-700 dark:text-gray-300">Condimentos</span>
+                </label>
+              </div>
+            </div>
           </div>
 
           <!-- Descuento -->

@@ -27,6 +27,34 @@ export function setupAddProductModal() {
   isInitialized = true
   console.log('✅ setupAddProductModal inicializado')
 
+  // Function to toggle subcategory groups based on category
+  const toggleSubcategoryGroup = (categoria: string) => {
+    const carnesGroup = document.getElementById('addSubcategoriaCarnes');
+    const productosGroup = document.getElementById('addSubcategoriaProductos');
+    
+    if (categoria === 'carnes') {
+      carnesGroup?.classList.remove('hidden');
+      productosGroup?.classList.add('hidden');
+      // Desmarcar checkboxes de productos
+      productosGroup?.querySelectorAll('input[type="checkbox"]').forEach((cb: any) => cb.checked = false);
+    } else if (categoria === 'productos') {
+      carnesGroup?.classList.add('hidden');
+      productosGroup?.classList.remove('hidden');
+      // Desmarcar checkboxes de carnes
+      carnesGroup?.querySelectorAll('input[type="checkbox"]').forEach((cb: any) => cb.checked = false);
+    } else {
+      carnesGroup?.classList.add('hidden');
+      productosGroup?.classList.add('hidden');
+    }
+  };
+
+  // Listen to category changes
+  const categoriaSelect = document.getElementById('productCategory') as HTMLSelectElement;
+  categoriaSelect?.addEventListener('change', (e) => {
+    const selectedCategory = (e.target as HTMLSelectElement).value;
+    toggleSubcategoryGroup(selectedCategory);
+  });
+
   // Open modal function (called from pages)
   window.openAddProductModal = () => {
     modal?.classList.remove('hidden')
@@ -142,11 +170,21 @@ export function setupAddProductModal() {
     const nombre = formData.get('nombre') as string
     const descripcion = formData.get('descripcion') as string
     const categoria = formData.get('categoria') as string
-    const subcategoria = formData.get('subcategoria') as string || null
     const descuento = parseInt(formData.get('descuento') as string) || 0
+
+    // Obtener subcategorías seleccionadas (múltiples checkboxes)
+    const selectedSubcategorias: string[] = [];
+    document.querySelectorAll('input[name="subcategorias"]:checked').forEach((checkbox: any) => {
+      selectedSubcategorias.push(checkbox.value);
+    });
 
     if (!nombre || !categoria) {
       alert('Por favor completa los campos obligatorios')
+      return
+    }
+
+    if (selectedSubcategorias.length === 0) {
+      alert('⚠️ Debes seleccionar al menos una subcategoría')
       return
     }
 
@@ -202,21 +240,41 @@ export function setupAddProductModal() {
 
       const nextOrden = (maxOrdenData && maxOrdenData[0]?.orden || 0) + 1
 
-      // Insert product
-      const { error: insertError } = await supabase
+      // Insert product (sin subcategoria)
+      const { error: insertError, data: newProduct } = await supabase
         .from('productos')
         .insert({
           nombre,
           descripcion,
           imagen_url,
           categoria,
-          subcategoria,
           descuento,
           orden: nextOrden,
           activo: true
         })
+        .select()
+        .single()
 
       if (insertError) throw insertError
+
+      // Insertar subcategorías en la tabla producto_subcategorias
+      if (newProduct && selectedSubcategorias.length > 0) {
+        const subcategoriasToInsert = selectedSubcategorias.map(subcat => ({
+          producto_id: newProduct.id,
+          subcategoria: subcat
+        }));
+
+        const { error: insertSubcatError } = await supabase
+          .from('producto_subcategorias')
+          .insert(subcategoriasToInsert);
+
+        if (insertSubcatError) {
+          console.error('❌ Error insertando subcategorías:', insertSubcatError);
+          throw insertSubcatError;
+        }
+
+        console.log('✅ Subcategorías insertadas:', selectedSubcategorias);
+      }
 
       alert('✅ Producto añadido exitosamente')
       
