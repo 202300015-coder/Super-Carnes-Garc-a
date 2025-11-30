@@ -350,10 +350,30 @@ export function setupEditProductModal() {
     const precio = parseFloat(formData.get('precio') as string) || 0
 
     // Obtener subcategorías seleccionadas (múltiples checkboxes)
+    // IMPORTANTE: Solo del grupo VISIBLE (no hidden)
     const selectedSubcategorias: string[] = [];
-    document.querySelectorAll('input[name="subcategorias"]:checked').forEach((checkbox: any) => {
-      selectedSubcategorias.push(checkbox.value);
-    });
+    
+    // Determinar qué grupo está visible
+    const carnesGroup = document.getElementById('editSubcategoriaCarnes');
+    const productosGroup = document.getElementById('editSubcategoriaProductos');
+    
+    let visibleGroup: HTMLElement | null = null;
+    if (carnesGroup && !carnesGroup.classList.contains('hidden')) {
+      visibleGroup = carnesGroup;
+    } else if (productosGroup && !productosGroup.classList.contains('hidden')) {
+      visibleGroup = productosGroup;
+    }
+    
+    // Solo obtener checkboxes del grupo visible
+    if (visibleGroup) {
+      visibleGroup.querySelectorAll('input[name="subcategorias"]:checked').forEach((checkbox: any) => {
+        if (!selectedSubcategorias.includes(checkbox.value)) { // Evitar duplicados
+          selectedSubcategorias.push(checkbox.value);
+        }
+      });
+    }
+    
+    console.log('🎯 Subcategorías seleccionadas (sin duplicados):', selectedSubcategorias);
 
     if (!nombre || !categoria) {
       alert('Por favor completa los campos obligatorios')
