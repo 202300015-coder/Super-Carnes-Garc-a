@@ -40,6 +40,69 @@ export function setupEditProductModal() {
   isInitialized = true
   console.log('✅ setupEditProductModal inicializado')
 
+  // Function to toggle subcategory groups based on category
+  const toggleSubcategoryGroup = (categoria: string) => {
+    const carnesGroup = document.getElementById('editSubcategoriaCarnes');
+    const productosGroup = document.getElementById('editSubcategoriaProductos');
+    
+    if (categoria === 'carnes') {
+      carnesGroup?.classList.remove('hidden');
+      productosGroup?.classList.add('hidden');
+      // Desmarcar checkboxes de productos
+      productosGroup?.querySelectorAll('input[type="checkbox"]').forEach((cb: any) => cb.checked = false);
+    } else if (categoria === 'productos') {
+      carnesGroup?.classList.add('hidden');
+      productosGroup?.classList.remove('hidden');
+      // Desmarcar checkboxes de carnes
+      carnesGroup?.querySelectorAll('input[type="checkbox"]').forEach((cb: any) => cb.checked = false);
+    } else {
+      carnesGroup?.classList.add('hidden');
+      productosGroup?.classList.add('hidden');
+    }
+  };
+
+  // Listen to category changes
+  const categoriaSelect = document.getElementById('editCategoria') as HTMLSelectElement;
+  categoriaSelect?.addEventListener('change', (e) => {
+    const selectedCategory = (e.target as HTMLSelectElement).value;
+    toggleSubcategoryGroup(selectedCategory);
+  });
+
+  // Function to update price preview
+  const updatePricePreview = () => {
+    const precioInput = document.getElementById('editPrecio') as HTMLInputElement;
+    const descuentoInput = document.getElementById('editDescuento') as HTMLInputElement;
+    const pricePreviewDiv = document.getElementById('pricePreview');
+    const previewOriginalPrice = document.getElementById('previewOriginalPrice');
+    const previewFinalPrice = document.getElementById('previewFinalPrice');
+    const previewDiscountPercent = document.getElementById('previewDiscountPercent');
+
+    if (!precioInput || !descuentoInput || !pricePreviewDiv) return;
+
+    const precio = parseFloat(precioInput.value) || 0;
+    const descuento = parseFloat(descuentoInput.value) || 0;
+
+    // Show preview only if both price and discount exist
+    if (precio > 0 && descuento > 0) {
+      const finalPrice = precio * (1 - descuento / 100);
+      
+      if (previewOriginalPrice) previewOriginalPrice.textContent = `$${precio.toFixed(2)}`;
+      if (previewFinalPrice) previewFinalPrice.textContent = `$${finalPrice.toFixed(2)}`;
+      if (previewDiscountPercent) previewDiscountPercent.textContent = descuento.toString();
+      
+      pricePreviewDiv.classList.remove('hidden');
+    } else {
+      pricePreviewDiv.classList.add('hidden');
+    }
+  };
+
+  // Add event listeners for real-time preview update
+  const precioInput = document.getElementById('editPrecio') as HTMLInputElement;
+  const descuentoInput = document.getElementById('editDescuento') as HTMLInputElement;
+  
+  precioInput?.addEventListener('input', updatePricePreview);
+  descuentoInput?.addEventListener('input', updatePricePreview);
+
   // Open modal function (called globally)
   window.openEditProductModal = async (productId: number) => {
     currentProductId = productId
@@ -51,6 +114,7 @@ export function setupEditProductModal() {
   // Load product data
   async function loadProductData(productId: number) {
     try {
+      // Cargar datos del producto
       const { data, error } = await supabase
         .from('productos')
         .select('*')
@@ -65,9 +129,27 @@ export function setupEditProductModal() {
         (document.getElementById('editNombre') as HTMLInputElement).value = data.nombre || '';
         (document.getElementById('editDescripcion') as HTMLTextAreaElement).value = data.descripcion || '';
         (document.getElementById('editCategoria') as HTMLSelectElement).value = data.categoria || '';
-        (document.getElementById('editSubcategoria') as HTMLSelectElement).value = data.subcategoria || '';
         (document.getElementById('editDescuento') as HTMLInputElement).value = data.descuento?.toString() || '';
         (document.getElementById('editPrecio') as HTMLInputElement).value = data.precio?.toString() || '';
+
+        // Cargar subcategorías del producto desde la tabla producto_subcategorias
+        const { data: subcategoriasData, error: subcatError } = await supabase
+          .from('producto_subcategorias')
+          .select('subcategoria')
+          .eq('producto_id', productId);
+
+        const subcategorias = subcategoriasData?.map(item => item.subcategoria) || [];
+
+        // Mostrar grupo de checkboxes según la categoría
+        toggleSubcategoryGroup(data.categoria);
+
+        // Marcar los checkboxes correspondientes
+        document.querySelectorAll('input[name="subcategorias"]').forEach((checkbox: any) => {
+          checkbox.checked = subcategorias.includes(checkbox.value);
+        });
+
+        // Update price preview
+        updatePricePreview();
 
         // Show current image if exists
         const currentImageContainer = document.getElementById('editCurrentImageContainer')
@@ -239,12 +321,22 @@ export function setupEditProductModal() {
     const nombre = formData.get('nombre') as string
     const descripcion = formData.get('descripcion') as string
     const categoria = formData.get('categoria') as string
-    const subcategoria = formData.get('subcategoria') as string || null
     const descuento = parseInt(formData.get('descuento') as string) || 0
     const precio = parseFloat(formData.get('precio') as string) || 0
 
+    // Obtener subcategorías seleccionadas (múltiples checkboxes)
+    const selectedSubcategorias: string[] = [];
+    document.querySelectorAll('input[name="subcategorias"]:checked').forEach((checkbox: any) => {
+      selectedSubcategorias.push(checkbox.value);
+    });
+
     if (!nombre || !categoria) {
       alert('Por favor completa los campos obligatorios')
+      return
+    }
+
+    if (selectedSubcategorias.length === 0) {
+      alert('⚠️ Debes seleccionar al menos una subcategoría')
       return
     }
 
@@ -256,12 +348,11 @@ export function setupEditProductModal() {
       submitBtn.disabled = true
       submitBtn.innerHTML = '<span class="animate-spin">⏳</span> Guardando...'
 
-      // Prepare update data
+      // Prepare update data (sin subcategoria porque se maneja en tabla separada)
       const updateData: any = {
         nombre,
         descripcion,
         categoria,
-        subcategoria,
         descuento,
         precio,
       }
@@ -305,6 +396,36 @@ export function setupEditProductModal() {
         .eq('id', currentProductId)
 
       if (updateError) throw updateError
+
+      // Actualizar subcategorías en tabla producto_subcategorias
+      // 1. Eliminar subcategorías existentes
+      const { error: deleteSubcatError } = await supabase
+        .from('producto_subcategorias')
+        .delete()
+        .eq('producto_id', currentProductId);
+
+      if (deleteSubcatError) {
+        console.error('⚠️ Error eliminando subcategorías antiguas:', deleteSubcatError);
+      }
+
+      // 2. Insertar nuevas subcategorías
+      if (selectedSubcategorias.length > 0) {
+        const subcategoriasToInsert = selectedSubcategorias.map(subcat => ({
+          producto_id: currentProductId,
+          subcategoria: subcat
+        }));
+
+        const { error: insertSubcatError } = await supabase
+          .from('producto_subcategorias')
+          .insert(subcategoriasToInsert);
+
+        if (insertSubcatError) {
+          console.error('❌ Error insertando subcategorías:', insertSubcatError);
+          throw insertSubcatError;
+        }
+
+        console.log('✅ Subcategorías actualizadas:', selectedSubcategorias);
+      }
 
       alert('✅ Producto actualizado exitosamente')
       
