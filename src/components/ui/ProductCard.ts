@@ -6,11 +6,19 @@ interface Product {
   category: string;
   discount?: number;
   activo?: boolean; // Nuevo: para mostrar efecto fantasma
+  precio?: number; // Nuevo: precio original del producto
+  showPrice?: boolean; // Nuevo: flag para mostrar precios (solo en Ofertas)
 }
 
 export function ProductCard(product: Product) {
   const hasDiscount = typeof product.discount !== 'undefined' && product.discount > 0;
   const isInactive = product.activo === false; // Producto inactivo
+  
+  // Calcular precio con descuento si aplica
+  const precioOriginal = product.precio || 0;
+  const precioConDescuento = hasDiscount && precioOriginal > 0 
+    ? precioOriginal - (precioOriginal * (product.discount || 0) / 100)
+    : precioOriginal;
   
   return `
     <div class="product-card group relative bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 ${isInactive ? 'opacity-50 order-last' : ''}" data-product-id="${product.id}" data-activo="${product.activo !== false}">
@@ -70,6 +78,26 @@ export function ProductCard(product: Product) {
         <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
           ${product.description}
         </p>
+        
+        ${product.showPrice && precioOriginal > 0 ? `
+          <div class="flex items-center gap-3 mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+            ${hasDiscount ? `
+              <span class="text-gray-500 dark:text-gray-400 line-through text-sm">
+                $${precioOriginal.toFixed(2)}
+              </span>
+              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+              <span class="text-xl font-bold text-green-600 dark:text-green-400">
+                $${precioConDescuento.toFixed(2)}
+              </span>
+            ` : `
+              <span class="text-xl font-bold text-gray-900 dark:text-white">
+                $${precioOriginal.toFixed(2)}
+              </span>
+            `}
+          </div>
+        ` : ''}
       </div>
     </div>
   `

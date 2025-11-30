@@ -36,7 +36,9 @@ export async function setupPagination(
           image: producto.imagen_url || '/images/placeholder.jpg',
           category: producto.categoria,
           discount: producto.descuento,
-          activo: producto.activo
+          activo: producto.activo,
+          precio: producto.precio,
+          showPrice: onlyOffers // Solo mostrar precios en la sección de Ofertas
         })
       ).join('')
     } else {
