@@ -102,7 +102,7 @@ export function renderMeats() {
     <div class="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
 
       <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Nuestras Carnes</h1>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Nuestros Cortes</h1>
         
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
 
