@@ -116,7 +116,6 @@ export function AddProductModal() {
                 <option value="Lácteos">Lácteos</option>
                 <option value="Embutidos">Embutidos</option>
                 <option value="Condimentos">Condimentos</option>
-                <option value="General">General</option>
               </optgroup>
             </select>
           </div>

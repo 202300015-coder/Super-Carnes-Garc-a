@@ -67,6 +67,7 @@ export function setupEditProductModal() {
         (document.getElementById('editCategoria') as HTMLSelectElement).value = data.categoria || '';
         (document.getElementById('editSubcategoria') as HTMLSelectElement).value = data.subcategoria || '';
         (document.getElementById('editDescuento') as HTMLInputElement).value = data.descuento?.toString() || '';
+        (document.getElementById('editPrecio') as HTMLInputElement).value = data.precio?.toString() || '';
 
         // Show current image if exists
         const currentImageContainer = document.getElementById('editCurrentImageContainer')
@@ -240,6 +241,7 @@ export function setupEditProductModal() {
     const categoria = formData.get('categoria') as string
     const subcategoria = formData.get('subcategoria') as string || null
     const descuento = parseInt(formData.get('descuento') as string) || 0
+    const precio = parseFloat(formData.get('precio') as string) || 0
 
     if (!nombre || !categoria) {
       alert('Por favor completa los campos obligatorios')
@@ -261,6 +263,7 @@ export function setupEditProductModal() {
         categoria,
         subcategoria,
         descuento,
+        precio,
       }
 
       // Upload new image if selected

@@ -147,7 +147,6 @@ export function EditProductModal() {
                 <option value="Lácteos">Lácteos</option>
                 <option value="Embutidos">Embutidos</option>
                 <option value="Condimentos">Condimentos</option>
-                <option value="General">General</option>
               </optgroup>
             </select>
           </div>
@@ -166,6 +165,25 @@ export function EditProductModal() {
               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
               placeholder="0"
             >
+          </div>
+
+          <!-- Precio -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              💰 Precio ($)
+            </label>
+            <input
+              type="number"
+              id="editPrecio"
+              name="precio"
+              min="0"
+              step="0.01"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
+              placeholder="0.00"
+            >
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              💡 El precio se mostrará en la sección de Ofertas junto con el descuento
+            </p>
           </div>
 
           <!-- Buttons -->
