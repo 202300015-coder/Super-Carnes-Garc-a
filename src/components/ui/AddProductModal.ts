@@ -153,19 +153,49 @@ export function AddProductModal() {
 
           <!-- Descuento -->
           <div>
-            <div>
-              <label for="productDiscount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Descuento (%)
-              </label>
-              <input 
-                type="number" 
-                id="productDiscount" 
-                name="descuento"
-                min="0"
-                max="100"
-                value="0"
-                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-              >
+            <label for="productDiscount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Descuento (%)
+            </label>
+            <input 
+              type="number" 
+              id="productDiscount" 
+              name="descuento"
+              min="0"
+              max="100"
+              value="0"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
+            >
+          </div>
+
+          <!-- Precio -->
+          <div>
+            <label for="productPrice" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              💰 Precio ($)
+            </label>
+            <input
+              type="number"
+              id="productPrice"
+              name="precio"
+              min="0"
+              step="0.01"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
+              placeholder="0.00"
+            >
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              💡 El precio se mostrará en la sección de Ofertas junto con el descuento
+            </p>
+            
+            <!-- Vista previa de precio con descuento -->
+            <div id="addPricePreview" class="hidden mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <p class="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">📊 Vista previa:</p>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-600 dark:text-gray-400">Precio original:</span>
+                <span class="text-sm font-semibold text-gray-900 dark:text-white" id="addPreviewOriginalPrice">$0.00</span>
+              </div>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-sm text-gray-600 dark:text-gray-400">Con descuento (<span id="addPreviewDiscountPercent">0</span>%):</span>
+                <span class="text-lg font-bold text-green-600 dark:text-green-400" id="addPreviewFinalPrice">$0.00</span>
+              </div>
             </div>
           </div>
 

@@ -64,7 +64,7 @@ function setupCategoryFilters() {
             discount: producto.descuento,
             activo: producto.activo,
             precio: producto.precio,
-            showPrice: false // No mostrar precios en Productos
+            showPrice: true // Mostrar precios en Productos
           })
         ).join('')
         
@@ -85,13 +85,8 @@ function setupCategoryFilters() {
 }
 
 export function renderProducts() {
-  // Iniciar carga de productos después del render
-  // Aquí NO mostramos carnes, solo otros productos
+  // Configurar funcionalidades después del render
   setTimeout(() => {
-    import('./loadProducts').then(module => {
-      module.renderProductsInGrid('productsGrid', 'productos', true) // true = excluir carnes
-    })
-    
     // Configurar búsqueda específica para productos (excluyendo carnes)
     import('./searchProducts').then(module => {
       module.setupSearch({
@@ -103,15 +98,14 @@ export function renderProducts() {
       })
     })
     
-    // 🆕 Configurar filtros de subcategoría
+    // Configurar filtros de subcategoría
     setupCategoryFilters()
   }, 0)
 
-  // 👉 AGREGADO: Inicializar paginación DESPUÉS de que el DOM existe
+  // Inicializar paginación (esto carga los productos automáticamente)
   requestAnimationFrame(() => {
     setTimeout(() => {
-      setupPagination('productsGrid', 'productsPagination', 'productos', true) 
-      // El último true = excluir carnes en la paginación también
+      setupPagination('productsGrid', 'productsPagination', 'productos', true, false)
     }, 100)
   })
   

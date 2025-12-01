@@ -38,7 +38,7 @@ export async function setupPagination(
           discount: producto.descuento,
           activo: producto.activo,
           precio: producto.precio,
-          showPrice: onlyOffers // Solo mostrar precios en la sección de Ofertas
+          showPrice: true // Siempre mostrar precios si están disponibles
         })
       ).join('')
     } else {

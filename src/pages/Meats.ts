@@ -64,7 +64,7 @@ function setupCategoryFilters() {
             discount: producto.descuento,
             activo: producto.activo,
             precio: producto.precio,
-            showPrice: false // No mostrar precios en Carnes
+            showPrice: true // Mostrar precios en Carnes
           })
         ).join('')
         
@@ -85,12 +85,8 @@ function setupCategoryFilters() {
 }
 
 export function renderMeats() {
-  // Iniciar carga de productos después del render
+  // Configurar funcionalidades después del render
   setTimeout(() => {
-    import('./loadProducts').then(module => {
-      module.renderProductsInGrid('meatsGrid', 'carnes')
-    })
-    
     // Configurar búsqueda específica para carnes
     import('./searchProducts').then(module => {
       module.setupSearch({
@@ -101,14 +97,14 @@ export function renderMeats() {
       })
     })
     
-    // 🆕 Configurar filtros de subcategoría
+    // Configurar filtros de subcategoría
     setupCategoryFilters()
   }, 0)
   
-  // 👉 AGREGADO: Inicializar paginación DESPUÉS de que el DOM existe
+  // Inicializar paginación (esto carga los productos automáticamente)
   requestAnimationFrame(() => {
     setTimeout(() => {
-      setupPagination('meatsGrid', 'meatsPagination', 'carnes')
+      setupPagination('meatsGrid', 'meatsPagination', 'carnes', false, false)
     }, 100)
   })
 

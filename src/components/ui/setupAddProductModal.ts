@@ -154,6 +154,35 @@ export function setupAddProductModal() {
     imageInput.value = ''
   })
 
+  // ========== VISTA PREVIA DE PRECIO ==========
+  const precioInput = document.getElementById('productPrice') as HTMLInputElement
+  const descuentoInput = document.getElementById('productDiscount') as HTMLInputElement
+  const pricePreviewDiv = document.getElementById('addPricePreview')
+  const previewOriginalPrice = document.getElementById('addPreviewOriginalPrice')
+  const previewDiscountPercent = document.getElementById('addPreviewDiscountPercent')
+  const previewFinalPrice = document.getElementById('addPreviewFinalPrice')
+
+  function updatePricePreview() {
+    const precio = parseFloat(precioInput?.value || '0')
+    const descuento = parseFloat(descuentoInput?.value || '0')
+
+    if (precio > 0 && descuento > 0) {
+      const precioConDescuento = precio - (precio * descuento / 100)
+      
+      if (previewOriginalPrice) previewOriginalPrice.textContent = `$${precio.toFixed(2)}`
+      if (previewDiscountPercent) previewDiscountPercent.textContent = descuento.toString()
+      if (previewFinalPrice) previewFinalPrice.textContent = `$${precioConDescuento.toFixed(2)}`
+      
+      pricePreviewDiv?.classList.remove('hidden')
+    } else {
+      pricePreviewDiv?.classList.add('hidden')
+    }
+  }
+
+  precioInput?.addEventListener('input', updatePricePreview)
+  descuentoInput?.addEventListener('input', updatePricePreview)
+  // ========== FIN VISTA PREVIA DE PRECIO ==========
+
   // Form submit
   let isSubmitting = false // Flag para prevenir doble envío
   
@@ -171,6 +200,7 @@ export function setupAddProductModal() {
     const descripcion = formData.get('descripcion') as string
     const categoria = formData.get('categoria') as string
     const descuento = parseInt(formData.get('descuento') as string) || 0
+    const precio = parseFloat(formData.get('precio') as string) || null // Precio NO obligatorio
 
     // Obtener subcategorías seleccionadas (múltiples checkboxes)
     // IMPORTANTE: Solo del grupo VISIBLE (no hidden)
@@ -269,6 +299,7 @@ export function setupAddProductModal() {
           imagen_url,
           categoria,
           descuento,
+          precio, // Agregar precio (puede ser null)
           orden: nextOrden,
           activo: true
         })

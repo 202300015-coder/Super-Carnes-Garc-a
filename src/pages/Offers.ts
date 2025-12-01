@@ -81,12 +81,8 @@ function setupCategoryFilters() {
 }
 
 export function renderOffers() {
-  // Cargar productos con ofertas
+  // Configurar funcionalidades después del render
   setTimeout(() => {
-    import('./loadProducts').then(module => {
-      module.renderProductsInGrid('offersGrid', undefined, false, true, true) // último true = mostrar precios
-    })
-
     import('./searchProducts').then(module => {
       module.setupSearch({
         inputId: 'searchOffers',
@@ -96,11 +92,11 @@ export function renderOffers() {
       })
     })
 
-    // Subcategorías
+    // Configurar filtros de subcategoría
     setupCategoryFilters()
   }, 0)
 
-  // Paginación
+  // Inicializar paginación (esto carga los productos automáticamente)
   requestAnimationFrame(() => {
     setTimeout(() => {
       setupPagination('offersGrid', 'offersPagination', undefined, false, true)

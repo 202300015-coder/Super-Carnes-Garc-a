@@ -11,7 +11,59 @@ interface SearchConfig {
 }
 
 /**
- * Buscar productos en Supabase con filtros
+ * Normaliza texto eliminando acentos y convirtiendo a minúsculas
+ */
+function normalizeText(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Eliminar acentos
+    .trim()
+}
+
+/**
+ * Calcula similitud entre dos textos (mejorado para mayor tolerancia)
+ */
+function calculateSimilarity(str1: string, str2: string): number {
+  const norm1 = normalizeText(str1)
+  const norm2 = normalizeText(str2)
+  
+  // Si coincide exactamente, máxima puntuación
+  if (norm1 === norm2) return 100
+  
+  // Si uno contiene al otro, alta puntuación
+  if (norm1.includes(norm2)) return 90
+  if (norm2.includes(norm1)) return 85
+  
+  // Buscar palabras individuales (muy importante para flexibilidad)
+  const words1 = norm1.split(/\s+/)
+  const words2 = norm2.split(/\s+/)
+  
+  let matches = 0
+  let partialMatches = 0
+  
+  words2.forEach(searchWord => {
+    // Coincidencia exacta de palabra
+    if (words1.some(w => w === searchWord)) {
+      matches += 2
+    }
+    // Coincidencia parcial (palabra contiene o está contenida)
+    else if (words1.some(w => w.includes(searchWord) || searchWord.includes(w))) {
+      matches += 1
+      partialMatches += 0.5
+    }
+    // Coincidencia muy parcial (primeras letras)
+    else if (words1.some(w => w.startsWith(searchWord.slice(0, 3)) || searchWord.startsWith(w.slice(0, 3)))) {
+      partialMatches += 0.3
+    }
+  })
+  
+  const totalScore = ((matches + partialMatches) / words2.length) * 70
+  return Math.min(totalScore, 100)
+}
+
+/**
+ * Buscar productos en Supabase con filtros mejorados y búsqueda permisiva
  */
 export async function searchProductsInDB(
   searchTerm: string,
@@ -25,10 +77,16 @@ export async function searchProductsInDB(
     // Obtener rol del usuario
     const userRole = (window as any).userRole || 'user'
 
+    // Normalizar término de búsqueda
+    const normalizedSearch = normalizeText(searchTerm)
+
+    // Construir query base - traer TODOS los productos relevantes
     let query = supabase
       .from('productos')
-      .select('*')
-      .ilike('nombre', `%${searchTerm}%`) // Búsqueda por coincidencia parcial
+      .select(`
+        *,
+        producto_subcategorias(subcategoria)
+      `)
       .order('orden', { ascending: true })
 
     // Solo filtrar activos si NO es admin
@@ -55,8 +113,41 @@ export async function searchProductsInDB(
 
     if (error) throw error
 
-    console.log('✅ Resultados encontrados:', data?.length || 0)
-    return data || []
+    // Filtrado y puntuación en el cliente (más flexible que SQL)
+    const scoredResults = (data || []).map(product => {
+      let score = 0
+      
+      // Buscar en nombre (mayor peso)
+      const nameScore = calculateSimilarity(product.nombre, searchTerm)
+      score += nameScore * 3
+      
+      // Buscar en descripción
+      if (product.descripcion) {
+        const descScore = calculateSimilarity(product.descripcion, searchTerm)
+        score += descScore
+      }
+      
+      // Buscar en subcategorías
+      if (product.producto_subcategorias && Array.isArray(product.producto_subcategorias)) {
+        product.producto_subcategorias.forEach((sub: any) => {
+          if (sub.subcategoria) {
+            const subScore = calculateSimilarity(sub.subcategoria, searchTerm)
+            score += subScore * 2
+          }
+        })
+      }
+      
+      return { product, score }
+    })
+    
+    // Filtrar resultados con puntuación > 0 y ordenar por puntuación
+    const results = scoredResults
+      .filter(item => item.score > 15) // Umbral más bajo para mayor permisividad
+      .sort((a, b) => b.score - a.score)
+      .map(item => item.product)
+
+    console.log('✅ Resultados encontrados:', results.length)
+    return results
   } catch (error) {
     console.error('❌ Error en búsqueda:', error)
     return []
@@ -108,8 +199,8 @@ export function setupSearch(config: SearchConfig) {
       return
     }
 
-    // Búsqueda mínima de 2 caracteres
-    if (searchTerm.length < 2) {
+    // Búsqueda mínima de 1 carácter (más permisiva)
+    if (searchTerm.length < 1) {
       resultsContainer.classList.add('hidden')
       return
     }
@@ -164,7 +255,9 @@ export function setupSearch(config: SearchConfig) {
               image: product.imagen_url || '/images/placeholder.jpg',
               category: product.categoria,
               discount: product.descuento,
-              activo: product.activo
+              activo: product.activo,
+              precio: product.precio,
+              showPrice: true
             })
             
             // Actualizar botones admin
@@ -223,7 +316,9 @@ export function setupSearch(config: SearchConfig) {
             image: product.imagen_url || '/images/placeholder.jpg',
             category: product.categoria,
             discount: product.descuento,
-            activo: product.activo
+            activo: product.activo,
+            precio: product.precio,
+            showPrice: true
           })).join('')
         : '<p class="col-span-full text-center text-gray-500 dark:text-gray-400 py-8">No se encontraron productos</p>'
 
