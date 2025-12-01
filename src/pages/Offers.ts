@@ -62,7 +62,9 @@ function setupCategoryFilters() {
             image: producto.imagen_url || '/images/placeholder.jpg',
             category: producto.categoria,
             discount: producto.descuento,
-            activo: producto.activo
+            activo: producto.activo,
+            precio: producto.precio,
+            showPrice: true // Siempre mostrar precios en Ofertas
           })
         ).join('')
 
@@ -82,7 +84,7 @@ export function renderOffers() {
   // Cargar productos con ofertas
   setTimeout(() => {
     import('./loadProducts').then(module => {
-      module.renderProductsInGrid('offersGrid', undefined, false, true)
+      module.renderProductsInGrid('offersGrid', undefined, false, true, true) // último true = mostrar precios
     })
 
     import('./searchProducts').then(module => {

@@ -585,21 +585,22 @@ function reloadProducts() {
   const productsGrid = document.getElementById('productsGrid')
   const offersGrid = document.getElementById('offersGrid')
   
+  // En lugar de renderProductsInGrid, recargar la paginación
   if (meatsGrid) {
-    import('../../pages/loadProducts').then(module => {
-      module.renderProductsInGrid('meatsGrid', 'carnes', false, false)
+    import('../../pages/pagination').then(module => {
+      module.setupPagination('meatsGrid', 'meatsPagination', 'carnes', false, false)
     })
   }
   
   if (productsGrid) {
-    import('../../pages/loadProducts').then(module => {
-      module.renderProductsInGrid('productsGrid', 'productos', true, false) // Excluir carnes
+    import('../../pages/pagination').then(module => {
+      module.setupPagination('productsGrid', 'productsPagination', 'productos', true, false)
     })
   }
   
   if (offersGrid) {
-    import('../../pages/loadProducts').then(module => {
-      module.renderProductsInGrid('offersGrid', undefined, false, true) // Solo ofertas
+    import('../../pages/pagination').then(module => {
+      module.setupPagination('offersGrid', 'offersPagination', undefined, false, true)
     })
   }
 }

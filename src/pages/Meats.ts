@@ -62,7 +62,9 @@ function setupCategoryFilters() {
             image: producto.imagen_url || '/images/placeholder.jpg',
             category: producto.categoria,
             discount: producto.descuento,
-            activo: producto.activo
+            activo: producto.activo,
+            precio: producto.precio,
+            showPrice: false // No mostrar precios en Carnes
           })
         ).join('')
         

@@ -75,8 +75,9 @@ export async function loadProductsFromDB(
  * @param categoria - Categoría a filtrar (opcional)
  * @param excludeCarnes - Si es true, excluye productos de categoría 'carnes'
  * @param onlyOffers - Si es true, solo muestra productos con descuento > 0
+ * @param showPrices - Si es true, muestra los precios en las tarjetas
  */
-export async function renderProductsInGrid(containerId: string, categoria?: string, excludeCarnes: boolean = false, onlyOffers: boolean = false) {
+export async function renderProductsInGrid(containerId: string, categoria?: string, excludeCarnes: boolean = false, onlyOffers: boolean = false, showPrices: boolean = false) {
   const container = document.getElementById(containerId)
   if (!container) {
     console.error(`❌ No se encontró el contenedor: ${containerId}`)
@@ -122,7 +123,9 @@ export async function renderProductsInGrid(containerId: string, categoria?: stri
       image: producto.imagen_url || '/images/placeholder.jpg',
       category: producto.categoria,
       discount: producto.descuento,
-      activo: producto.activo // ✨ Nuevo: pasar estado activo
+      activo: producto.activo,
+      precio: producto.precio,
+      showPrice: showPrices // Mostrar precios según el parámetro
     })
   ).join('')
   
