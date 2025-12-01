@@ -23,18 +23,30 @@ function setupCategoryFilters() {
       // Filtrar productos
       const userRole = (window as any).userRole || 'user'
 
-      let query = supabase
-        .from('productos')
-        .select('*')
-        .gt('descuento', 0) // solo ofertas
-        .order('orden', { ascending: true })
+      let query
+      
+      // Si hay filtro de subcategoría, hacer JOIN
+      if (subcategory && subcategory !== 'Todos') {
+        query = supabase
+          .from('productos')
+          .select(`
+            *,
+            producto_subcategorias!inner(subcategoria)
+          `)
+          .gt('descuento', 0)
+          .eq('producto_subcategorias.subcategoria', subcategory)
+          .order('orden', { ascending: true })
+      } else {
+        // Sin filtro, traer todas las ofertas
+        query = supabase
+          .from('productos')
+          .select('*')
+          .gt('descuento', 0)
+          .order('orden', { ascending: true })
+      }
 
       if (userRole !== 'admin') {
         query = query.eq('activo', true)
-      }
-
-      if (subcategory && subcategory !== 'Todos') {
-        query = query.eq('subcategoria', subcategory)
       }
 
       const { data: products } = await query

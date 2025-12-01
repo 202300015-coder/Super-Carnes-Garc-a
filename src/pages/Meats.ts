@@ -21,20 +21,32 @@ function setupCategoryFilters() {
       
       // Filtrar productos
       const userRole = (window as any).userRole || 'user'
-      let query = supabase
-        .from('productos')
-        .select('*')
-        .eq('categoria', 'carnes')
-        .order('orden', { ascending: true })
+      
+      let query
+      
+      // Si hay filtro de subcategoría, hacer JOIN
+      if (subcategory && subcategory !== 'Todos') {
+        query = supabase
+          .from('productos')
+          .select(`
+            *,
+            producto_subcategorias!inner(subcategoria)
+          `)
+          .eq('categoria', 'carnes')
+          .eq('producto_subcategorias.subcategoria', subcategory)
+          .order('orden', { ascending: true })
+      } else {
+        // Sin filtro, traer todos
+        query = supabase
+          .from('productos')
+          .select('*')
+          .eq('categoria', 'carnes')
+          .order('orden', { ascending: true })
+      }
       
       // Filtrar por activo si no es admin
       if (userRole !== 'admin') {
         query = query.eq('activo', true)
-      }
-      
-      // Filtrar por subcategoría si no es "Todos"
-      if (subcategory && subcategory !== 'Todos') {
-        query = query.eq('subcategoria', subcategory)
       }
       
       const { data: products } = await query
