@@ -133,6 +133,8 @@ export function setupEditProductModal() {
         (document.getElementById('editPrecio') as HTMLInputElement).value = data.precio?.toString() || '';
 
         // Cargar subcategorías del producto desde la tabla producto_subcategorias
+        console.log('🔍 Cargando subcategorías para producto ID:', productId);
+        
         const { data: subcategoriasData, error: subcatError } = await supabase
           .from('producto_subcategorias')
           .select('subcategoria')
@@ -140,7 +142,11 @@ export function setupEditProductModal() {
 
         if (subcatError) {
           console.error('⚠️ Error cargando subcategorías:', subcatError);
+          console.error('⚠️ Error completo:', JSON.stringify(subcatError, null, 2));
         }
+
+        console.log('📦 Respuesta cruda de Supabase:', subcategoriasData);
+        console.log('📊 Cantidad de subcategorías recibidas:', subcategoriasData?.length || 0);
 
         const subcategorias = subcategoriasData?.map(item => item.subcategoria) || [];
         console.log('📋 Subcategorías cargadas:', subcategorias);
