@@ -151,22 +151,47 @@ export function setupEditProductModal() {
         const subcategorias = subcategoriasData?.map(item => item.subcategoria) || [];
         console.log('📋 Subcategorías cargadas:', subcategorias);
 
-        // Mostrar grupo de checkboxes según la categoría
-        toggleSubcategoryGroup(data.categoria);
+        // PRIMERO: Mostrar grupo de checkboxes según la categoría
+        const carnesGroup = document.getElementById('editSubcategoriaCarnes');
+        const productosGroup = document.getElementById('editSubcategoriaProductos');
+        
+        let visibleGroupId = '';
+        if (data.categoria === 'carnes') {
+          carnesGroup?.classList.remove('hidden');
+          productosGroup?.classList.add('hidden');
+          visibleGroupId = 'editSubcategoriaCarnes';
+        } else if (data.categoria === 'productos') {
+          carnesGroup?.classList.add('hidden');
+          productosGroup?.classList.remove('hidden');
+          visibleGroupId = 'editSubcategoriaProductos';
+        } else {
+          carnesGroup?.classList.add('hidden');
+          productosGroup?.classList.add('hidden');
+        }
 
-        // PRIMERO: Desmarcar TODOS los checkboxes
-        document.querySelectorAll('input[name="subcategorias"]').forEach((checkbox: any) => {
-          checkbox.checked = false;
-        });
+        // SEGUNDO: Esperar un micro-momento para que el DOM se actualice
+        requestAnimationFrame(() => {
+          // Desmarcar SOLO los checkboxes del grupo visible
+          const visibleGroup = document.getElementById(visibleGroupId);
+          if (visibleGroup) {
+            visibleGroup.querySelectorAll('input[name="subcategorias"]').forEach((checkbox: any) => {
+              checkbox.checked = false;
+              checkbox.removeAttribute('checked');
+            });
 
-        // SEGUNDO: Marcar solo los checkboxes correspondientes
-        subcategorias.forEach(subcat => {
-          const checkbox = document.querySelector(`input[name="subcategorias"][value="${subcat}"]`) as HTMLInputElement;
-          if (checkbox) {
-            checkbox.checked = true;
-            console.log(`✅ Marcado checkbox: ${subcat}`);
-          } else {
-            console.warn(`⚠️ No se encontró checkbox para: ${subcat}`);
+            // TERCERO: Marcar los checkboxes correspondientes
+            subcategorias.forEach(subcat => {
+              const checkbox = visibleGroup.querySelector(`input[name="subcategorias"][value="${subcat}"]`) as HTMLInputElement;
+              if (checkbox) {
+                checkbox.checked = true;
+                checkbox.setAttribute('checked', 'checked');
+                // Trigger visual update
+                checkbox.dispatchEvent(new Event('change', { bubbles: false }));
+                console.log(`✅ Marcado checkbox: ${subcat}`);
+              } else {
+                console.warn(`⚠️ No se encontró checkbox para: ${subcat}`);
+              }
+            });
           }
         });
 
@@ -481,6 +506,7 @@ export function setupEditProductModal() {
           
           if (delError) {
             console.error(`❌ Error eliminando ${subcat}:`, delError);
+            throw delError; // Detener si hay error
           } else {
             console.log(`✅ Eliminado: ${subcat}`);
           }
@@ -506,6 +532,13 @@ export function setupEditProductModal() {
         console.log('✅ Agregadas:', toAdd);
       }
       
+      // Verificar que realmente se guardó
+      const { data: verificacion } = await supabase
+        .from('producto_subcategorias')
+        .select('subcategoria')
+        .eq('producto_id', currentProductId);
+      
+      console.log('🔍 Verificación después de guardar:', verificacion?.map(s => s.subcategoria));
       console.log('✅ Subcategorías actualizadas correctamente');
 
       alert('✅ Producto actualizado exitosamente')
