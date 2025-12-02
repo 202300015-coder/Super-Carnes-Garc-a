@@ -1,4 +1,4 @@
-import './input.css'
+﻿import './input.css'
 import { supabase } from './lib/supabaseClient'
 import { Navigation } from './components/layout/Navigation'
 import { renderHome } from './pages/Home'
@@ -901,6 +901,8 @@ function attachUI() {
     const mobileAuthButtons = document.getElementById('mobileAuthButtons')
     const userMenuContainer = document.getElementById('userMenuContainer')
     const mobileUserInfo = document.getElementById('mobileUserInfo')
+    const dropdownAuthButtons = document.getElementById('dropdownAuthButtons')
+    const dropdownUserInfo = document.getElementById('dropdownUserInfo')
     
     if (session) {
       // Usuario autenticado
@@ -923,6 +925,9 @@ function attachUI() {
       mobileUserInfo?.classList.remove('hidden')
       authButtons?.classList.add('hidden')
       mobileAuthButtons?.classList.add('hidden')
+      // En el dropdown: mostrar info de usuario, ocultar botones auth
+      dropdownUserInfo?.classList.remove('hidden')
+      dropdownAuthButtons?.classList.add('hidden')
     } else {
       // Usuario NO autenticado
       // Mostrar botones de auth, ocultar men\u00fa de usuario
@@ -931,6 +936,9 @@ function attachUI() {
       mobileAuthButtons?.classList.remove('hidden')
       userMenuContainer?.classList.add('hidden')
       mobileUserInfo?.classList.add('hidden')
+      // En el dropdown: mostrar botones auth, ocultar info de usuario
+      dropdownAuthButtons?.classList.remove('hidden')
+      dropdownUserInfo?.classList.add('hidden')
     }
   })
   
@@ -940,11 +948,26 @@ function attachUI() {
   })
   
   document.getElementById('navRegisterButton')?.addEventListener('click', () => {
-    document.getElementById('loginButton')?.click()
-    // Esperar un poco y cambiar a registro
-    setTimeout(() => {
-      document.getElementById('switchToRegister')?.click()
-    }, 100)
+    const modal = document.getElementById('loginModal')
+    modal?.classList.remove('hidden')
+    modal?.classList.add('flex')
+    // Cambiar a formulario de registro
+    document.getElementById('loginForm')?.classList.add('hidden')
+    document.getElementById('registerForm')?.classList.remove('hidden')
+    const title = document.getElementById('loginModalTitle')
+    if (title) title.textContent = 'Crear Cuenta'
+  })
+  
+  // Event listeners para botones dentro del dropdown
+  document.getElementById('dropdownLoginButton')?.addEventListener('click', () => {
+    const modal = document.getElementById('loginModal')
+    modal?.classList.remove('hidden')
+    modal?.classList.add('flex')
+    // Asegurar que muestra formulario de login
+    document.getElementById('loginForm')?.classList.remove('hidden')
+    document.getElementById('registerForm')?.classList.add('hidden')
+    const title = document.getElementById('loginModalTitle')
+    if (title) title.textContent = 'Iniciar Sesión'
   })
   
   // Mobile

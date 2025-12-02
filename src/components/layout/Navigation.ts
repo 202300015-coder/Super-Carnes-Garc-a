@@ -28,15 +28,15 @@ export function Navigation() {
               </svg>
             </button>
             
-            <!-- Botones de Login/Registro (cuando NO hay sesión) -->
-            <div id="authButtons" class="hidden md:flex items-center space-x-2 flex-shrink-0">
-              <button id="navLoginButton" class="px-4 py-2 text-sm font-medium text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors">
+            <!-- Botones de Login/Registro (cuando NO hay sesión) - DESHABILITADOS -->
+            <!-- <div id="authButtons" class="hidden items-center space-x-2 flex-shrink-0">
+              <button id="navLoginButton" class="px-4 py-2 text-sm font-medium bg-white bg-opacity-10 hover:bg-opacity-20 rounded-lg transition-colors border border-white border-opacity-30">
                 Iniciar Sesión
               </button>
-              <button id="navRegisterButton" class="px-4 py-2 text-sm font-medium bg-white text-primary-600 hover:bg-opacity-90 rounded-lg transition-colors">
+              <button id="navRegisterButton" class="px-4 py-2 text-sm font-medium bg-white text-primary-600 hover:bg-opacity-90 rounded-lg transition-colors shadow-md">
                 Crear Cuenta
               </button>
-            </div>
+            </div> -->
             
             <!-- User Menu - Solo cuando HAY sesión -->
             <div class="relative hidden md:block flex-shrink-0" id="userMenuContainer">
@@ -52,16 +52,29 @@ export function Navigation() {
               
               <!-- Dropdown Menu -->
               <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-50">
-                <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-                  <p class="text-sm font-medium text-gray-900 dark:text-white truncate" id="dropdownEmail"></p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400 admin-only hidden">Administrador</p>
+                <!-- Opciones cuando NO hay sesión -->
+                <div id="dropdownAuthButtons" class="hidden">
+                  <button id="dropdownLoginButton" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                    </svg>
+                    <span>Iniciar Sesión</span>
+                  </button>
                 </div>
-                <button id="logoutButton" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center space-x-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                  </svg>
-                  <span>Cerrar Sesión</span>
-                </button>
+                
+                <!-- Info de usuario cuando HAY sesión -->
+                <div id="dropdownUserInfo" class="hidden">
+                  <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                    <p class="text-sm font-medium text-gray-900 dark:text-white truncate" id="dropdownEmail"></p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 admin-only hidden">Administrador</p>
+                  </div>
+                  <button id="logoutButton" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                    <span>Cerrar Sesión</span>
+                  </button>
+                </div>
               </div>
             </div>
             
