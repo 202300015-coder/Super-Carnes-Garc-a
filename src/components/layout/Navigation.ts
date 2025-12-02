@@ -28,13 +28,23 @@ export function Navigation() {
               </svg>
             </button>
             
-            <!-- User Menu - Solo en desktop -->
-            <div class="relative hidden md:block flex-shrink-0">
-              <button id="userMenuButton" class="hidden md:flex items-center space-x-2 px-3 lg:px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors min-w-0">
+            <!-- Botones de Login/Registro (cuando NO hay sesión) -->
+            <div id="authButtons" class="hidden md:flex items-center space-x-2 flex-shrink-0">
+              <button id="navLoginButton" class="px-4 py-2 text-sm font-medium text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors">
+                Iniciar Sesión
+              </button>
+              <button id="navRegisterButton" class="px-4 py-2 text-sm font-medium bg-white text-primary-600 hover:bg-opacity-90 rounded-lg transition-colors">
+                Crear Cuenta
+              </button>
+            </div>
+            
+            <!-- User Menu - Solo cuando HAY sesión -->
+            <div class="relative hidden md:block flex-shrink-0" id="userMenuContainer">
+              <button id="userMenuButton" class="flex items-center space-x-2 px-3 lg:px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors min-w-0">
                 <svg class="w-4 h-4 lg:w-5 lg:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                 </svg>
-                <span id="userEmail" class="text-xs lg:text-sm max-w-[100px] lg:max-w-[150px] truncate"></span>
+                <span id="userName" class="text-xs lg:text-sm font-medium max-w-[100px] lg:max-w-[150px] truncate"></span>
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                 </svg>
@@ -67,6 +77,16 @@ export function Navigation() {
         <!-- Mobile menu -->
         <div id="mobileMenu" class="hidden md:hidden mt-4 pb-4">
           <div class="flex flex-col space-y-4">
+            <!-- Botones de autenticación en mobile (cuando NO hay sesión) -->
+            <div id="mobileAuthButtons" class="hidden border-t border-primary-500 pt-4 space-y-2">
+              <button id="mobileNavLoginButton" class="w-full px-4 py-2 text-sm font-medium bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors">
+                Iniciar Sesión
+              </button>
+              <button id="mobileNavRegisterButton" class="w-full px-4 py-2 text-sm font-medium bg-white text-primary-600 hover:bg-opacity-90 rounded-lg transition-colors">
+                Crear Cuenta
+              </button>
+            </div>
+            
             <!-- User info en mobile cuando está logueado -->
             <div id="mobileUserInfo" class="hidden border-t border-primary-500 pt-4">
               <div class="flex items-center justify-between mb-4">
@@ -75,7 +95,7 @@ export function Navigation() {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                   </svg>
                   <div class="min-w-0 flex-1">
-                    <p class="text-sm font-medium truncate" id="mobileUserEmail"></p>
+                    <p class="text-sm font-medium truncate" id="mobileUserName"></p>
                     <p class="text-xs text-primary-200 admin-only hidden">Administrador</p>
                   </div>
                 </div>

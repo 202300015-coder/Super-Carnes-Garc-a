@@ -338,8 +338,8 @@ export function setupAuth() {
     setButtonLoading('registerSubmit', 'registerBtnText', 'registerSpinner', true)
     
     try {
-      // TODO: Guardar username en metadata del usuario
-      const data = await signUp(email, password)
+      // Guardar username en metadata del usuario
+      const data = await signUp(email, password, username)
       console.log('✅ Usuario registrado:', data)
       
       // Solicitar permiso para notificaciones inmediatamente

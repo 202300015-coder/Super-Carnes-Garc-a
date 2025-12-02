@@ -895,26 +895,70 @@ function attachUI() {
     }
   })
 
-  // Show user email in nav
+  // Show user info in nav (nombre o email)
   supabase.auth.getSession().then(({ data: { session } }) => {
+    const authButtons = document.getElementById('authButtons')
+    const mobileAuthButtons = document.getElementById('mobileAuthButtons')
+    const userMenuContainer = document.getElementById('userMenuContainer')
+    const mobileUserInfo = document.getElementById('mobileUserInfo')
+    
     if (session) {
-      const userEmail = document.getElementById('userEmail')
+      // Usuario autenticado
+      const userName = document.getElementById('userName')
       const dropdownEmail = document.getElementById('dropdownEmail')
-      const mobileUserEmail = document.getElementById('mobileUserEmail')
-      const mobileUserInfo = document.getElementById('mobileUserInfo')
+      const mobileUserName = document.getElementById('mobileUserName')
+      
+      const fullName = session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'Usuario'
       const email = session.user.email || ''
-      const shortEmail = email.length > 20 ? email.substring(0, 17) + '...' : email
       
-      // Desktop
-      if (userEmail) userEmail.textContent = shortEmail
+      // Desktop - mostrar nombre
+      if (userName) userName.textContent = fullName
       if (dropdownEmail) dropdownEmail.textContent = email
-      userMenuButton?.classList.remove('hidden')
-      userMenuButton?.classList.add('flex')
       
-      // Mobile
-      if (mobileUserEmail) mobileUserEmail.textContent = email
+      // Mobile - mostrar nombre
+      if (mobileUserName) mobileUserName.textContent = fullName
+      
+      // Mostrar men\u00fa de usuario, ocultar botones de auth
+      userMenuContainer?.classList.remove('hidden')
       mobileUserInfo?.classList.remove('hidden')
+      authButtons?.classList.add('hidden')
+      mobileAuthButtons?.classList.add('hidden')
+    } else {
+      // Usuario NO autenticado
+      // Mostrar botones de auth, ocultar men\u00fa de usuario
+      authButtons?.classList.remove('hidden')
+      authButtons?.classList.add('flex')
+      mobileAuthButtons?.classList.remove('hidden')
+      userMenuContainer?.classList.add('hidden')
+      mobileUserInfo?.classList.add('hidden')
     }
+  })
+  
+  // Event listeners para botones de Login/Registro en navegaci\u00f3n
+  document.getElementById('navLoginButton')?.addEventListener('click', () => {
+    document.getElementById('loginButton')?.click()
+  })
+  
+  document.getElementById('navRegisterButton')?.addEventListener('click', () => {
+    document.getElementById('loginButton')?.click()
+    // Esperar un poco y cambiar a registro
+    setTimeout(() => {
+      document.getElementById('switchToRegister')?.click()
+    }, 100)
+  })
+  
+  // Mobile
+  document.getElementById('mobileNavLoginButton')?.addEventListener('click', () => {
+    document.getElementById('menuButton')?.click() // Cerrar men\u00fa mobile
+    document.getElementById('loginButton')?.click()
+  })
+  
+  document.getElementById('mobileNavRegisterButton')?.addEventListener('click', () => {
+    document.getElementById('menuButton')?.click() // Cerrar men\u00fa mobile
+    document.getElementById('loginButton')?.click()
+    setTimeout(() => {
+      document.getElementById('switchToRegister')?.click()
+    }, 100)
   })
 
   // Search modal

@@ -1,9 +1,14 @@
 import { supabase } from './lib/supabaseClient'
 
-export async function signUp(email: string, password: string) {
+export async function signUp(email: string, password: string, fullName?: string) {
   const { data, error } = await supabase.auth.signUp({
     email,
-    password
+    password,
+    options: {
+      data: {
+        full_name: fullName || email.split('@')[0] // Guardar nombre o usar parte del email
+      }
+    }
   })
   if (error) throw error
   return data
