@@ -1,4 +1,4 @@
-﻿import './input.css'
+import './input.css'
 import { supabase } from './lib/supabaseClient'
 import { Navigation } from './components/layout/Navigation'
 import { renderHome } from './pages/Home'
@@ -20,17 +20,17 @@ if (isDarkMode) {
   document.documentElement.classList.add('dark')
 }
 
-// Estado de autenticación
+// Estado de autenticaci�n
 let userRole: string | null = null
-let isReloading: boolean = false // 🆕 Bandera para evitar recargas duplicadas
+let isReloading: boolean = false // ?? Bandera para evitar recargas duplicadas
 
 // Initialize state - recuperar de localStorage si existe
 let currentPage = localStorage.getItem('currentPage') || 'home'
 
-// Función global para actualizar visibilidad de botones admin
+// Funci�n global para actualizar visibilidad de botones admin
 function updateAdminButtons() {
   const adminElements = document.querySelectorAll('.admin-only')
-  console.log('🔄 updateAdminButtons - Elementos encontrados:', adminElements.length, 'Role:', userRole)
+  console.log('?? updateAdminButtons - Elementos encontrados:', adminElements.length, 'Role:', userRole)
   
   if (userRole === 'admin') {
     adminElements.forEach(el => {
@@ -43,10 +43,10 @@ function updateAdminButtons() {
   }
 }
 
-// Función global para actualizar el orden de productos
+// Funci�n global para actualizar el orden de productos
 async function updateProductOrder(productId: number, newOrder: number) {
   try {
-    console.log('🔄 Actualizando orden:', productId, '→', newOrder)
+    console.log('?? Actualizando orden:', productId, '?', newOrder)
     
     const { data, error } = await supabase
       .from('productos')
@@ -55,33 +55,33 @@ async function updateProductOrder(productId: number, newOrder: number) {
       .select()
     
     if (error) {
-      console.error('❌ Error en UPDATE:', error)
+      console.error('? Error en UPDATE:', error)
       throw error
     }
     
-    console.log('✅ Orden actualizado exitosamente:', data)
+    console.log('? Orden actualizado exitosamente:', data)
     return true
   } catch (error) {
-    console.error('❌ Error actualizando orden:', error)
+    console.error('? Error actualizando orden:', error)
     return false
   }
 }
 
-// Función global para configurar drag & drop (solo admin)
+// Funci�n global para configurar drag & drop (solo admin)
 function setupDragAndDrop() {
   if (userRole !== 'admin') {
-    console.log('⚠️ Drag & drop solo disponible para admin')
+    console.log('?? Drag & drop solo disponible para admin')
     return
   }
   
-  console.log('🎯 Configurando drag & drop para admin')
+  console.log('?? Configurando drag & drop para admin')
   
   const productCards = document.querySelectorAll('.product-card')
   let draggedElement: HTMLElement | null = null
   let draggedId: number | null = null
-  const pageNavigationArrows: HTMLElement[] = [] // Flechas de navegación entre páginas
+  const pageNavigationArrows: HTMLElement[] = [] // Flechas de navegaci�n entre p�ginas
   
-  // 🆕 Funciones para manejar flechas de navegación entre páginas
+  // ?? Funciones para manejar flechas de navegaci�n entre p�ginas
   const showPageNavigationArrows = () => {
     // Limpiar flechas anteriores si existen
     hidePageNavigationArrows()
@@ -89,7 +89,7 @@ function setupDragAndDrop() {
     const container = document.querySelector('.container') as HTMLElement
     if (!container) return
     
-    // 🔴 FRANJA ROJA IZQUIERDA (página anterior)
+    // ?? FRANJA ROJA IZQUIERDA (p�gina anterior)
     const leftStripe = document.createElement('div')
     leftStripe.id = 'leftPageStripe'
     leftStripe.className = 'fixed left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-red-600 to-transparent opacity-70 z-40 pointer-events-auto'
@@ -105,7 +105,7 @@ function setupDragAndDrop() {
       </svg>
     `
     
-    // 🔴 FRANJA ROJA DERECHA (página siguiente)
+    // ?? FRANJA ROJA DERECHA (p�gina siguiente)
     const rightStripe = document.createElement('div')
     rightStripe.id = 'rightPageStripe'
     rightStripe.className = 'fixed right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-red-600 to-transparent opacity-70 z-40 pointer-events-auto'
@@ -195,15 +195,15 @@ function setupDragAndDrop() {
   
   const moveProductToPreviousPage = async () => {
     if (!draggedId) {
-      console.error('❌ No hay producto arrastrado')
+      console.error('? No hay producto arrastrado')
       return
     }
     
-    console.log('📄 Intentando mover producto', draggedId, 'a página anterior')
+    console.log('?? Intentando mover producto', draggedId, 'a p�gina anterior')
     
-    const confirmed = confirm('¿Mover este producto a la página anterior?')
+    const confirmed = confirm('�Mover este producto a la p�gina anterior?')
     if (!confirmed) {
-      console.log('❌ Usuario canceló el movimiento')
+      console.log('? Usuario cancel� el movimiento')
       hidePageNavigationArrows()
       if (draggedElement) {
         draggedElement.classList.remove('opacity-40', 'scale-95')
@@ -226,15 +226,15 @@ function setupDragAndDrop() {
   
   const moveProductToNextPage = async () => {
     if (!draggedId) {
-      console.error('❌ No hay producto arrastrado')
+      console.error('? No hay producto arrastrado')
       return
     }
     
-    console.log('📄 Intentando mover producto', draggedId, 'a página siguiente')
+    console.log('?? Intentando mover producto', draggedId, 'a p�gina siguiente')
     
-    const confirmed = confirm('¿Mover este producto a la página siguiente?')
+    const confirmed = confirm('�Mover este producto a la p�gina siguiente?')
     if (!confirmed) {
-      console.log('❌ Usuario canceló el movimiento')
+      console.log('? Usuario cancel� el movimiento')
       hidePageNavigationArrows()
       if (draggedElement) {
         draggedElement.classList.remove('opacity-40', 'scale-95')
@@ -256,23 +256,23 @@ function setupDragAndDrop() {
   }
   
   const moveProductBetweenPages = async (productId: number, direction: 'previous' | 'next') => {
-    console.log(`📄 Moviendo producto ${productId} a la página ${direction === 'next' ? 'siguiente' : 'anterior'}`)
+    console.log(`?? Moviendo producto ${productId} a la p�gina ${direction === 'next' ? 'siguiente' : 'anterior'}`)
     
     const PRODUCTS_PER_PAGE = 16
     let allProducts: any[] = []
     
-    // 🔧 CRÍTICO: Obtener productos aplicando los MISMOS filtros que la paginación
+    // ?? CR�TICO: Obtener productos aplicando los MISMOS filtros que la paginaci�n
     // Esto asegura que estamos trabajando con el mismo conjunto de datos visible
     
-    // Obtener los productos según la página actual
+    // Obtener los productos seg�n la p�gina actual
     if (currentPage === 'meats') {
-      // Para carnes, filtrar por categoría
+      // Para carnes, filtrar por categor�a
       let query = supabase
         .from('productos')
         .select('id, orden')
         .eq('categoria', 'carnes')
       
-      // 🆕 IMPORTANTE: Filtrar por activo si NO es admin (igual que la paginación)
+      // ?? IMPORTANTE: Filtrar por activo si NO es admin (igual que la paginaci�n)
       if (userRole !== 'admin') {
         query = query.eq('activo', true)
       }
@@ -288,7 +288,7 @@ function setupDragAndDrop() {
         .select('id, orden')
         .neq('categoria', 'carnes')
       
-      // 🆕 IMPORTANTE: Filtrar por activo si NO es admin
+      // ?? IMPORTANTE: Filtrar por activo si NO es admin
       if (userRole !== 'admin') {
         query = query.eq('activo', true)
       }
@@ -304,7 +304,7 @@ function setupDragAndDrop() {
         .select('id, orden')
         .gt('descuento', 0)
       
-      // 🆕 IMPORTANTE: Filtrar por activo si NO es admin
+      // ?? IMPORTANTE: Filtrar por activo si NO es admin
       if (userRole !== 'admin') {
         query = query.eq('activo', true)
       }
@@ -314,31 +314,31 @@ function setupDragAndDrop() {
       const { data } = await query
       allProducts = data || []
     } else {
-      console.error('❌ Página actual no soportada para mover productos:', currentPage)
+      console.error('? P�gina actual no soportada para mover productos:', currentPage)
       return
     }
     
     if (!allProducts || allProducts.length === 0) {
-      console.error('❌ No se obtuvieron productos')
+      console.error('? No se obtuvieron productos')
       return
     }
     
-    console.log('📊 Productos obtenidos para movimiento:', {
+    console.log('?? Productos obtenidos para movimiento:', {
       total: allProducts.length,
       userRole,
       currentPage,
       productIds: allProducts.map(p => p.id)
     })
     
-    // Encontrar el índice del producto actual en el array filtrado
+    // Encontrar el �ndice del producto actual en el array filtrado
     const currentIndex = allProducts.findIndex(p => p.id === productId)
     if (currentIndex === -1) {
-      console.error('❌ No se encontró el producto en la lista')
-      alert('❌ Error: El producto no se encuentra en la lista actual')
+      console.error('? No se encontr� el producto en la lista')
+      alert('? Error: El producto no se encuentra en la lista actual')
       return
     }
     
-    // 🆕 NUEVA LÓGICA: Calcular página actual y determinar si existe página destino
+    // ?? NUEVA L�GICA: Calcular p�gina actual y determinar si existe p�gina destino
     const currentPageNum = Math.floor(currentIndex / PRODUCTS_PER_PAGE) + 1
     const totalPages = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE)
     
@@ -347,28 +347,28 @@ function setupDragAndDrop() {
     
     if (direction === 'next') {
       targetPageNum = currentPageNum + 1
-      // Validar que existe la página siguiente
+      // Validar que existe la p�gina siguiente
       if (targetPageNum > totalPages) {
-        alert('No hay página siguiente')
-        console.log('⚠️ No existe página siguiente. Página actual:', currentPageNum, 'Total páginas:', totalPages)
+        alert('No hay p�gina siguiente')
+        console.log('?? No existe p�gina siguiente. P�gina actual:', currentPageNum, 'Total p�ginas:', totalPages)
         return
       }
-      // Mover al PRIMER producto de la página siguiente
+      // Mover al PRIMER producto de la p�gina siguiente
       targetIndex = (targetPageNum - 1) * PRODUCTS_PER_PAGE
     } else {
       targetPageNum = currentPageNum - 1
-      // Validar que existe la página anterior
+      // Validar que existe la p�gina anterior
       if (targetPageNum < 1) {
-        alert('No hay página anterior')
-        console.log('⚠️ No existe página anterior. Página actual:', currentPageNum)
+        alert('No hay p�gina anterior')
+        console.log('?? No existe p�gina anterior. P�gina actual:', currentPageNum)
         return
       }
-      // Mover al ÚLTIMO producto de la página anterior
+      // Mover al �LTIMO producto de la p�gina anterior
       const endOfPrevPage = Math.min(targetPageNum * PRODUCTS_PER_PAGE - 1, allProducts.length - 1)
       targetIndex = endOfPrevPage
     }
     
-    console.log('📊 Debug movimiento:', {
+    console.log('?? Debug movimiento:', {
       currentIndex,
       currentPageNum,
       targetPageNum,
@@ -379,10 +379,10 @@ function setupDragAndDrop() {
       currentProductId: productId
     })
     
-    // Validar que el índice objetivo existe (doble verificación)
+    // Validar que el �ndice objetivo existe (doble verificaci�n)
     if (targetIndex < 0 || targetIndex >= allProducts.length) {
-      alert('No hay página ' + (direction === 'next' ? 'siguiente' : 'anterior'))
-      console.log('⚠️ Índice objetivo fuera de rango:', targetIndex, '(total productos:', allProducts.length, ')')
+      alert('No hay p�gina ' + (direction === 'next' ? 'siguiente' : 'anterior'))
+      console.log('?? �ndice objetivo fuera de rango:', targetIndex, '(total productos:', allProducts.length, ')')
       return
     }
     
@@ -390,35 +390,35 @@ function setupDragAndDrop() {
     const currentProduct = allProducts[currentIndex]
     const targetProduct = allProducts[targetIndex]
     
-    console.log('🔄 Intercambiando orden:', {
+    console.log('?? Intercambiando orden:', {
       currentId: currentProduct.id,
       currentOrder: currentProduct.orden,
       targetId: targetProduct.id,
       targetOrder: targetProduct.orden,
-      movingFrom: `Página ${currentPageNum}, índice ${currentIndex}`,
-      movingTo: `Página ${targetPageNum}, índice ${targetIndex}`
+      movingFrom: `P�gina ${currentPageNum}, �ndice ${currentIndex}`,
+      movingTo: `P�gina ${targetPageNum}, �ndice ${targetIndex}`
     })
     
-    // Intercambiar órdenes
+    // Intercambiar �rdenes
     await updateProductOrder(currentProduct.id, targetProduct.orden)
     await updateProductOrder(targetProduct.id, currentProduct.orden)
     
-    // Recargar la página actual
+    // Recargar la p�gina actual
     await reloadCurrentPage()
   }
   
   const reloadCurrentPage = async () => {
     if (isReloading) {
-      console.log('⚠️ Ya hay una recarga en proceso, saltando...')
+      console.log('?? Ya hay una recarga en proceso, saltando...')
       return
     }
     
     isReloading = true
-    console.log('🔄 Recargando página actual:', currentPage)
+    console.log('?? Recargando p�gina actual:', currentPage)
     const pageContent = document.getElementById('pageContent')
     
     if (!pageContent || !currentPage) {
-      console.error('❌ No se puede recargar: pageContent o currentPage no disponible')
+      console.error('? No se puede recargar: pageContent o currentPage no disponible')
       isReloading = false
       return
     }
@@ -441,7 +441,7 @@ function setupDragAndDrop() {
     // Adjuntar eventos y funcionalidad
     attachUIForContent()
     
-    // Importar y configurar paginación
+    // Importar y configurar paginaci�n
     const { setupPagination } = await import('./pages/pagination')
     
     if (currentPage === 'meats') {
@@ -452,9 +452,9 @@ function setupDragAndDrop() {
       await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
     }
     
-    console.log('✅ Página recargada exitosamente')
+    console.log('? P�gina recargada exitosamente')
     isReloading = false
-    alert('✅ Producto movido correctamente')
+    alert('? Producto movido correctamente')
   }
   
   productCards.forEach((card) => {
@@ -471,9 +471,9 @@ function setupDragAndDrop() {
       element.style.cursor = 'grabbing'
       element.classList.add('opacity-40', 'scale-95')
       element.style.transition = 'all 0.2s ease'
-      console.log('🎯 Arrastrando producto:', draggedId)
+      console.log('?? Arrastrando producto:', draggedId)
       
-      // 🆕 Mostrar flechas de navegación entre páginas
+      // ?? Mostrar flechas de navegaci�n entre p�ginas
       showPageNavigationArrows()
     })
     
@@ -482,7 +482,7 @@ function setupDragAndDrop() {
       element.classList.remove('opacity-40', 'scale-95')
       element.style.cursor = 'grab'
       
-      // 🆕 Ocultar flechas de navegación
+      // ?? Ocultar flechas de navegaci�n
       hidePageNavigationArrows()
     })
     
@@ -511,8 +511,8 @@ function setupDragAndDrop() {
       
       if (!draggedId || !targetId) return
       
-      // Confirmación antes de reordenar
-      const confirmed = confirm('¿Intercambiar el orden de estos productos?')
+      // Confirmaci�n antes de reordenar
+      const confirmed = confirm('�Intercambiar el orden de estos productos?')
       if (!confirmed) {
         if (draggedElement) {
           draggedElement.classList.remove('opacity-40', 'scale-95')
@@ -520,66 +520,66 @@ function setupDragAndDrop() {
         return
       }
       
-      console.log('📦 Intercambiando orden:', draggedId, '↔', targetId)
-      console.log('📍 Página actual:', currentPage) // 🆕 Debug
+      console.log('?? Intercambiando orden:', draggedId, '?', targetId)
+      console.log('?? P�gina actual:', currentPage) // ?? Debug
       
-      // Obtener órdenes actuales
+      // Obtener �rdenes actuales
       const { data: products } = await supabase
         .from('productos')
         .select('id, orden')
         .in('id', [draggedId, targetId])
       
-      console.log('📊 Productos obtenidos:', products)
+      console.log('?? Productos obtenidos:', products)
       
       if (!products || products.length !== 2) {
-        console.error('❌ Error: No se obtuvieron 2 productos. Recibidos:', products?.length)
+        console.error('? Error: No se obtuvieron 2 productos. Recibidos:', products?.length)
         return
       }
       
-      // 🔧 CORREGIDO: Comparar IDs convirtiendo a número
+      // ?? CORREGIDO: Comparar IDs convirtiendo a n�mero
       const draggedProduct = products.find(p => Number(p.id) === Number(draggedId))
       const targetProduct = products.find(p => Number(p.id) === Number(targetId))
       
-      console.log('🔍 Productos encontrados:', { draggedProduct, targetProduct }) // 🆕 Debug
+      console.log('?? Productos encontrados:', { draggedProduct, targetProduct }) // ?? Debug
       
       if (!draggedProduct || !targetProduct) {
-        console.error('❌ Error: No se encontraron productos en la respuesta')
-        console.error('❌ Buscando IDs:', { draggedId, targetId })
-        console.error('❌ IDs en respuesta:', products.map(p => ({ id: p.id, tipo: typeof p.id })))
+        console.error('? Error: No se encontraron productos en la respuesta')
+        console.error('? Buscando IDs:', { draggedId, targetId })
+        console.error('? IDs en respuesta:', products.map(p => ({ id: p.id, tipo: typeof p.id })))
         return
       }
       
-      console.log('🔄 Actualizando órdenes en BD...')
+      console.log('?? Actualizando �rdenes en BD...')
       
-      // 🔧 MEJORADO: Usar órdenes únicas basadas en ID si los órdenes son iguales
+      // ?? MEJORADO: Usar �rdenes �nicas basadas en ID si los �rdenes son iguales
       let newDraggedOrder = targetProduct.orden
       let newTargetOrder = draggedProduct.orden
       
       // Si ambos tienen el mismo orden, usar los IDs como orden temporal
       if (draggedProduct.orden === targetProduct.orden) {
-        console.log('⚠️ Advertencia: Ambos productos tienen el mismo orden, usando IDs como base')
+        console.log('?? Advertencia: Ambos productos tienen el mismo orden, usando IDs como base')
         newDraggedOrder = targetId
         newTargetOrder = draggedId
       }
       
-      // Intercambiar órdenes
+      // Intercambiar �rdenes
       const result1 = await updateProductOrder(draggedId, newDraggedOrder)
       const result2 = await updateProductOrder(targetId, newTargetOrder)
       
-      console.log('✅ Resultado actualizaciones:', { result1, result2 })
+      console.log('? Resultado actualizaciones:', { result1, result2 })
       
       if (!result1 || !result2) {
-        console.error('❌ Error al actualizar órdenes en BD')
-        alert('❌ Error al reordenar productos. Verifica la consola.')
+        console.error('? Error al actualizar �rdenes en BD')
+        alert('? Error al reordenar productos. Verifica la consola.')
         return
       }
       
-      // Recargar página actual con animación
-      console.log('🔄 Recargando vista después de intercambio...')
-      console.log('📍 currentPage:', currentPage)
+      // Recargar p�gina actual con animaci�n
+      console.log('?? Recargando vista despu�s de intercambio...')
+      console.log('?? currentPage:', currentPage)
       
       if (isReloading) {
-        console.log('⚠️ Ya hay una recarga en proceso, saltando...')
+        console.log('?? Ya hay una recarga en proceso, saltando...')
         draggedElement = null
         draggedId = null
         return
@@ -606,7 +606,7 @@ function setupDragAndDrop() {
         
         attachUIForContent()
         
-        // Reinicializar paginación
+        // Reinicializar paginaci�n
         const { setupPagination } = await import('./pages/pagination')
         
         if (currentPage === 'meats') {
@@ -617,23 +617,23 @@ function setupDragAndDrop() {
           await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
         }
         
-        console.log('✅ Vista actualizada con nuevo orden')
+        console.log('? Vista actualizada con nuevo orden')
         isReloading = false
       } else {
         isReloading = false
       }
       
-      // 🔧 IMPORTANTE: Resetear draggedElement y draggedId DESPUÉS de usarlos
+      // ?? IMPORTANTE: Resetear draggedElement y draggedId DESPU�S de usarlos
       draggedElement = null
       draggedId = null
     })
   })
 }
 
-// Función global para activar productos inactivos
+// Funci�n global para activar productos inactivos
 async function activateProduct(productId: number) {
   try {
-    console.log('🟢 Activando producto:', productId)
+    console.log('?? Activando producto:', productId)
     
     const { error } = await supabase
       .from('productos')
@@ -642,41 +642,41 @@ async function activateProduct(productId: number) {
     
     if (error) throw error
     
-    console.log('✅ Producto activado exitosamente')
-    console.log('📍 Página actual:', currentPage)
+    console.log('? Producto activado exitosamente')
+    console.log('?? P�gina actual:', currentPage)
     
     // Obtener referencia a pageContent ANTES del setTimeout
     const pageContent = document.getElementById('pageContent')
     
     if (!pageContent) {
-      console.error('❌ No se encontró pageContent')
-      alert('✅ Producto activado correctamente')
+      console.error('? No se encontr� pageContent')
+      alert('? Producto activado correctamente')
       return
     }
     
-    console.log('🔄 Iniciando recarga de página:', currentPage)
+    console.log('?? Iniciando recarga de p�gina:', currentPage)
     
     // Recargar INMEDIATAMENTE sin setTimeout
     if (currentPage === 'home') {
-      console.log('🏠 Recargando Home...')
+      console.log('?? Recargando Home...')
       pageContent.innerHTML = renderHome()
     } else if (currentPage === 'meats') {
-      console.log('🥩 Recargando Carnes...')
+      console.log('?? Recargando Carnes...')
       pageContent.innerHTML = renderMeats()
     } else if (currentPage === 'products') {
-      console.log('📦 Recargando Productos...')
+      console.log('?? Recargando Productos...')
       pageContent.innerHTML = renderProducts()
     } else if (currentPage === 'offers') {
-      console.log('🏷️ Recargando Ofertas...')
+      console.log('??? Recargando Ofertas...')
       pageContent.innerHTML = renderOffers()
     }
     
-    console.log('✅ HTML actualizado, re-adjuntando eventos...')
+    console.log('? HTML actualizado, re-adjuntando eventos...')
     
-    // Re-adjuntar eventos DESPUÉS de renderizar
+    // Re-adjuntar eventos DESPU�S de renderizar
     attachUIForContent()
     
-    // ✨ NUEVO: Reinicializar paginación según la página actual
+    // ? NUEVO: Reinicializar paginaci�n seg�n la p�gina actual
     const { setupPagination } = await import('./pages/pagination')
     
     if (currentPage === 'meats') {
@@ -687,17 +687,17 @@ async function activateProduct(productId: number) {
       await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
     }
     
-    console.log('✅ Paginación reinicializada')
-    console.log('✅ Eventos re-adjuntados')
+    console.log('? Paginaci�n reinicializada')
+    console.log('? Eventos re-adjuntados')
     
-    // Mostrar mensaje DESPUÉS de todo
+    // Mostrar mensaje DESPU�S de todo
     setTimeout(() => {
-      alert('✅ Producto activado correctamente')
+      alert('? Producto activado correctamente')
     }, 200)
     
   } catch (error) {
-    console.error('❌ Error activando producto:', error)
-    alert('❌ Error al activar el producto')
+    console.error('? Error activando producto:', error)
+    alert('? Error al activar el producto')
   }
 }
 
@@ -712,7 +712,7 @@ async function checkAuth() {
   const { data: { session } } = await supabase.auth.getSession()
   
   if (session) {
-    console.log('🔑 Sesión encontrada, obteniendo rol desde BD...')
+    console.log('?? Sesi�n encontrada, obteniendo rol desde BD...')
     
     // SIEMPRE obtener el rol DIRECTAMENTE de la base de datos
     // NO confiar en el JWT porque puede estar desactualizado
@@ -723,21 +723,21 @@ async function checkAuth() {
       .single()
     
     if (error) {
-      console.error('❌ Error obteniendo perfil:', error)
-      console.error('❌ Detalles:', { userId: session.user.id, email: session.user.email })
+      console.error('? Error obteniendo perfil:', error)
+      console.error('? Detalles:', { userId: session.user.id, email: session.user.email })
       userRole = 'user' // Default a user si hay error
       window.userRole = 'user'
     } else if (!profile) {
-      console.error('❌ No se encontró perfil para el usuario')
+      console.error('? No se encontr� perfil para el usuario')
       userRole = 'user'
       window.userRole = 'user'
     } else {
       userRole = profile.role || 'user'
       window.userRole = userRole
-      console.log('✅ Rol obtenido de BD:', userRole)
+      console.log('? Rol obtenido de BD:', userRole)
     }
     
-    console.log('🔐 Usuario autenticado:', { 
+    console.log('?? Usuario autenticado:', { 
       email: session.user.email, 
       userId: session.user.id,
       roleBD: userRole,
@@ -748,7 +748,7 @@ async function checkAuth() {
   
   userRole = null
   window.userRole = null
-  console.log('❌ No hay sesión activa')
+  console.log('? No hay sesi�n activa')
   return false
 }
 
@@ -782,22 +782,22 @@ function renderApp() {
 
   // Renderizar modales directamente en el body (solo una vez)
   if (!document.getElementById('loginModal')) {
-    console.log('✨ Renderizando loginModal por primera vez')
+    console.log('? Renderizando loginModal por primera vez')
     document.body.insertAdjacentHTML('beforeend', LoginModal())
   } else {
-    console.log('⚠️ loginModal ya existe, saltando...')
+    console.log('?? loginModal ya existe, saltando...')
   }
   if (!document.getElementById('addProductModal')) {
-    console.log('✨ Renderizando addProductModal por primera vez')
+    console.log('? Renderizando addProductModal por primera vez')
     document.body.insertAdjacentHTML('beforeend', AddProductModal())
   } else {
-    console.log('⚠️ addProductModal ya existe, saltando...')
+    console.log('?? addProductModal ya existe, saltando...')
   }
   if (!document.getElementById('editProductModal')) {
-    console.log('✨ Renderizando editProductModal por primera vez')
+    console.log('? Renderizando editProductModal por primera vez')
     document.body.insertAdjacentHTML('beforeend', EditProductModal())
   } else {
-    console.log('⚠️ editProductModal ya existe, saltando...')
+    console.log('?? editProductModal ya existe, saltando...')
   }
 
   // After render, attach UI event handlers
@@ -811,9 +811,9 @@ function renderAuthPageView() {
   setupAuthPage()
 }
 
-// Attach UI handlers solo para contenido dinámico (sin duplicar event listeners de la nav)
+// Attach UI handlers solo para contenido din�mico (sin duplicar event listeners de la nav)
 function attachUIForContent() {
-  console.log('🔧 attachUIForContent - userRole:', userRole)
+  console.log('?? attachUIForContent - userRole:', userRole)
   
   // Initialize auth handlers
   try {
@@ -823,24 +823,24 @@ function attachUIForContent() {
     
     // Show/hide admin elements based on role
     const adminElements = document.querySelectorAll('.admin-only')
-    console.log('📊 Elementos admin encontrados:', adminElements.length)
+    console.log('?? Elementos admin encontrados:', adminElements.length)
     
     if (userRole === 'admin') {
-      console.log('✅ Usuario es ADMIN - mostrando botones')
+      console.log('? Usuario es ADMIN - mostrando botones')
       adminElements.forEach(el => {
         (el as HTMLElement).style.display = 'flex'
       })
       
-      // Nota: setupDragAndDrop() se llama automáticamente desde pagination.ts
-      // después de renderizar productos, así que no es necesario llamarlo aquí
+      // Nota: setupDragAndDrop() se llama autom�ticamente desde pagination.ts
+      // despu�s de renderizar productos, as� que no es necesario llamarlo aqu�
     } else {
-      console.log('❌ Usuario NO es admin - ocultando botones (role:', userRole, ')')
+      console.log('? Usuario NO es admin - ocultando botones (role:', userRole, ')')
       adminElements.forEach(el => {
         (el as HTMLElement).style.display = 'none'
       })
     }
   } catch (e) {
-    console.error('❌ Error en attachUIForContent:', e)
+    console.error('? Error en attachUIForContent:', e)
   }
 }
 
@@ -877,10 +877,10 @@ function attachUI() {
   document.getElementById('logoutButton')?.addEventListener('click', async () => {
     const { error } = await supabase.auth.signOut()
     if (!error) {
-      console.log('✅ Sesión cerrada')
+      console.log('? Sesi�n cerrada')
       window.location.reload()
     } else {
-      console.error('❌ Error al cerrar sesión:', error)
+      console.error('? Error al cerrar sesi�n:', error)
     }
   })
 
@@ -888,21 +888,20 @@ function attachUI() {
   document.getElementById('mobileLogoutButton')?.addEventListener('click', async () => {
     const { error } = await supabase.auth.signOut()
     if (!error) {
-      console.log('✅ Sesión cerrada')
+      console.log('? Sesi�n cerrada')
       window.location.reload()
     } else {
-      console.error('❌ Error al cerrar sesión:', error)
+      console.error('? Error al cerrar sesi�n:', error)
     }
   })
 
   // Show user info in nav (nombre o email)
   supabase.auth.getSession().then(({ data: { session } }) => {
-    const authButtons = document.getElementById('authButtons')
-    const mobileAuthButtons = document.getElementById('mobileAuthButtons')
     const userMenuContainer = document.getElementById('userMenuContainer')
     const mobileUserInfo = document.getElementById('mobileUserInfo')
     const dropdownAuthButtons = document.getElementById('dropdownAuthButtons')
     const dropdownUserInfo = document.getElementById('dropdownUserInfo')
+    const mobileAuthButtons = document.getElementById('mobileAuthButtons')
     
     if (session) {
       // Usuario autenticado
@@ -920,22 +919,16 @@ function attachUI() {
       // Mobile - mostrar nombre
       if (mobileUserName) mobileUserName.textContent = fullName
       
-      // Mostrar men\u00fa de usuario, ocultar botones de auth
+      // Mostrar men� de usuario siempre
       userMenuContainer?.classList.remove('hidden')
       mobileUserInfo?.classList.remove('hidden')
-      authButtons?.classList.add('hidden')
-      mobileAuthButtons?.classList.add('hidden')
       // En el dropdown: mostrar info de usuario, ocultar botones auth
       dropdownUserInfo?.classList.remove('hidden')
       dropdownAuthButtons?.classList.add('hidden')
     } else {
       // Usuario NO autenticado
       // Mostrar botones de auth, ocultar men\u00fa de usuario
-      authButtons?.classList.remove('hidden')
-      authButtons?.classList.add('flex')
-      mobileAuthButtons?.classList.remove('hidden')
-      userMenuContainer?.classList.add('hidden')
-      mobileUserInfo?.classList.add('hidden')
+      userMenuContainer?.classList.remove('hidden'); const userName = document.getElementById('userName'); if (userName) userName.textContent = 'Cuenta'
       // En el dropdown: mostrar botones auth, ocultar info de usuario
       dropdownAuthButtons?.classList.remove('hidden')
       dropdownUserInfo?.classList.add('hidden')
@@ -967,7 +960,7 @@ function attachUI() {
     document.getElementById('loginForm')?.classList.remove('hidden')
     document.getElementById('registerForm')?.classList.add('hidden')
     const title = document.getElementById('loginModalTitle')
-    if (title) title.textContent = 'Iniciar Sesión'
+    if (title) title.textContent = 'Iniciar Sesi�n'
   })
   
   // Mobile
@@ -999,7 +992,7 @@ function attachUI() {
     }
   })
 
-  // Función para registrar event listeners de navegación
+  // Funci�n para registrar event listeners de navegaci�n
   function setupNavigationListeners() {
     document.querySelectorAll<HTMLAnchorElement>('.nav-link').forEach(link => {
       link.addEventListener('click', async (e) => {
@@ -1009,20 +1002,20 @@ function attachUI() {
           currentPage = page
           localStorage.setItem('currentPage', page) // Guardar en localStorage
           
-          // Scroll suave al inicio al cambiar de sección
+          // Scroll suave al inicio al cambiar de secci�n
           window.scrollTo({ top: 0, behavior: 'smooth' })
           
           // re-render page content only
           const pageContent = document.getElementById('pageContent')
           if (pageContent) pageContent.innerHTML = renderPage(currentPage)
           
-          // re-attach UI for new content (pero NO para la navegación)
+          // re-attach UI for new content (pero NO para la navegaci�n)
           attachUIForContent()
           
-          // ✨ Volver a registrar listeners de navegación para el nuevo contenido
+          // ? Volver a registrar listeners de navegaci�n para el nuevo contenido
           setupNavigationListeners()
           
-          // ✨ NUEVO: Reinicializar paginación después de cambiar sección
+          // ? NUEVO: Reinicializar paginaci�n despu�s de cambiar secci�n
           const { setupPagination } = await import('./pages/pagination')
           
           if (currentPage === 'meats') {
@@ -1037,7 +1030,7 @@ function attachUI() {
     })
   }
 
-  // Navigation links (router) - Llamar la función al inicio
+  // Navigation links (router) - Llamar la funci�n al inicio
   setupNavigationListeners()
 
   // Initialize auth handlers
@@ -1052,21 +1045,21 @@ function attachUI() {
     
     // Show/hide admin elements based on role
     const adminElements = document.querySelectorAll('.admin-only')
-    console.log('📊 [attachUI] Elementos admin encontrados:', adminElements.length, 'Role:', userRole)
+    console.log('?? [attachUI] Elementos admin encontrados:', adminElements.length, 'Role:', userRole)
     
     if (userRole === 'admin') {
-      console.log('✅ [attachUI] Usuario es ADMIN - mostrando botones')
+      console.log('? [attachUI] Usuario es ADMIN - mostrando botones')
       adminElements.forEach(el => {
         (el as HTMLElement).style.display = 'flex'
       })
     } else {
-      console.log('❌ [attachUI] Usuario NO es admin - ocultando botones')
+      console.log('? [attachUI] Usuario NO es admin - ocultando botones')
       adminElements.forEach(el => {
         (el as HTMLElement).style.display = 'none'
       })
     }
   } catch (e) {
-    console.error('❌ Error en attachUI:', e)
+    console.error('? Error en attachUI:', e)
   }
 
   // Predictive search (global simple implementation)
@@ -1079,7 +1072,7 @@ function attachUI() {
       return
     }
     const results = [
-      'Ribeye', 'T-Bone', 'Picaña', 'Arrachera', 'Chorizo', 'Costillas'
+      'Ribeye', 'T-Bone', 'Pica�a', 'Arrachera', 'Chorizo', 'Costillas'
     ].filter(item => item.toLowerCase().includes(query))
     if (searchResults) {
       searchResults.innerHTML = results.map(r => `\n        <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer">${r}</div>\n      `).join('')
@@ -1092,17 +1085,17 @@ async function init() {
   // Por defecto, renderizar app como visitante
   renderApp()
   
-  // Intentar verificar si hay sesión de admin
+  // Intentar verificar si hay sesi�n de admin
   const authenticated = await checkAuth()
   
   if (authenticated) {
-    console.log('✅ Admin autenticado')
+    console.log('? Admin autenticado')
     updateAdminButtons()
   } else {
-    console.log('👤 Visitante (sin login)')
+    console.log('?? Visitante (sin login)')
   }
   
-  // 🆕 Configurar acceso secreto para admin (doble click en el logo)
+  // ?? Configurar acceso secreto para admin (doble click en el logo)
   setTimeout(() => {
     const logo = document.getElementById('adminSecretAccess')
     if (logo) {
@@ -1116,7 +1109,7 @@ async function init() {
         if (clickCount === 1) {
           clickTimer = setTimeout(() => {
             clickCount = 0
-          }, 500) // Reset después de 500ms
+          }, 500) // Reset despu�s de 500ms
         } else if (clickCount === 2) {
           if (clickTimer) clearTimeout(clickTimer)
           clickCount = 0
@@ -1127,7 +1120,7 @@ async function init() {
             loginModal.classList.remove('hidden')
             loginModal.classList.add('flex')
           } else {
-            // Si no existe el modal, navegar a página de auth
+            // Si no existe el modal, navegar a p�gina de auth
             renderAuthPageView()
           }
         }
@@ -1135,7 +1128,7 @@ async function init() {
     }
   }, 500)
   
-  // 🆕 Inicializar paginación si estamos en una página con productos
+  // ?? Inicializar paginaci�n si estamos en una p�gina con productos
   const { setupPagination } = await import('./pages/pagination')
   
   if (currentPage === 'meats') {
@@ -1148,7 +1141,7 @@ async function init() {
   
   // Listen for auth changes
   supabase.auth.onAuthStateChange((event, session) => {
-    console.log('🔄 Auth state changed:', event)
+    console.log('?? Auth state changed:', event)
     if (event === 'SIGNED_IN' && session) {
       window.location.reload()
     } else if (event === 'SIGNED_OUT') {

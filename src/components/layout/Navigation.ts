@@ -28,16 +28,6 @@ export function Navigation() {
               </svg>
             </button>
             
-            <!-- Botones de Login/Registro (cuando NO hay sesión) - DESHABILITADOS -->
-            <!-- <div id="authButtons" class="hidden items-center space-x-2 flex-shrink-0">
-              <button id="navLoginButton" class="px-4 py-2 text-sm font-medium bg-white bg-opacity-10 hover:bg-opacity-20 rounded-lg transition-colors border border-white border-opacity-30">
-                Iniciar Sesión
-              </button>
-              <button id="navRegisterButton" class="px-4 py-2 text-sm font-medium bg-white text-primary-600 hover:bg-opacity-90 rounded-lg transition-colors shadow-md">
-                Crear Cuenta
-              </button>
-            </div> -->
-            
             <!-- User Menu - Solo cuando HAY sesión -->
             <div class="relative hidden md:block flex-shrink-0" id="userMenuContainer">
               <button id="userMenuButton" class="flex items-center space-x-2 px-3 lg:px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors min-w-0">
