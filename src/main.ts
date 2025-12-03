@@ -1,4 +1,4 @@
-import './input.css'
+ï»¿import './input.css'
 import { supabase } from './lib/supabaseClient'
 import { Navigation } from './components/layout/Navigation'
 import { renderHome } from './pages/Home'
@@ -20,14 +20,14 @@ if (isDarkMode) {
   document.documentElement.classList.add('dark')
 }
 
-// Estado de autenticación
+// Estado de autenticaciï¿½n
 let userRole: string | null = null
 let isReloading: boolean = false // ?? Bandera para evitar recargas duplicadas
 
 // Initialize state - recuperar de localStorage si existe
 let currentPage = localStorage.getItem('currentPage') || 'home'
 
-// Función global para actualizar visibilidad de botones admin
+// Funciï¿½n global para actualizar visibilidad de botones admin
 function updateAdminButtons() {
   const adminElements = document.querySelectorAll('.admin-only')
   console.log('?? updateAdminButtons - Elementos encontrados:', adminElements.length, 'Role:', userRole)
@@ -43,7 +43,7 @@ function updateAdminButtons() {
   }
 }
 
-// Función global para actualizar el orden de productos
+// Funciï¿½n global para actualizar el orden de productos
 async function updateProductOrder(productId: number, newOrder: number) {
   try {
     console.log('?? Actualizando orden:', productId, '?', newOrder)
@@ -67,7 +67,7 @@ async function updateProductOrder(productId: number, newOrder: number) {
   }
 }
 
-// Función global para configurar drag & drop (solo admin)
+// Funciï¿½n global para configurar drag & drop (solo admin)
 function setupDragAndDrop() {
   if (userRole !== 'admin') {
     console.log('?? Drag & drop solo disponible para admin')
@@ -79,9 +79,9 @@ function setupDragAndDrop() {
   const productCards = document.querySelectorAll('.product-card')
   let draggedElement: HTMLElement | null = null
   let draggedId: number | null = null
-  const pageNavigationArrows: HTMLElement[] = [] // Flechas de navegación entre páginas
+  const pageNavigationArrows: HTMLElement[] = [] // Flechas de navegaciï¿½n entre pï¿½ginas
   
-  // ?? Funciones para manejar flechas de navegación entre páginas
+  // ?? Funciones para manejar flechas de navegaciï¿½n entre pï¿½ginas
   const showPageNavigationArrows = () => {
     // Limpiar flechas anteriores si existen
     hidePageNavigationArrows()
@@ -89,7 +89,7 @@ function setupDragAndDrop() {
     const container = document.querySelector('.container') as HTMLElement
     if (!container) return
     
-    // ?? FRANJA ROJA IZQUIERDA (página anterior)
+    // ?? FRANJA ROJA IZQUIERDA (pï¿½gina anterior)
     const leftStripe = document.createElement('div')
     leftStripe.id = 'leftPageStripe'
     leftStripe.className = 'fixed left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-red-600 to-transparent opacity-70 z-40 pointer-events-auto'
@@ -105,7 +105,7 @@ function setupDragAndDrop() {
       </svg>
     `
     
-    // ?? FRANJA ROJA DERECHA (página siguiente)
+    // ?? FRANJA ROJA DERECHA (pï¿½gina siguiente)
     const rightStripe = document.createElement('div')
     rightStripe.id = 'rightPageStripe'
     rightStripe.className = 'fixed right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-red-600 to-transparent opacity-70 z-40 pointer-events-auto'
@@ -199,11 +199,11 @@ function setupDragAndDrop() {
       return
     }
     
-    console.log('?? Intentando mover producto', draggedId, 'a página anterior')
+    console.log('?? Intentando mover producto', draggedId, 'a pï¿½gina anterior')
     
-    const confirmed = confirm('¿Mover este producto a la página anterior?')
+    const confirmed = confirm('ï¿½Mover este producto a la pï¿½gina anterior?')
     if (!confirmed) {
-      console.log('? Usuario canceló el movimiento')
+      console.log('? Usuario cancelï¿½ el movimiento')
       hidePageNavigationArrows()
       if (draggedElement) {
         draggedElement.classList.remove('opacity-40', 'scale-95')
@@ -230,11 +230,11 @@ function setupDragAndDrop() {
       return
     }
     
-    console.log('?? Intentando mover producto', draggedId, 'a página siguiente')
+    console.log('?? Intentando mover producto', draggedId, 'a pï¿½gina siguiente')
     
-    const confirmed = confirm('¿Mover este producto a la página siguiente?')
+    const confirmed = confirm('ï¿½Mover este producto a la pï¿½gina siguiente?')
     if (!confirmed) {
-      console.log('? Usuario canceló el movimiento')
+      console.log('? Usuario cancelï¿½ el movimiento')
       hidePageNavigationArrows()
       if (draggedElement) {
         draggedElement.classList.remove('opacity-40', 'scale-95')
@@ -256,23 +256,23 @@ function setupDragAndDrop() {
   }
   
   const moveProductBetweenPages = async (productId: number, direction: 'previous' | 'next') => {
-    console.log(`?? Moviendo producto ${productId} a la página ${direction === 'next' ? 'siguiente' : 'anterior'}`)
+    console.log(`?? Moviendo producto ${productId} a la pï¿½gina ${direction === 'next' ? 'siguiente' : 'anterior'}`)
     
     const PRODUCTS_PER_PAGE = 16
     let allProducts: any[] = []
     
-    // ?? CRÍTICO: Obtener productos aplicando los MISMOS filtros que la paginación
+    // ?? CRï¿½TICO: Obtener productos aplicando los MISMOS filtros que la paginaciï¿½n
     // Esto asegura que estamos trabajando con el mismo conjunto de datos visible
     
-    // Obtener los productos según la página actual
+    // Obtener los productos segï¿½n la pï¿½gina actual
     if (currentPage === 'meats') {
-      // Para carnes, filtrar por categoría
+      // Para carnes, filtrar por categorï¿½a
       let query = supabase
         .from('productos')
         .select('id, orden')
         .eq('categoria', 'carnes')
       
-      // ?? IMPORTANTE: Filtrar por activo si NO es admin (igual que la paginación)
+      // ?? IMPORTANTE: Filtrar por activo si NO es admin (igual que la paginaciï¿½n)
       if (userRole !== 'admin') {
         query = query.eq('activo', true)
       }
@@ -314,7 +314,7 @@ function setupDragAndDrop() {
       const { data } = await query
       allProducts = data || []
     } else {
-      console.error('? Página actual no soportada para mover productos:', currentPage)
+      console.error('? Pï¿½gina actual no soportada para mover productos:', currentPage)
       return
     }
     
@@ -330,15 +330,15 @@ function setupDragAndDrop() {
       productIds: allProducts.map(p => p.id)
     })
     
-    // Encontrar el índice del producto actual en el array filtrado
+    // Encontrar el ï¿½ndice del producto actual en el array filtrado
     const currentIndex = allProducts.findIndex(p => p.id === productId)
     if (currentIndex === -1) {
-      console.error('? No se encontró el producto en la lista')
+      console.error('? No se encontrï¿½ el producto en la lista')
       alert('? Error: El producto no se encuentra en la lista actual')
       return
     }
     
-    // ?? NUEVA LÓGICA: Calcular página actual y determinar si existe página destino
+    // ?? NUEVA Lï¿½GICA: Calcular pï¿½gina actual y determinar si existe pï¿½gina destino
     const currentPageNum = Math.floor(currentIndex / PRODUCTS_PER_PAGE) + 1
     const totalPages = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE)
     
@@ -347,23 +347,23 @@ function setupDragAndDrop() {
     
     if (direction === 'next') {
       targetPageNum = currentPageNum + 1
-      // Validar que existe la página siguiente
+      // Validar que existe la pï¿½gina siguiente
       if (targetPageNum > totalPages) {
-        alert('No hay página siguiente')
-        console.log('?? No existe página siguiente. Página actual:', currentPageNum, 'Total páginas:', totalPages)
+        alert('No hay pï¿½gina siguiente')
+        console.log('?? No existe pï¿½gina siguiente. Pï¿½gina actual:', currentPageNum, 'Total pï¿½ginas:', totalPages)
         return
       }
-      // Mover al PRIMER producto de la página siguiente
+      // Mover al PRIMER producto de la pï¿½gina siguiente
       targetIndex = (targetPageNum - 1) * PRODUCTS_PER_PAGE
     } else {
       targetPageNum = currentPageNum - 1
-      // Validar que existe la página anterior
+      // Validar que existe la pï¿½gina anterior
       if (targetPageNum < 1) {
-        alert('No hay página anterior')
-        console.log('?? No existe página anterior. Página actual:', currentPageNum)
+        alert('No hay pï¿½gina anterior')
+        console.log('?? No existe pï¿½gina anterior. Pï¿½gina actual:', currentPageNum)
         return
       }
-      // Mover al ÚLTIMO producto de la página anterior
+      // Mover al ï¿½LTIMO producto de la pï¿½gina anterior
       const endOfPrevPage = Math.min(targetPageNum * PRODUCTS_PER_PAGE - 1, allProducts.length - 1)
       targetIndex = endOfPrevPage
     }
@@ -379,10 +379,10 @@ function setupDragAndDrop() {
       currentProductId: productId
     })
     
-    // Validar que el índice objetivo existe (doble verificación)
+    // Validar que el ï¿½ndice objetivo existe (doble verificaciï¿½n)
     if (targetIndex < 0 || targetIndex >= allProducts.length) {
-      alert('No hay página ' + (direction === 'next' ? 'siguiente' : 'anterior'))
-      console.log('?? Índice objetivo fuera de rango:', targetIndex, '(total productos:', allProducts.length, ')')
+      alert('No hay pï¿½gina ' + (direction === 'next' ? 'siguiente' : 'anterior'))
+      console.log('?? ï¿½ndice objetivo fuera de rango:', targetIndex, '(total productos:', allProducts.length, ')')
       return
     }
     
@@ -395,15 +395,15 @@ function setupDragAndDrop() {
       currentOrder: currentProduct.orden,
       targetId: targetProduct.id,
       targetOrder: targetProduct.orden,
-      movingFrom: `Página ${currentPageNum}, índice ${currentIndex}`,
-      movingTo: `Página ${targetPageNum}, índice ${targetIndex}`
+      movingFrom: `Pï¿½gina ${currentPageNum}, ï¿½ndice ${currentIndex}`,
+      movingTo: `Pï¿½gina ${targetPageNum}, ï¿½ndice ${targetIndex}`
     })
     
-    // Intercambiar órdenes
+    // Intercambiar ï¿½rdenes
     await updateProductOrder(currentProduct.id, targetProduct.orden)
     await updateProductOrder(targetProduct.id, currentProduct.orden)
     
-    // Recargar la página actual
+    // Recargar la pï¿½gina actual
     await reloadCurrentPage()
   }
   
@@ -414,7 +414,7 @@ function setupDragAndDrop() {
     }
     
     isReloading = true
-    console.log('?? Recargando página actual:', currentPage)
+    console.log('?? Recargando pï¿½gina actual:', currentPage)
     const pageContent = document.getElementById('pageContent')
     
     if (!pageContent || !currentPage) {
@@ -441,7 +441,7 @@ function setupDragAndDrop() {
     // Adjuntar eventos y funcionalidad
     attachUIForContent()
     
-    // Importar y configurar paginación
+    // Importar y configurar paginaciï¿½n
     const { setupPagination } = await import('./pages/pagination')
     
     if (currentPage === 'meats') {
@@ -452,7 +452,7 @@ function setupDragAndDrop() {
       await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
     }
     
-    console.log('? Página recargada exitosamente')
+    console.log('? Pï¿½gina recargada exitosamente')
     isReloading = false
     alert('? Producto movido correctamente')
   }
@@ -473,7 +473,7 @@ function setupDragAndDrop() {
       element.style.transition = 'all 0.2s ease'
       console.log('?? Arrastrando producto:', draggedId)
       
-      // ?? Mostrar flechas de navegación entre páginas
+      // ?? Mostrar flechas de navegaciï¿½n entre pï¿½ginas
       showPageNavigationArrows()
     })
     
@@ -482,7 +482,7 @@ function setupDragAndDrop() {
       element.classList.remove('opacity-40', 'scale-95')
       element.style.cursor = 'grab'
       
-      // ?? Ocultar flechas de navegación
+      // ?? Ocultar flechas de navegaciï¿½n
       hidePageNavigationArrows()
     })
     
@@ -511,8 +511,8 @@ function setupDragAndDrop() {
       
       if (!draggedId || !targetId) return
       
-      // Confirmación antes de reordenar
-      const confirmed = confirm('¿Intercambiar el orden de estos productos?')
+      // Confirmaciï¿½n antes de reordenar
+      const confirmed = confirm('ï¿½Intercambiar el orden de estos productos?')
       if (!confirmed) {
         if (draggedElement) {
           draggedElement.classList.remove('opacity-40', 'scale-95')
@@ -521,9 +521,9 @@ function setupDragAndDrop() {
       }
       
       console.log('?? Intercambiando orden:', draggedId, '?', targetId)
-      console.log('?? Página actual:', currentPage) // ?? Debug
+      console.log('?? Pï¿½gina actual:', currentPage) // ?? Debug
       
-      // Obtener órdenes actuales
+      // Obtener ï¿½rdenes actuales
       const { data: products } = await supabase
         .from('productos')
         .select('id, orden')
@@ -536,7 +536,7 @@ function setupDragAndDrop() {
         return
       }
       
-      // ?? CORREGIDO: Comparar IDs convirtiendo a número
+      // ?? CORREGIDO: Comparar IDs convirtiendo a nï¿½mero
       const draggedProduct = products.find(p => Number(p.id) === Number(draggedId))
       const targetProduct = products.find(p => Number(p.id) === Number(targetId))
       
@@ -549,9 +549,9 @@ function setupDragAndDrop() {
         return
       }
       
-      console.log('?? Actualizando órdenes en BD...')
+      console.log('?? Actualizando ï¿½rdenes en BD...')
       
-      // ?? MEJORADO: Usar órdenes únicas basadas en ID si los órdenes son iguales
+      // ?? MEJORADO: Usar ï¿½rdenes ï¿½nicas basadas en ID si los ï¿½rdenes son iguales
       let newDraggedOrder = targetProduct.orden
       let newTargetOrder = draggedProduct.orden
       
@@ -562,20 +562,20 @@ function setupDragAndDrop() {
         newTargetOrder = draggedId
       }
       
-      // Intercambiar órdenes
+      // Intercambiar ï¿½rdenes
       const result1 = await updateProductOrder(draggedId, newDraggedOrder)
       const result2 = await updateProductOrder(targetId, newTargetOrder)
       
       console.log('? Resultado actualizaciones:', { result1, result2 })
       
       if (!result1 || !result2) {
-        console.error('? Error al actualizar órdenes en BD')
+        console.error('? Error al actualizar ï¿½rdenes en BD')
         alert('? Error al reordenar productos. Verifica la consola.')
         return
       }
       
-      // Recargar página actual con animación
-      console.log('?? Recargando vista después de intercambio...')
+      // Recargar pï¿½gina actual con animaciï¿½n
+      console.log('?? Recargando vista despuï¿½s de intercambio...')
       console.log('?? currentPage:', currentPage)
       
       if (isReloading) {
@@ -606,7 +606,7 @@ function setupDragAndDrop() {
         
         attachUIForContent()
         
-        // Reinicializar paginación
+        // Reinicializar paginaciï¿½n
         const { setupPagination } = await import('./pages/pagination')
         
         if (currentPage === 'meats') {
@@ -623,14 +623,14 @@ function setupDragAndDrop() {
         isReloading = false
       }
       
-      // ?? IMPORTANTE: Resetear draggedElement y draggedId DESPUÉS de usarlos
+      // ?? IMPORTANTE: Resetear draggedElement y draggedId DESPUï¿½S de usarlos
       draggedElement = null
       draggedId = null
     })
   })
 }
 
-// Función global para activar productos inactivos
+// Funciï¿½n global para activar productos inactivos
 async function activateProduct(productId: number) {
   try {
     console.log('?? Activando producto:', productId)
@@ -643,18 +643,18 @@ async function activateProduct(productId: number) {
     if (error) throw error
     
     console.log('? Producto activado exitosamente')
-    console.log('?? Página actual:', currentPage)
+    console.log('?? Pï¿½gina actual:', currentPage)
     
     // Obtener referencia a pageContent ANTES del setTimeout
     const pageContent = document.getElementById('pageContent')
     
     if (!pageContent) {
-      console.error('? No se encontró pageContent')
+      console.error('? No se encontrï¿½ pageContent')
       alert('? Producto activado correctamente')
       return
     }
     
-    console.log('?? Iniciando recarga de página:', currentPage)
+    console.log('?? Iniciando recarga de pï¿½gina:', currentPage)
     
     // Recargar INMEDIATAMENTE sin setTimeout
     if (currentPage === 'home') {
@@ -673,10 +673,10 @@ async function activateProduct(productId: number) {
     
     console.log('? HTML actualizado, re-adjuntando eventos...')
     
-    // Re-adjuntar eventos DESPUÉS de renderizar
+    // Re-adjuntar eventos DESPUï¿½S de renderizar
     attachUIForContent()
     
-    // ? NUEVO: Reinicializar paginación según la página actual
+    // ? NUEVO: Reinicializar paginaciï¿½n segï¿½n la pï¿½gina actual
     const { setupPagination } = await import('./pages/pagination')
     
     if (currentPage === 'meats') {
@@ -687,10 +687,10 @@ async function activateProduct(productId: number) {
       await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
     }
     
-    console.log('? Paginación reinicializada')
+    console.log('? Paginaciï¿½n reinicializada')
     console.log('? Eventos re-adjuntados')
     
-    // Mostrar mensaje DESPUÉS de todo
+    // Mostrar mensaje DESPUï¿½S de todo
     setTimeout(() => {
       alert('? Producto activado correctamente')
     }, 200)
@@ -712,7 +712,7 @@ async function checkAuth() {
   const { data: { session } } = await supabase.auth.getSession()
   
   if (session) {
-    console.log('?? Sesión encontrada, obteniendo rol desde BD...')
+    console.log('?? Sesiï¿½n encontrada, obteniendo rol desde BD...')
     
     // SIEMPRE obtener el rol DIRECTAMENTE de la base de datos
     // NO confiar en el JWT porque puede estar desactualizado
@@ -728,7 +728,7 @@ async function checkAuth() {
       userRole = 'user' // Default a user si hay error
       window.userRole = 'user'
     } else if (!profile) {
-      console.error('? No se encontró perfil para el usuario')
+      console.error('? No se encontrï¿½ perfil para el usuario')
       userRole = 'user'
       window.userRole = 'user'
     } else {
@@ -748,7 +748,7 @@ async function checkAuth() {
   
   userRole = null
   window.userRole = null
-  console.log('? No hay sesión activa')
+  console.log('? No hay sesiï¿½n activa')
   return false
 }
 
@@ -811,7 +811,7 @@ function renderAuthPageView() {
   setupAuthPage()
 }
 
-// Attach UI handlers solo para contenido dinámico (sin duplicar event listeners de la nav)
+// Attach UI handlers solo para contenido dinï¿½mico (sin duplicar event listeners de la nav)
 function attachUIForContent() {
   console.log('?? attachUIForContent - userRole:', userRole)
   
@@ -831,8 +831,8 @@ function attachUIForContent() {
         (el as HTMLElement).style.display = 'flex'
       })
       
-      // Nota: setupDragAndDrop() se llama automáticamente desde pagination.ts
-      // después de renderizar productos, así que no es necesario llamarlo aquí
+      // Nota: setupDragAndDrop() se llama automï¿½ticamente desde pagination.ts
+      // despuï¿½s de renderizar productos, asï¿½ que no es necesario llamarlo aquï¿½
     } else {
       console.log('? Usuario NO es admin - ocultando botones (role:', userRole, ')')
       adminElements.forEach(el => {
@@ -877,10 +877,10 @@ function attachUI() {
   document.getElementById('logoutButton')?.addEventListener('click', async () => {
     const { error } = await supabase.auth.signOut()
     if (!error) {
-      console.log('? Sesión cerrada')
+      console.log('? Sesiï¿½n cerrada')
       window.location.reload()
     } else {
-      console.error('? Error al cerrar sesión:', error)
+      console.error('? Error al cerrar sesiï¿½n:', error)
     }
   })
 
@@ -888,10 +888,10 @@ function attachUI() {
   document.getElementById('mobileLogoutButton')?.addEventListener('click', async () => {
     const { error } = await supabase.auth.signOut()
     if (!error) {
-      console.log('? Sesión cerrada')
+      console.log('? Sesiï¿½n cerrada')
       window.location.reload()
     } else {
-      console.error('? Error al cerrar sesión:', error)
+      console.error('? Error al cerrar sesiï¿½n:', error)
     }
   })
 
@@ -901,7 +901,6 @@ function attachUI() {
     const mobileUserInfo = document.getElementById('mobileUserInfo')
     const dropdownAuthButtons = document.getElementById('dropdownAuthButtons')
     const dropdownUserInfo = document.getElementById('dropdownUserInfo')
-    const mobileAuthButtons = document.getElementById('mobileAuthButtons')
     
     if (session) {
       // Usuario autenticado
@@ -913,13 +912,16 @@ function attachUI() {
       const email = session.user.email || ''
       
       // Desktop - mostrar nombre
-      if (userName) userName.textContent = fullName
+      if (userName) {
+        userName.textContent = fullName
+        userName.classList.remove('hidden')
+      }
       if (dropdownEmail) dropdownEmail.textContent = email
       
       // Mobile - mostrar nombre
       if (mobileUserName) mobileUserName.textContent = fullName
       
-      // Mostrar menú de usuario siempre
+      // Mostrar menï¿½ de usuario siempre
       userMenuContainer?.classList.remove('hidden')
       mobileUserInfo?.classList.remove('hidden')
       // En el dropdown: mostrar info de usuario, ocultar botones auth
@@ -927,8 +929,17 @@ function attachUI() {
       dropdownAuthButtons?.classList.add('hidden')
     } else {
       // Usuario NO autenticado
-      // Mostrar botones de auth, ocultar men\u00fa de usuario
-      userMenuContainer?.classList.remove('hidden'); const userName = document.getElementById('userName'); if (userName) userName.textContent = 'Cuenta'
+      // Usuario NO autenticado
+      const userName = document.getElementById('userName')
+      
+      // Ocultar texto y span, mostrar solo icono cuando no hay sesiÃ³n
+      if (userName) {
+        userName.textContent = ''
+        userName.classList.add('hidden')
+      }
+      
+      // Mostrar menÃº de usuario siempre (con dropdown de login)
+      userMenuContainer?.classList.remove('hidden')
       // En el dropdown: mostrar botones auth, ocultar info de usuario
       dropdownAuthButtons?.classList.remove('hidden')
       dropdownUserInfo?.classList.add('hidden')
@@ -960,7 +971,7 @@ function attachUI() {
     document.getElementById('loginForm')?.classList.remove('hidden')
     document.getElementById('registerForm')?.classList.add('hidden')
     const title = document.getElementById('loginModalTitle')
-    if (title) title.textContent = 'Iniciar Sesión'
+    if (title) title.textContent = 'Iniciar SesiÃ³n'
   })
   
   // Mobile
@@ -992,7 +1003,7 @@ function attachUI() {
     }
   })
 
-  // Función para registrar event listeners de navegación
+  // Funciï¿½n para registrar event listeners de navegaciï¿½n
   function setupNavigationListeners() {
     document.querySelectorAll<HTMLAnchorElement>('.nav-link').forEach(link => {
       link.addEventListener('click', async (e) => {
@@ -1002,20 +1013,20 @@ function attachUI() {
           currentPage = page
           localStorage.setItem('currentPage', page) // Guardar en localStorage
           
-          // Scroll suave al inicio al cambiar de sección
+          // Scroll suave al inicio al cambiar de secciï¿½n
           window.scrollTo({ top: 0, behavior: 'smooth' })
           
           // re-render page content only
           const pageContent = document.getElementById('pageContent')
           if (pageContent) pageContent.innerHTML = renderPage(currentPage)
           
-          // re-attach UI for new content (pero NO para la navegación)
+          // re-attach UI for new content (pero NO para la navegaciï¿½n)
           attachUIForContent()
           
-          // ? Volver a registrar listeners de navegación para el nuevo contenido
+          // ? Volver a registrar listeners de navegaciï¿½n para el nuevo contenido
           setupNavigationListeners()
           
-          // ? NUEVO: Reinicializar paginación después de cambiar sección
+          // ? NUEVO: Reinicializar paginaciï¿½n despuï¿½s de cambiar secciï¿½n
           const { setupPagination } = await import('./pages/pagination')
           
           if (currentPage === 'meats') {
@@ -1030,7 +1041,7 @@ function attachUI() {
     })
   }
 
-  // Navigation links (router) - Llamar la función al inicio
+  // Navigation links (router) - Llamar la funciï¿½n al inicio
   setupNavigationListeners()
 
   // Initialize auth handlers
@@ -1072,7 +1083,7 @@ function attachUI() {
       return
     }
     const results = [
-      'Ribeye', 'T-Bone', 'Picaña', 'Arrachera', 'Chorizo', 'Costillas'
+      'Ribeye', 'T-Bone', 'Picaï¿½a', 'Arrachera', 'Chorizo', 'Costillas'
     ].filter(item => item.toLowerCase().includes(query))
     if (searchResults) {
       searchResults.innerHTML = results.map(r => `\n        <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer">${r}</div>\n      `).join('')
@@ -1085,7 +1096,7 @@ async function init() {
   // Por defecto, renderizar app como visitante
   renderApp()
   
-  // Intentar verificar si hay sesión de admin
+  // Intentar verificar si hay sesiï¿½n de admin
   const authenticated = await checkAuth()
   
   if (authenticated) {
@@ -1109,7 +1120,7 @@ async function init() {
         if (clickCount === 1) {
           clickTimer = setTimeout(() => {
             clickCount = 0
-          }, 500) // Reset después de 500ms
+          }, 500) // Reset despuï¿½s de 500ms
         } else if (clickCount === 2) {
           if (clickTimer) clearTimeout(clickTimer)
           clickCount = 0
@@ -1120,7 +1131,7 @@ async function init() {
             loginModal.classList.remove('hidden')
             loginModal.classList.add('flex')
           } else {
-            // Si no existe el modal, navegar a página de auth
+            // Si no existe el modal, navegar a pï¿½gina de auth
             renderAuthPageView()
           }
         }
@@ -1128,7 +1139,7 @@ async function init() {
     }
   }, 500)
   
-  // ?? Inicializar paginación si estamos en una página con productos
+  // ?? Inicializar paginaciï¿½n si estamos en una pï¿½gina con productos
   const { setupPagination } = await import('./pages/pagination')
   
   if (currentPage === 'meats') {
