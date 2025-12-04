@@ -77,9 +77,6 @@ export async function searchProductsInDB(
     // Obtener rol del usuario
     const userRole = (window as any).userRole || 'user'
 
-    // Normalizar término de búsqueda
-    const normalizedSearch = normalizeText(searchTerm)
-
     // Construir query base - traer TODOS los productos relevantes
     let query = supabase
       .from('productos')
