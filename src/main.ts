@@ -67,7 +67,7 @@ async function updateProductOrder(productId: number, newOrder: number) {
   }
 }
 
-// Funci�n global para configurar drag & drop (solo admin)
+// Función global para configurar drag & drop (solo admin)
 function setupDragAndDrop() {
   if (userRole !== 'admin') {
     console.log('?? Drag & drop solo disponible para admin')
@@ -105,7 +105,7 @@ function setupDragAndDrop() {
       </svg>
     `
     
-    // ?? FRANJA ROJA DERECHA (p�gina siguiente)
+    // FRANJA ROJA DERECHA (página siguiente)
     const rightStripe = document.createElement('div')
     rightStripe.id = 'rightPageStripe'
     rightStripe.className = 'fixed right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-red-600 to-transparent opacity-70 z-40 pointer-events-auto'
@@ -199,11 +199,11 @@ function setupDragAndDrop() {
       return
     }
     
-    console.log('?? Intentando mover producto', draggedId, 'a p�gina anterior')
+    console.log('?? Intentando mover producto', draggedId, 'a página anterior')
     
-    const confirmed = confirm('�Mover este producto a la p�gina anterior?')
+    const confirmed = confirm('¿Mover este producto a la página anterior?')
     if (!confirmed) {
-      console.log('? Usuario cancel� el movimiento')
+      console.log('? Usuario canceló el movimiento')
       hidePageNavigationArrows()
       if (draggedElement) {
         draggedElement.classList.remove('opacity-40', 'scale-95')
