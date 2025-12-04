@@ -92,7 +92,56 @@ class NotificationService {
   }
   
   /**
-   * Envía una notificación
+   * Mostrar toast HTML (respaldo para Windows que bloquea notificaciones del sistema)
+   */
+  private showToast(title: string, body: string, emoji: string = '🔔'): void {
+    let container = document.getElementById('toast-container')
+    if (!container) {
+      container = document.createElement('div')
+      container.id = 'toast-container'
+      container.style.cssText = 'position:fixed;top:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:10px;'
+      document.body.appendChild(container)
+    }
+    
+    const toast = document.createElement('div')
+    toast.style.cssText = `
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      min-width: 300px;
+      max-width: 400px;
+      animation: slideIn 0.3s ease;
+    `
+    
+    toast.innerHTML = `
+      <div style="display:flex;align-items:start;gap:12px;">
+        <div style="font-size:24px;">${emoji}</div>
+        <div style="flex:1;">
+          <div style="font-weight:bold;font-size:16px;margin-bottom:4px;">${title}</div>
+          <div style="font-size:14px;opacity:0.95;">${body}</div>
+        </div>
+        <button onclick="this.parentElement.parentElement.remove()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:16px;">×</button>
+      </div>
+    `
+    
+    if (!document.getElementById('toast-animations')) {
+      const style = document.createElement('style')
+      style.id = 'toast-animations'
+      style.textContent = '@keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}'
+      document.head.appendChild(style)
+    }
+    
+    container.appendChild(toast)
+    setTimeout(() => {
+      toast.style.animation = 'slideIn 0.3s ease reverse'
+      setTimeout(() => toast.remove(), 300)
+    }, 5000)
+  }
+
+  /**
+   * Envía una notificación (siempre usa toast HTML para máxima compatibilidad)
    */
   public send(config: NotificationConfig): Notification | null {
     if (!this.isSupported()) {
@@ -105,24 +154,25 @@ class NotificationService {
       return null
     }
     
+    // SIEMPRE usar toast HTML (más confiable que las notificaciones del sistema)
+    const emoji = config.title.split(' ')[0] || '🔔'
+    this.showToast(config.title, config.body, emoji)
+    
+    // Intentar también notificación del sistema (opcional)
     try {
       const notification = new Notification(config.title, {
         body: config.body,
-        icon: config.icon || '/images/logo.png',
-        badge: config.badge || '/images/badge.png',
+        icon: config.icon,
+        badge: config.badge,
         tag: config.tag || 'general',
         data: config.data,
         requireInteraction: false
       })
       
-      // Auto-cerrar después de 5 segundos
-      setTimeout(() => {
-        notification.close()
-      }, 5000)
-      
+      setTimeout(() => notification.close(), 5000)
       return notification
     } catch (error) {
-      console.error('❌ Error enviando notificación:', error)
+      console.warn('⚠️ Notificación del sistema falló, pero toast HTML sí funcionó')
       return null
     }
   }

@@ -1,5 +1,6 @@
 ﻿import './input.css'
 import { supabase } from './lib/supabaseClient'
+import { notificationService } from './lib/notificationService'
 import { Navigation } from './components/layout/Navigation'
 import { renderHome } from './pages/Home'
 import { renderMeats } from './pages/Meats'
@@ -1165,9 +1166,13 @@ async function init() {
 // Start app
 init()
 
+// Exponer notificationService globalmente para que el admin lo use desde consola
+;(window as any).notificationService = notificationService
+
 // Declaraciones globales para TypeScript
 declare global {
   interface Window {
     updateAdminButtons: () => void
+    notificationService: typeof notificationService
   }
 }
