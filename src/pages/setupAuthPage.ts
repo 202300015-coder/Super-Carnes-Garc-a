@@ -231,7 +231,9 @@ export function setupAuthPage() {
       submitBtn.textContent = 'Enviando...'
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`
+        redirectTo: window.location.hostname === 'localhost' 
+          ? `${window.location.origin}/reset-password.html`
+          : `${window.location.origin}/Super-Carnes-Garc-a/reset-password.html`
       })
 
       if (error) throw error
