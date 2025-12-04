@@ -1094,20 +1094,31 @@ function attachUI() {
 
 // Initial render - NO requiere auth para visitantes
 async function init() {
+  // Verificar si hay token de reset password en la URL
+  const hashParams = new URLSearchParams(window.location.hash.substring(1))
+  const accessToken = hashParams.get('access_token')
+  const type = hashParams.get('type')
+  
+  if (type === 'recovery' && accessToken) {
+    // Redirigir a la página de reset password
+    window.location.href = window.location.pathname + 'reset-password.html' + window.location.hash
+    return
+  }
+  
   // Por defecto, renderizar app como visitante
   renderApp()
   
-  // Intentar verificar si hay sesi�n de admin
+  // Intentar verificar si hay sesión de admin
   const authenticated = await checkAuth()
   
   if (authenticated) {
-    console.log('? Admin autenticado')
+    console.log('✅ Admin autenticado')
     updateAdminButtons()
   } else {
-    console.log('?? Visitante (sin login)')
+    console.log('👤 Visitante (sin login)')
   }
   
-  // ?? Configurar acceso secreto para admin (doble click en el logo)
+  // 🔒 Configurar acceso secreto para admin (doble click en el logo)
   setTimeout(() => {
     const logo = document.getElementById('adminSecretAccess')
     if (logo) {

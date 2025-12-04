@@ -230,11 +230,9 @@ export function setupAuthPage() {
       submitBtn.disabled = true
       submitBtn.textContent = 'Enviando...'
 
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.hostname === 'localhost' 
-          ? `${window.location.origin}/reset-password.html`
-          : `${window.location.origin}/Super-Carnes-Garc-a/reset-password.html`
-      })
+      // Usar la URL actual sin especificar redirectTo
+      // Supabase redirigirá automáticamente a la URL del sitio
+      const { error } = await supabase.auth.resetPasswordForEmail(email)
 
       if (error) throw error
 
