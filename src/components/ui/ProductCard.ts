@@ -38,10 +38,10 @@ export function ProductCard(product: Product) {
       
       <!-- Controles de Administrador -->
       ${isInactive ? `
-        <div class="absolute inset-0 hidden items-center justify-center bg-black/30 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+        <div class="admin-only absolute inset-0 flex items-center justify-center transition-all duration-300 z-20">
           <button 
             onclick="window.activateProduct(${product.id})" 
-            class="admin-only px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl shadow-xl hover:from-green-600 hover:to-green-700 hover:scale-105 active:scale-95 transition-all font-bold text-base inline-flex items-center gap-2"
+            class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl shadow-xl hover:from-green-600 hover:to-green-700 hover:scale-105 active:scale-95 transition-all font-bold text-base inline-flex items-center gap-2"
             title="Activar producto"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
