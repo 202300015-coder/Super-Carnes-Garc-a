@@ -38,10 +38,10 @@ export function ProductCard(product: Product) {
       
       <!-- Controles de Administrador -->
       ${isInactive ? `
-        <div class="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+        <div class="absolute inset-0 hidden items-center justify-center bg-black/30 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
           <button 
             onclick="window.activateProduct(${product.id})" 
-            class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl shadow-xl hover:from-green-600 hover:to-green-700 hover:scale-105 active:scale-95 transition-all admin-only hidden font-bold text-base flex items-center gap-2"
+            class="admin-only px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl shadow-xl hover:from-green-600 hover:to-green-700 hover:scale-105 active:scale-95 transition-all font-bold text-base inline-flex items-center gap-2"
             title="Activar producto"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,7 +54,7 @@ export function ProductCard(product: Product) {
         <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 transform group-hover:scale-110">
           <button 
             onclick="window.openEditProductModal(${product.id})" 
-            class="p-2.5 bg-white dark:bg-gray-700 rounded-xl shadow-lg hover:shadow-xl hover:bg-primary-50 dark:hover:bg-gray-600 transition-all admin-only hidden backdrop-blur-sm border border-gray-200 dark:border-gray-600"
+            class="admin-only p-2.5 bg-white dark:bg-gray-700 rounded-xl shadow-lg hover:shadow-xl hover:bg-primary-50 dark:hover:bg-gray-600 transition-all backdrop-blur-sm border border-gray-200 dark:border-gray-600"
             title="Editar producto"
           >
             <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

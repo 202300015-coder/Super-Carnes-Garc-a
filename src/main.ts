@@ -1111,7 +1111,7 @@ function attachUI() {
 async function init() {
   // Verificar si hay token de reset password en la URL
   const hashParams = new URLSearchParams(window.location.hash.substring(1))
-  const accessToken = hashParams.get('access_token')
+  hashParams.get('access_token') // Verificar si existe token
   // Por defecto, renderizar app como visitante
   renderApp()
   
