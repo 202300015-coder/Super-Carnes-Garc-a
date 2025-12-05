@@ -639,18 +639,13 @@ async function checkPasswordRecoveryHash() {
       console.log('✅ Sesión establecida correctamente:', data.session.user.email)
       console.log('✅ Sesión verificada y lista para cambiar contraseña')
       
-      // Esperar un momento para asegurar que la sesión esté propagada
-      await new Promise(resolve => setTimeout(resolve, 500))
+      // Abrir el modal de reseteo inmediatamente
+      const modal = document.getElementById('resetPasswordModal')
+      modal?.classList.remove('hidden')
+      modal?.classList.add('flex')
       
-      // Abrir el modal de reseteo
-      setTimeout(() => {
-        const modal = document.getElementById('resetPasswordModal')
-        modal?.classList.remove('hidden')
-        modal?.classList.add('flex')
-        
-        // Limpiar la URL
-        window.history.replaceState({}, document.title, window.location.pathname)
-      }, 100)
+      // Limpiar la URL
+      window.history.replaceState({}, document.title, window.location.pathname)
       
       return
     } catch (error) {
@@ -708,8 +703,8 @@ async function checkPasswordRecoveryHash() {
         
         console.log('✅ Sesión establecida correctamente:', data.session?.user?.email)
         
-        // Esperar un poco más para que la sesión se propague
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        // Esperar solo 100ms para que la sesión se propague
+        await new Promise(resolve => setTimeout(resolve, 100))
         
         // Verificar que la sesión esté activa
         const { data: sessionData } = await supabase.auth.getSession()
@@ -727,15 +722,13 @@ async function checkPasswordRecoveryHash() {
       return
     }
     
-    // Abrir el modal de reseteo DESPUÉS de establecer la sesión
-    setTimeout(() => {
-      const modal = document.getElementById('resetPasswordModal')
-      modal?.classList.remove('hidden')
-      modal?.classList.add('flex')
-      
-      // Limpiar el hash de la URL
-      history.replaceState(null, '', window.location.pathname)
-    }, 500)
+    // Abrir el modal de reseteo inmediatamente
+    const resetModal = document.getElementById('resetPasswordModal')
+    resetModal?.classList.remove('hidden')
+    resetModal?.classList.add('flex')
+    
+    // Limpiar el hash de la URL
+    history.replaceState(null, '', window.location.pathname)
   }
 }
 
