@@ -29,10 +29,30 @@ export async function signOut() {
 }
 
 export async function resetPassword(email: string) {
+  // Detectar si estamos en producción o desarrollo
+  const isProduction = window.location.hostname.includes('github.io')
+  
+  // NO agregamos #reset-password porque Supabase ya agrega #access_token=...
+  // y causaría un doble hash: #reset-password#access_token=...
+  const redirectTo = isProduction
+    ? 'https://202300015-coder.github.io/Super-Carnes-Garc-a/'
+    : `${window.location.origin}/Super-Carnes-Garc-a/`
+  
+  console.log('📧 Enviando email de recuperación a:', email)
+  console.log('🔗 Redirect URL:', redirectTo)
+  
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://202300015-coder.github.io/Super-Carnes-Garc-a/reset-password.html'
+    redirectTo
   })
   if (error) throw error
+}
+
+export async function updatePassword(newPassword: string) {
+  const { data, error } = await supabase.auth.updateUser({
+    password: newPassword
+  })
+  if (error) throw error
+  return data
 }
 
 // Verificar sesión actual

@@ -1,4 +1,4 @@
-import { signIn, signUp, resetPassword, getCurrentUser } from '../../auth'
+import { signIn, signUp, resetPassword, updatePassword, getCurrentUser } from '../../auth'
 import {
   validateEmail,
   validatePassword,
@@ -71,6 +71,14 @@ export function setupAuth() {
     clearAlerts()
   })
 
+  // Cerrar modal de reseteo
+  document.getElementById('closeResetPasswordModal')?.addEventListener('click', () => {
+    const modal = document.getElementById('resetPasswordModal')
+    modal?.classList.add('hidden')
+    modal?.classList.remove('flex')
+    clearAlerts()
+  })
+
   // ============================================
   // TOGGLES DE VISIBILIDAD DE CONTRASEÑA
   // ============================================
@@ -78,6 +86,8 @@ export function setupAuth() {
   setupPasswordToggle('togglePassword', 'password', 'passwordIconShow', 'passwordIconHide')
   setupPasswordToggle('toggleRegisterPassword', 'registerPassword', 'registerPasswordIconShow', 'registerPasswordIconHide')
   setupPasswordToggle('toggleConfirmPassword', 'confirmPassword', 'confirmPasswordIconShow', 'confirmPasswordIconHide')
+  setupPasswordToggle('toggleNewPassword', 'newPassword', 'newPasswordIconShow', 'newPasswordIconHide')
+  setupPasswordToggle('toggleConfirmNewPassword', 'confirmNewPassword', 'confirmNewPasswordIconShow', 'confirmNewPasswordIconHide')
 
   // ============================================
   // SWITCH ENTRE LOGIN Y REGISTRO
@@ -444,6 +454,289 @@ export function setupAuth() {
       console.log('👤 Usuario autenticado:', user.email)
     }
   })
+
+  // ============================================
+  // DETECTAR SI VIENE DESDE EMAIL DE RECUPERACIÓN
+  // ============================================
+  
+  checkPasswordRecoveryHash()
+
+  // ============================================
+  // SUBMIT - RESETEO DE CONTRASEÑA
+  // ============================================
+
+  document.getElementById('resetPasswordForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    
+    clearAlerts()
+    clearFieldError('newPassword')
+    clearFieldError('confirmNewPassword')
+    
+    const newPasswordInput = document.getElementById('newPassword') as HTMLInputElement
+    const confirmNewPasswordInput = document.getElementById('confirmNewPassword') as HTMLInputElement
+    
+    const newPassword = newPasswordInput.value
+    const confirmNewPassword = confirmNewPasswordInput.value
+    
+    // Validar campos
+    const passwordValidation = validatePassword(newPassword)
+    const confirmValidation = validatePasswordMatch(newPassword, confirmNewPassword)
+    
+    let hasErrors = false
+    
+    if (!passwordValidation.valid) {
+      showFieldError('newPassword', passwordValidation.error)
+      hasErrors = true
+    }
+    
+    if (!confirmValidation.valid) {
+      showFieldError('confirmNewPassword', confirmValidation.error)
+      hasErrors = true
+    }
+    
+    if (hasErrors) return
+    
+    // Mostrar loading
+    setButtonLoading('resetPasswordSubmit', 'resetBtnText', 'resetSpinner', true)
+    
+    try {
+      // NO verificamos sesión aquí porque:
+      // 1. El código ya fue intercambiado por exchangeCodeForSession() cuando se cargó la página
+      // 2. Si el intercambio falló, el modal ni siquiera se habría abierto
+      // 3. Supabase automáticamente usa la sesión temporal del token de recuperación
+      
+      console.log('🔐 Actualizando contraseña...')
+      
+      await updatePassword(newPassword)
+      
+      console.log('✅ Contraseña actualizada exitosamente')
+      
+      showAlert(
+        'resetPasswordAlert',
+        '¡Contraseña actualizada exitosamente!',
+        'success'
+      )
+      
+      // Limpiar inputs
+      newPasswordInput.value = ''
+      confirmNewPasswordInput.value = ''
+      
+      setButtonLoading('resetPasswordSubmit', 'resetBtnText', 'resetSpinner', false)
+      
+      // Cerrar modal y recargar después de 2 segundos
+      setTimeout(() => {
+        const modal = document.getElementById('resetPasswordModal')
+        modal?.classList.add('hidden')
+        modal?.classList.remove('flex')
+        
+        window.location.reload()
+      }, 2000)
+      
+    } catch (error: any) {
+      console.error('❌ Error actualizando contraseña:', error)
+      
+      // Si hay error de sesión, dar instrucciones claras
+      let errorMessage = error.message || getAuthErrorMessage(error)
+      
+      if (errorMessage.includes('session') || errorMessage.includes('Auth session missing')) {
+        errorMessage = 'El enlace ha expirado o ya fue usado. Por favor, solicita un nuevo enlace de recuperación.'
+      }
+      
+      showAlert('resetPasswordAlert', errorMessage, 'error')
+      
+      setButtonLoading('resetPasswordSubmit', 'resetBtnText', 'resetSpinner', false)
+    }
+  })
+
+  // Validaciones en tiempo real para reseteo
+  document.getElementById('newPassword')?.addEventListener('blur', (e) => {
+    const input = e.target as HTMLInputElement
+    const validation = validatePassword(input.value)
+    
+    if (!validation.valid) {
+      showFieldError('newPassword', validation.error)
+    } else {
+      clearFieldError('newPassword')
+    }
+  })
+
+  document.getElementById('confirmNewPassword')?.addEventListener('blur', (e) => {
+    const input = e.target as HTMLInputElement
+    const newPasswordInput = document.getElementById('newPassword') as HTMLInputElement
+    const validation = validatePasswordMatch(newPasswordInput?.value || '', input.value)
+    
+    if (!validation.valid) {
+      showFieldError('confirmNewPassword', validation.error)
+    } else {
+      clearFieldError('confirmNewPassword')
+    }
+  })
+}
+
+// ============================================
+// FUNCIÓN PARA VERIFICAR SI VIENE DESDE RECUPERACIÓN
+// ============================================
+
+async function checkPasswordRecoveryHash() {
+  const hash = window.location.hash
+  const search = window.location.search
+  const fullUrl = window.location.href
+  
+  console.log('🔍 Verificando URL de recuperación...')
+  console.log('🔍 Hash:', hash)
+  console.log('🔍 Search:', search)
+  console.log('🔍 Full URL:', fullUrl)
+  
+  // Supabase puede enviar el código de dos formas:
+  // 1. Como parámetro de búsqueda: ?code=ABC123
+  // 2. En el hash: #access_token=...&type=recovery
+  // 3. A veces en el hash como parámetros: #code=ABC123
+  
+  // Intentar obtener el código de múltiples lugares
+  let code = null
+  
+  // Primero intentar desde search params (?code=...)
+  const searchParams = new URLSearchParams(search)
+  code = searchParams.get('code')
+  
+  // Si no está en search, intentar en el hash (#code=... o #?code=...)
+  if (!code && hash) {
+    // Limpiar el # inicial
+    const hashContent = hash.startsWith('#') ? hash.substring(1) : hash
+    // Si el hash tiene un ?, quitarlo también
+    const hashParams = hashContent.startsWith('?') ? hashContent.substring(1) : hashContent
+    const hashUrlParams = new URLSearchParams(hashParams)
+    code = hashUrlParams.get('code')
+  }
+  
+  console.log('🔍 Código detectado:', code ? 'SÍ (' + code.substring(0, 10) + '...)' : 'NO')
+  
+  // MÉTODO NUEVO: Usando código (PKCE flow)
+  if (code) {
+    console.log('🔑 Detectado código de recuperación de contraseña (PKCE)')
+    
+    try {
+      console.log('🔄 Intercambiando código por sesión...')
+      
+      const { supabase } = await import('../../lib/supabaseClient')
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+      
+      if (error) {
+        console.error('❌ Error intercambiando código:', error)
+        showAlert('resetPasswordAlert', 'Error al validar el enlace. Por favor, solicita uno nuevo.', 'error')
+        // Limpiar la URL
+        window.history.replaceState({}, document.title, window.location.pathname)
+        return
+      }
+      
+      if (!data.session) {
+        console.error('❌ No se obtuvo sesión del código')
+        showAlert('resetPasswordAlert', 'Error al validar el enlace. Por favor, solicita uno nuevo.', 'error')
+        window.history.replaceState({}, document.title, window.location.pathname)
+        return
+      }
+      
+      console.log('✅ Sesión establecida correctamente:', data.session.user.email)
+      console.log('✅ Sesión verificada y lista para cambiar contraseña')
+      
+      // Esperar un momento para asegurar que la sesión esté propagada
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      // Abrir el modal de reseteo
+      setTimeout(() => {
+        const modal = document.getElementById('resetPasswordModal')
+        modal?.classList.remove('hidden')
+        modal?.classList.add('flex')
+        
+        // Limpiar la URL
+        window.history.replaceState({}, document.title, window.location.pathname)
+      }, 100)
+      
+      return
+    } catch (error) {
+      console.error('❌ Error procesando código de recuperación:', error)
+      showAlert('resetPasswordAlert', 'Error al procesar el enlace. Por favor, inténtalo de nuevo.', 'error')
+      window.history.replaceState({}, document.title, window.location.pathname)
+      return
+    }
+  }
+  
+  // MÉTODO ANTIGUO: Usando access_token directo (por compatibilidad)
+  if (hash.includes('access_token') || hash.includes('type=recovery')) {
+    console.log('🔑 Detectado enlace de recuperación de contraseña (método antiguo)')
+    
+    try {
+      // El hash puede tener múltiples # por nuestra redirección
+      // Ejemplo: #reset-password#access_token=...
+      // Necesitamos extraer solo la parte después del último #
+      let hashParams = hash
+      
+      // Si hay múltiples #, tomar la parte que contiene access_token
+      if (hash.includes('#access_token')) {
+        hashParams = hash.substring(hash.indexOf('#access_token') + 1)
+      } else {
+        // Si no, simplemente quitar el primer #
+        hashParams = hash.substring(1)
+      }
+      
+      console.log('🔍 Hash procesado:', hashParams.substring(0, 100) + '...')
+      
+      // Extraer los parámetros del hash limpio
+      const params = new URLSearchParams(hashParams)
+      const accessToken = params.get('access_token')
+      const refreshToken = params.get('refresh_token')
+      const type = params.get('type')
+      
+      console.log('🔍 Type:', type)
+      console.log('🔍 Access Token:', accessToken ? 'SÍ (presente)' : 'NO')
+      
+      if (type === 'recovery' && accessToken) {
+        console.log('🔄 Estableciendo sesión de recuperación...')
+        
+        // Establecer la sesión usando los tokens del email
+        const { supabase } = await import('../../lib/supabaseClient')
+        const { data, error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken || ''
+        })
+        
+        if (error) {
+          console.error('❌ Error estableciendo sesión:', error)
+          showAlert('resetPasswordAlert', 'Error al validar el enlace. Por favor, solicita uno nuevo.', 'error')
+          return
+        }
+        
+        console.log('✅ Sesión establecida correctamente:', data.session?.user?.email)
+        
+        // Esperar un poco más para que la sesión se propague
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        
+        // Verificar que la sesión esté activa
+        const { data: sessionData } = await supabase.auth.getSession()
+        if (!sessionData.session) {
+          console.error('❌ No se pudo establecer la sesión')
+          showAlert('resetPasswordAlert', 'Error al validar el enlace. Por favor, solicita uno nuevo.', 'error')
+          return
+        }
+        
+        console.log('✅ Sesión verificada y lista para cambiar contraseña')
+      }
+    } catch (error) {
+      console.error('❌ Error procesando enlace de recuperación:', error)
+      showAlert('resetPasswordAlert', 'Error al procesar el enlace. Por favor, inténtalo de nuevo.', 'error')
+      return
+    }
+    
+    // Abrir el modal de reseteo DESPUÉS de establecer la sesión
+    setTimeout(() => {
+      const modal = document.getElementById('resetPasswordModal')
+      modal?.classList.remove('hidden')
+      modal?.classList.add('flex')
+      
+      // Limpiar el hash de la URL
+      history.replaceState(null, '', window.location.pathname)
+    }, 500)
+  }
 }
 
 // ============================================
@@ -458,7 +751,9 @@ function clearAllFieldErrors() {
     'registerEmail',
     'registerPassword',
     'confirmPassword',
-    'forgotEmail'
+    'forgotEmail',
+    'newPassword',
+    'confirmNewPassword'
   ]
   
   errorFields.forEach(field => clearFieldError(field))
