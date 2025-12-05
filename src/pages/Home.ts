@@ -1,11 +1,18 @@
 export function renderHome() {
   return `
-    <section class="relative bg-primary-600 dark:bg-gray-800 rounded-lg overflow-hidden mb-12">
-      <div class="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-900 dark:from-gray-800 dark:to-gray-900 opacity-90"></div>
-      <div class="relative z-10 px-8 py-16 text-white">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">Bienvenidos a Super Carnes García</h1>
-        <p class="text-xl mb-8">La mejor calidad en carnes para su mesa</p>
-        <a href="#" data-page="meats" class="nav-link inline-block bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
+    <section class="relative bg-primary-600 dark:bg-gray-800 rounded-lg overflow-hidden mb-12 min-h-[400px] flex items-center">
+      <!-- Imagen de fondo de la tienda -->
+      <div class="absolute inset-0">
+        <img src="images/imagen de la tienda.jpg" alt="Super Carnes García" class="w-full h-full object-cover">
+        <!-- Overlay oscuro para mejorar legibilidad del texto -->
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70"></div>
+      </div>
+      
+      <!-- Contenido del banner -->
+      <div class="relative z-10 px-8 py-16 text-white w-full">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">Bienvenidos a Super Carnes García</h1>
+        <p class="text-xl mb-8 drop-shadow-md">La mejor calidad en carnes para su mesa</p>
+        <a href="#" data-page="meats" class="nav-link inline-block bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors shadow-xl">
           Ver Carnes
         </a>
       </div>
