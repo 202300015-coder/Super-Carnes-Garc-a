@@ -1,94 +1,146 @@
 export function renderHome() {
   return `
-    <section class="relative bg-primary-600 dark:bg-gray-800 rounded-lg overflow-hidden mb-12 min-h-[400px] flex items-center">
+    <!-- Banner Principal con Imagen de la Tienda -->
+    <section class="relative bg-gradient-to-br from-primary-700 to-primary-900 dark:from-gray-900 dark:to-gray-800 rounded-2xl overflow-hidden mb-16 min-h-[450px] md:min-h-[500px] flex items-center shadow-2xl">
       <!-- Imagen de fondo de la tienda -->
       <div class="absolute inset-0">
-        <img src="images/imagen de la tienda.jpg" alt="Super Carnes García" class="w-full h-full object-cover">
-        <!-- Overlay oscuro para mejorar legibilidad del texto -->
-        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70"></div>
+        <img src="images/imagen de la tienda.jpg" alt="Super Carnes García" class="w-full h-full object-cover" loading="eager">
+        <!-- Overlay con gradiente mejorado -->
+        <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/80"></div>
       </div>
       
       <!-- Contenido del banner -->
-      <div class="relative z-10 px-8 py-16 text-white w-full">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">Bienvenidos a Super Carnes García</h1>
-        <p class="text-xl mb-8 drop-shadow-md">La mejor calidad en carnes para su mesa</p>
-        <a href="#" data-page="meats" class="nav-link inline-block bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors shadow-xl">
-          Ver Carnes
-        </a>
+      <div class="relative z-10 px-6 sm:px-8 md:px-12 py-20 text-white w-full">
+        <div class="max-w-3xl mx-auto text-center">
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 drop-shadow-2xl leading-tight slide-up">
+            Bienvenidos a <span class="text-red-400">Super Carnes García</span>
+          </h1>
+          <p class="text-xl sm:text-2xl mb-10 drop-shadow-lg text-gray-100 leading-relaxed fade-in">
+            La mejor calidad en carnes para su mesa
+          </p>
+          <a href="#" data-page="meats" class="nav-link inline-flex items-center gap-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-2xl hover:shadow-red-500/50 transition-all transform hover:scale-105 active:scale-95">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+            </svg>
+            Ver Carnes
+          </a>
+        </div>
       </div>
     </section>
 
-    <section class="mb-12">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Sobre Nosotros</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="prose dark:prose-invert max-w-none">
-          <p class="text-lg">
-            Desde 1988, Super Carnes García se ha convertido en 
+    <!-- Sección Sobre Nosotros -->
+    <section class="mb-16">
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-10 text-center">
+        Sobre Nosotros
+      </h2>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <!-- Texto descriptivo -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700">
+          <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
+            Desde <strong class="text-primary-600 dark:text-primary-400">1988</strong>, Super Carnes García se ha convertido en 
             sinónimo de calidad y excelencia en el mercado de carnes. Nos especializamos 
             en ofrecer los mejores cortes, seleccionados cuidadosamente para garantizar 
             la mejor experiencia culinaria para nuestros clientes.
           </p>
-          <ul class="mt-4">
-            <li>Carnes de primera calidad</li>
-            <li>Cortes especializados</li>
-            <li>Atención personalizada</li>
-            <li>Higiene y seguridad garantizada</li>
+          <ul class="space-y-3">
+            <li class="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+              <svg class="w-6 h-6 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span>Carnes de primera calidad</span>
+            </li>
+            <li class="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+              <svg class="w-6 h-6 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span>Cortes especializados</span>
+            </li>
+            <li class="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+              <svg class="w-6 h-6 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span>Atención personalizada</span>
+            </li>
+            <li class="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+              <svg class="w-6 h-6 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span>Higiene y seguridad garantizada</span>
+            </li>
           </ul>
         </div>
+        
+        <!-- Stats Cards -->
         <div class="grid grid-cols-2 gap-4">
-          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h3 class="text-xl font-semibold text-primary-600 mb-2">Experiencia</h3>
-            <p class="text-gray-600 dark:text-gray-300">30+ años sirviendo a nuestros clientes</p>
+          <div class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border border-red-200 dark:border-red-800">
+            <div class="text-3xl sm:text-4xl font-bold text-red-600 dark:text-red-400 mb-2">30+</div>
+            <h3 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-1">Años</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">De experiencia</p>
           </div>
-          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h3 class="text-xl font-semibold text-primary-600 mb-2">Calidad</h3>
-            <p class="text-gray-600 dark:text-gray-300">Productos certificados de primera</p>
+          <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border border-green-200 dark:border-green-800">
+            <div class="text-3xl sm:text-4xl font-bold text-green-600 dark:text-green-400 mb-2">100%</div>
+            <h3 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-1">Calidad</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Certificada</p>
           </div>
-          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h3 class="text-xl font-semibold text-primary-600 mb-2">Servicio</h3>
-            <p class="text-gray-600 dark:text-gray-300">Atención personalizada</p>
+          <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border border-blue-200 dark:border-blue-800">
+            <div class="text-3xl sm:text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">24/7</div>
+            <h3 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-1">Servicio</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">Atención continua</p>
           </div>
-          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h3 class="text-xl font-semibold text-primary-600 mb-2">Variedad</h3>
-            <p class="text-gray-600 dark:text-gray-300">Amplia selección de cortes</p>
+          <div class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border border-purple-200 dark:border-purple-800">
+            <div class="text-3xl sm:text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">200+</div>
+            <h3 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-1">Variedad</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">De productos</p>
           </div>
         </div>
       </div>
     </section>
 
-
-
-    <section class="mb-12 px-4">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+    <!-- Categorías Destacadas -->
+    <section class="mb-16">
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-10 text-center">
         Categorías Destacadas
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         
         <!-- Tarjeta 1 - Carnes -->
-        <a href="#" data-page="meats" class="nav-link bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer">
-          <img src="images/carnes-frescas.jpeg" alt="Carnes Frescas" class="w-full h-56 object-cover">
+        <a href="#" data-page="meats" class="nav-link group bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700">
+          <div class="relative overflow-hidden">
+            <img src="images/carnes-frescas.jpeg" alt="Carnes Frescas" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          </div>
           <div class="p-6 text-center">
-            <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Carnes Frescas</h3>
-            <p class="text-gray-600 dark:text-gray-300">La mejor selección de cortes frescos para tu mesa.</p>
+            <h3 class="text-2xl font-bold text-red-700 dark:text-red-400 mb-3 group-hover:text-red-600 dark:group-hover:text-red-300 transition-colors">🥩 Carnes Frescas</h3>
+            <p class="text-gray-600 dark:text-gray-300 leading-relaxed">La mejor selección de cortes frescos para tu mesa.</p>
           </div>
         </a>
 
         <!-- Tarjeta 2 - Productos -->
-        <a href="#" data-page="products" class="nav-link bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer">
-          <img src="images/abarrotes.webp" alt="Abarrotes" class="w-full h-56 object-cover">
+        <a href="#" data-page="products" class="nav-link group bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700">
+          <div class="relative overflow-hidden">
+            <img src="images/abarrotes.webp" alt="Abarrotes" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          </div>
           <div class="p-6 text-center">
-            <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Productos Increíbles</h3>
-            <p class="text-gray-600 dark:text-gray-300">Todo tipo de abarrotes.</p>
+            <h3 class="text-2xl font-bold text-red-700 dark:text-red-400 mb-3 group-hover:text-red-600 dark:group-hover:text-red-300 transition-colors">🛒 Productos Increíbles</h3>
+            <p class="text-gray-600 dark:text-gray-300 leading-relaxed">Todo tipo de abarrotes de primera calidad.</p>
           </div>
         </a>
 
         <!-- Tarjeta 3 - Ofertas -->
-        <a href="#" data-page="offers" class="nav-link bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer">
-          <img src="images/ofertas2.jpg" alt="Ofertas" class="w-full h-56 object-cover">
+        <a href="#" data-page="offers" class="nav-link group bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700">
+          <div class="relative overflow-hidden">
+            <img src="images/ofertas2.jpg" alt="Ofertas" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <!-- Badge de Oferta -->
+            <div class="absolute top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-full font-bold shadow-lg animate-pulse">
+              ¡OFERTAS!
+            </div>
+          </div>
           <div class="p-6 text-center">
-            <h3 class="text-xl font-semibold text-red-700 dark:text-red-400 mb-2">Grandes Ofertas</h3>
-            <p class="text-gray-600 dark:text-gray-300">Descuentos especiales de la semana.</p>
+            <h3 class="text-2xl font-bold text-red-700 dark:text-red-400 mb-3 group-hover:text-red-600 dark:group-hover:text-red-300 transition-colors">🔥 Grandes Ofertas</h3>
+            <p class="text-gray-600 dark:text-gray-300 leading-relaxed">Descuentos especiales de la semana.</p>
           </div>
         </a>
 
