@@ -1097,14 +1097,6 @@ async function init() {
   // Verificar si hay token de reset password en la URL
   const hashParams = new URLSearchParams(window.location.hash.substring(1))
   const accessToken = hashParams.get('access_token')
-  const type = hashParams.get('type')
-  
-  if (type === 'recovery' && accessToken) {
-    // Redirigir a la página de reset password
-    window.location.href = window.location.pathname + 'reset-password.html' + window.location.hash
-    return
-  }
-  
   // Por defecto, renderizar app como visitante
   renderApp()
   
