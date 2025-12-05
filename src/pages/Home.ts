@@ -72,25 +72,25 @@ export function renderHome() {
         
         <!-- Stats Cards -->
         <div class="grid grid-cols-2 gap-4">
-          <div class="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border border-red-200 dark:border-red-800">
-            <div class="text-3xl sm:text-4xl font-bold text-red-600 dark:text-red-400 mb-2">30+</div>
-            <h3 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-1">Años</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300">De experiencia</p>
+          <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300">
+            <div class="text-4xl sm:text-5xl font-bold text-gray-700 dark:text-gray-300 mb-2">30+</div>
+            <h3 class="text-base sm:text-lg font-semibold text-gray-600 dark:text-gray-400 mb-1">Años</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-500">De experiencia</p>
           </div>
-          <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border border-green-200 dark:border-green-800">
-            <div class="text-3xl sm:text-4xl font-bold text-green-600 dark:text-green-400 mb-2">100%</div>
-            <h3 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-1">Calidad</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300">Certificada</p>
+          <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300">
+            <div class="text-4xl sm:text-5xl font-bold text-gray-700 dark:text-gray-300 mb-2">100%</div>
+            <h3 class="text-base sm:text-lg font-semibold text-gray-600 dark:text-gray-400 mb-1">Calidad</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-500">Certificada</p>
           </div>
-          <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border border-blue-200 dark:border-blue-800">
-            <div class="text-3xl sm:text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">24/7</div>
-            <h3 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-1">Servicio</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300">Atención continua</p>
+          <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300">
+            <div class="text-4xl sm:text-5xl font-bold text-gray-700 dark:text-gray-300 mb-2">24/7</div>
+            <h3 class="text-base sm:text-lg font-semibold text-gray-600 dark:text-gray-400 mb-1">Servicio</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-500">Atención continua</p>
           </div>
-          <div class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow border border-purple-200 dark:border-purple-800">
-            <div class="text-3xl sm:text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">200+</div>
-            <h3 class="text-base sm:text-lg font-bold text-gray-800 dark:text-white mb-1">Variedad</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300">De productos</p>
+          <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300">
+            <div class="text-4xl sm:text-5xl font-bold text-gray-700 dark:text-gray-300 mb-2">200+</div>
+            <h3 class="text-base sm:text-lg font-semibold text-gray-600 dark:text-gray-400 mb-1">Variedad</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-500">De productos</p>
           </div>
         </div>
       </div>

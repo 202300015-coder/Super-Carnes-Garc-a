@@ -1017,25 +1017,40 @@ function attachUI() {
           // Scroll suave al inicio al cambiar de secci�n
           window.scrollTo({ top: 0, behavior: 'smooth' })
           
-          // re-render page content only
+          // re-render page content only con transición
           const pageContent = document.getElementById('pageContent')
-          if (pageContent) pageContent.innerHTML = renderPage(currentPage)
-          
-          // re-attach UI for new content (pero NO para la navegaci�n)
-          attachUIForContent()
-          
-          // ? Volver a registrar listeners de navegaci�n para el nuevo contenido
-          setupNavigationListeners()
-          
-          // ? NUEVO: Reinicializar paginaci�n despu�s de cambiar secci�n
-          const { setupPagination } = await import('./pages/pagination')
-          
-          if (currentPage === 'meats') {
-            await setupPagination('meatsGrid', 'meatsPagination', 'carnes')
-          } else if (currentPage === 'products') {
-            await setupPagination('productsGrid', 'productsPagination', 'productos', true)
-          } else if (currentPage === 'offers') {
-            await setupPagination('offersGrid', 'offersPagination', undefined, false, true)
+          if (pageContent) {
+            // Transición de salida
+            pageContent.classList.add('page-exit')
+            
+            setTimeout(() => {
+              pageContent.innerHTML = renderPage(currentPage)
+              
+              // Transición de entrada
+              pageContent.classList.remove('page-exit')
+              pageContent.classList.add('page-enter')
+              
+              setTimeout(() => {
+                pageContent.classList.remove('page-enter')
+              }, 200)
+              
+              // re-attach UI for new content (pero NO para la navegaci�n)
+              attachUIForContent()
+              
+              // ? Volver a registrar listeners de navegaci�n para el nuevo contenido
+              setupNavigationListeners()
+              
+              // ? NUEVO: Reinicializar paginaci�n despu�s de cambiar secci�n
+              import('./pages/pagination').then(({ setupPagination }) => {
+                if (currentPage === 'meats') {
+                  setupPagination('meatsGrid', 'meatsPagination', 'carnes')
+                } else if (currentPage === 'products') {
+                  setupPagination('productsGrid', 'productsPagination', 'productos', true)
+                } else if (currentPage === 'offers') {
+                  setupPagination('offersGrid', 'offersPagination', undefined, false, true)
+                }
+              })
+            }, 200)
           }
         }
       })
