@@ -22,7 +22,7 @@ export function renderHome() {
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
             </svg>
-            Ver Carnes
+            Ver Cortes
           </a>
         </div>
       </div>
